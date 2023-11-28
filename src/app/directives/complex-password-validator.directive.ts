@@ -2,7 +2,7 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export function ComplexPasswordValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
-    if (control.value.trim() === "") return null
+    if (control.value?.trim() === "") return null
     const hasUppercase = /[A-Z]/.test(control.value);
 
     const hasNumber = /[0-9]/.test(control.value);

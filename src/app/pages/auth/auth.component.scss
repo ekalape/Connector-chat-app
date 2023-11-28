@@ -1,11 +1,14 @@
 :host {
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
   padding: 2rem 0;
 
   & ::ng-deep {
     & .p-tabview-panel {
       width: 100%;
+
       justify-content: center;
       width: 400px;
     }
@@ -28,21 +31,6 @@
       display: flex;
       justify-content: center;
     }
-    /*     & .p-toast-message {
-      width: 100%;
-      display: flex;
-      justify-content: start;
-    }
-    & .p-toast-message-content {
-      width: 200px;
-      display: flex;
-      justify-content: start;
-    }
-    & .p-toast-detail {
-      width: 200px;
-      display: flex;
-      justify-content: start;
-    } */
   }
 
   & ::ng-deep & ::ng-deep .p-float-label {

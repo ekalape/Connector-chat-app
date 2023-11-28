@@ -4,6 +4,7 @@ import { PanelModule } from 'primeng/panel';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem, MenuItemCommandEvent } from 'primeng/api';
 import { Router } from '@angular/router';
+import { Pathes } from 'app/utils/enums/pathes';
 
 
 @Component({
@@ -27,9 +28,9 @@ export class HeaderComponent {
       {
         label: 'Home',
         icon: 'pi pi-fw pi-home',
-        //routerLink: '/home',
-        command: (event: MenuItemCommandEvent) => {
-          this.router.navigate(['/home']);
+        routerLink: Pathes.HOME,
+        command: (event: MenuItemCommandEvent) => { // TODO disable on selected
+          this.router.navigate([Pathes.HOME]);
 
         },
         disabled: this.checkactivestate("home"),
@@ -40,9 +41,9 @@ export class HeaderComponent {
       {
         label: 'Profile',
         icon: 'pi pi-fw pi-user',
-        //routerLink: '/profile',
-        command: (event: MenuItemCommandEvent) => {
-          this.router.navigate(['/profile'])
+        routerLink: Pathes.PROFILE,
+        command: (event: MenuItemCommandEvent) => { // TODO disable on selected
+          this.router.navigate([Pathes.PROFILE])
         },
         disabled: this.checkactivestate("profile"),
         routerLinkActiveOptions: { exact: true }
@@ -52,7 +53,7 @@ export class HeaderComponent {
         icon: 'pi pi-fw pi-sign-out',
         //routerLink: '/profile',
         command: (event: MenuItemCommandEvent) => {
-          this.router.navigate(['/profile'])
+          console.log("logout");
         },
         disabled: this.checkactivestate("profile"),
         routerLinkActiveOptions: { exact: true }

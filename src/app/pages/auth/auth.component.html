@@ -1,9 +1,8 @@
-<p-tabView [(activeIndex)]="activeIndex">
+<p-tabView [(activeIndex)]="activeIndex" (onChange)="changeTab($event)">
   <p-tabPanel header="Log-in">
-    <app-login-form (currentActiveIndex)="setActiveIndex($event)"></app-login-form>
   </p-tabPanel>
   <p-tabPanel header="Sign-up">
-    <app-signup-form (currentActiveIndex)="setActiveIndex($event)"></app-signup-form>
   </p-tabPanel>
 </p-tabView>
+<router-outlet></router-outlet>
 <p-toast position="top-center" key="tc"></p-toast>
