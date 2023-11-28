@@ -39,6 +39,7 @@ export class LoginFormComponent {
 
   onSubmit() {
     console.log('form :>> ', this.loginForm.value);
+
   }
 
 }

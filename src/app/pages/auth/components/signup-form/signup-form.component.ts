@@ -10,6 +10,7 @@ import { ComplexPasswordValidator } from 'app/directives/complex-password-valida
   selector: 'app-signup-form',
   standalone: true,
   imports: [CommonModule, ButtonModule, InputTextModule, ReactiveFormsModule],
+
   templateUrl: './signup-form.component.html',
   styleUrl: './signup-form.component.scss'
 })
@@ -38,5 +39,11 @@ export class SignupFormComponent {
     this.currentActiveIndex.emit(0)
   }
 
-  onSubmit() { }
+  onSubmit() {
+    console.log('form :>> ', this.signupForm.value);
+    this.currentActiveIndex.emit(3);
+    this.signupForm.reset()
+
+  }
+
 }
