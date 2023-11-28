@@ -1,11 +1,18 @@
-.header .p-menubar {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  padding: 2rem;
+:host {
+  & .header {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  & ::ng-deep .p-menubar-root-list {
+    margin-left: 3rem;
+  }
+  & ::ng-deep .p-menubar {
+    width: 100%;
+    padding: 1rem 2rem;
+  }
 }
-.logo {
-  display: block;
-  margin-left: 1rem;
-  margin-right: 5rem;
+.active {
+  color: red;
 }

@@ -1,0 +1,55 @@
+<form (ngSubmit)="onSubmit()" class="auth-form" [formGroup]="signupForm">
+  <div class="input-container">
+    <span class="p-float-label">
+      <input pInputText id="name" type="text" formControlName="firstNameInput">
+      <label htmlFor="name">Name</label>
+    </span>
+    <div class="errors-container"
+      *ngIf="firstName.invalid&&(firstName.dirty||firstName.touched)">
+      <p class="errors-message" *ngIf="firstName.errors?.['required']">
+        Please enter a name.
+      </p>
+      <p class="errors-message" *ngIf="firstName.errors?.['minlength']">
+        The name is too short.
+      </p>
+      <p class="errors-message" *ngIf="firstName.errors?.['pattern']">
+        Only letters and spaces are allowed.
+      </p>
+    </div>
+  </div>
+  <div class="input-container">
+    <span class="p-float-label">
+      <input pInputText id="mail" type="e-mail" formControlName="emailInput">
+      <label htmlFor="mail">E-mail</label>
+    </span>
+    <div class="errors-container" *ngIf="email.invalid&&(email.dirty||email.touched)">
+      <p class="errors-message" *ngIf="email.errors?.['required']">
+        Please enter e-mail.
+      </p>
+      <p class="errors-message" *ngIf="email.errors?.['email']">
+        E-mail is not valid.
+      </p>
+    </div>
+  </div>
+  <div class="input-container">
+    <span class="p-float-label">
+      <input pInputText id="passw" type="password" autocomplete="111"
+        formControlName="passInput">
+      <label htmlFor="passw">Password</label>
+    </span>
+    <div class="errors-container"
+      *ngIf="password.invalid&&(password.dirty||password.touched)">
+      <p class="errors-message" *ngIf="password.errors?.['required']">
+        Password cannot be empty.
+      </p>
+      <p class="errors-message" *ngIf="password.errors?.['weakPassword']">
+        {{password.errors?.['weakPassword']}}
+      </p>
+    </div>
+  </div>
+  <div class="btn-container">
+    <p-button type="submit" [disabled]="!signupForm.valid">Sign in</p-button>
+    <p-button [text]="true" type="button" (click)="onTabSwitch()">Have an
+      account?</p-button>
+  </div>
+</form>
