@@ -17,6 +17,7 @@ export const StoreInitialState: IState = {
   }
 }
 
+
 export const reducers: ActionReducerMap<IState> = {
   authorization: authReducer
 }

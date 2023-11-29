@@ -4,11 +4,13 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { LoginFormComponent } from './pages/auth/components/login-form/login-form.component';
 import { SignupFormComponent } from './pages/auth/components/signup-form/signup-form.component';
 import { Pathes } from './utils/enums/pathes';
+import { ProfileComponent } from './pages/profile/profile/profile.component';
 
 export const routes: Routes = [
   {
     path: "", redirectTo: Pathes.SIGN_IN, pathMatch: "full"
   },
+  { path: "profile", component: ProfileComponent },
   {
     path: "", component: AuthComponent, children:
       [

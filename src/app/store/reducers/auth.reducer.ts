@@ -1,9 +1,10 @@
 import { createReducer, on } from '@ngrx/store';
 import { IAutorizationSlice } from '../models/store.model';
-import { getProfileSuccessAction, logInAction, logOutAction } from '../actions/auth.action';
+import { logInAction, logOutAction } from '../actions/auth.action';
+import { StoreInitialState } from '..';
 
 
-const authInitState: IAutorizationSlice = {
+const initState: IAutorizationSlice = {
   id: "1",
   name: "aaa",
   email: "aaa@mail.ru",
@@ -13,7 +14,7 @@ const authInitState: IAutorizationSlice = {
 
 }
 
-export const authReducer = createReducer(authInitState,
+export const authReducer = createReducer(initState,
   on(logInAction, (state, { token, email, uid }) => ({
     ...state,
     loggedIn: true,
@@ -25,9 +26,5 @@ export const authReducer = createReducer(authInitState,
     loggedIn: false,
     token: ""
   })),
-  on(getProfileSuccessAction,
-    (state, { name, createdAt }) => ({
-      ...state,
-      name, createdAt
-    }))
+
 )

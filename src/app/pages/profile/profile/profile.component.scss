@@ -1,0 +1,61 @@
+.profile-form {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  padding: 1rem;
+  gap: 1rem;
+  position: relative;
+}
+
+.page-title {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 1rem;
+  justify-content: start;
+  padding-left: 2rem;
+}
+
+.page-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.5rem;
+}
+
+.btns-container {
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  & ::ng-deep .p-ripple {
+    width: 100%;
+  }
+}
+.btn {
+  width: 100%;
+}
+
+.profile-field {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  &__editable {
+    display: block;
+    width: 320px;
+    & input {
+      width: 87%;
+    }
+  }
+}
+input:not(:first-child) {
+  width: 320px;
+}
+
+label {
+  display: block;
+  width: 80px;
+}
