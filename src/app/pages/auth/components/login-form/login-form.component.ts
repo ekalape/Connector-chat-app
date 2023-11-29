@@ -6,6 +6,8 @@ import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormControl } 
 import { AuthService } from 'app/services/auth.service';
 import { Router } from '@angular/router';
 import { Pathes } from 'app/utils/enums/pathes';
+import { IHttpError } from 'app/models/auth.model';
+import { Observable, take } from 'rxjs';
 
 
 
@@ -13,6 +15,7 @@ import { Pathes } from 'app/utils/enums/pathes';
   selector: 'app-login-form',
   standalone: true,
   imports: [CommonModule, ButtonModule,
+
     InputTextModule,
 
     ReactiveFormsModule],
@@ -22,7 +25,7 @@ import { Pathes } from 'app/utils/enums/pathes';
 })
 export class LoginFormComponent {
 
-
+  result: Observable<any> | undefined;
 
   loginForm: FormGroup = this.fb.group({
 
@@ -50,8 +53,9 @@ export class LoginFormComponent {
 
   onSubmit() {
     console.log('form :>> ', this.loginForm.value);
-    const res = this.httpService.login(this.email.value, this.password.value)
-    console.log('inside form :>> ', res);
+    this.result = this.httpService.login(this.email.value, this.password.value).pipe(take(1))
+
+    //res.subscribe((result) => console.log("inside comp -->", result))
 
   }
 

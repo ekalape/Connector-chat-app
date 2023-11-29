@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { Pathes } from 'app/utils/enums/pathes';
+import { AuthService } from 'app/services/auth.service';
+import { take, tap } from 'rxjs';
 
 @Component({
   selector: 'app-signup-form',
@@ -18,6 +20,8 @@ import { Pathes } from 'app/utils/enums/pathes';
   styleUrl: './signup-form.component.scss'
 })
 export class SignupFormComponent {
+
+
 
   signupForm: FormGroup = this.fb.group({
     firstNameInput: ["", [Validators.required, Validators.minLength(3), Validators.pattern(/^[A-Za-z\s]*$/)]],
@@ -35,7 +39,10 @@ export class SignupFormComponent {
     return this.signupForm.get('passInput') as FormControl;
   }
 
-  constructor(private fb: FormBuilder, private router: Router, private messageService: MessageService,) {
+  constructor(private fb: FormBuilder,
+    private router: Router,
+    private messageService: MessageService,
+    private authService: AuthService) {
 
   }
   onTabSwitch() {
@@ -44,9 +51,15 @@ export class SignupFormComponent {
 
   onSubmit() {
     console.log('form :>> ', this.signupForm.value);
-    this.showSuccess()
-    this.signupForm.reset()
-    this.router.navigate([Pathes.SIGN_IN])
+    this.authService.register(this.firstName.value, this.email.value, this.password.value)
+      .pipe(take(1), tap(x => console.log("inside tap", x)))
+      .subscribe(res => {
+        console.log('res inside subs :>> ', res);
+      })
+
+    //this.showSuccess()
+    //this.signupForm.reset()
+    // this.router.navigate([Pathes.SIGN_IN])
 
   }
   showSuccess() {
