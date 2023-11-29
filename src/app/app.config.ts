@@ -7,7 +7,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { reducers } from './store';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), provideAnimations(), importProvidersFrom(HttpClientModule), provideStore(), provideEffects(), provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() })]
+  providers: [provideRouter(routes),
+  provideAnimations(),
+  importProvidersFrom(HttpClientModule), provideStore(reducers), provideEffects(), provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() })]
 };

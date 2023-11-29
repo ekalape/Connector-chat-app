@@ -7,7 +7,9 @@ import { AuthService } from 'app/services/auth.service';
 import { Router } from '@angular/router';
 import { Pathes } from 'app/utils/enums/pathes';
 import { IHttpError } from 'app/models/auth.model';
-import { Observable, take } from 'rxjs';
+import { Observable, map, take } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { logInAction } from 'app/store/actions/auth.action';
 
 
 
@@ -44,6 +46,7 @@ export class LoginFormComponent {
   constructor(private fb: FormBuilder,
     private httpService: AuthService,
     private router: Router,
+    private store: Store
   ) {
 
   }
@@ -53,7 +56,10 @@ export class LoginFormComponent {
 
   onSubmit() {
     console.log('form :>> ', this.loginForm.value);
-    this.result = this.httpService.login(this.email.value, this.password.value).pipe(take(1))
+    this.result = this.httpService.login(this.email.value, this.password.value)
+      .pipe(take(1),
+        map(res => this.store.dispatch(logInAction({ token: res.token, uid: res.uid, email: this.email.value })))
+      )
 
     //res.subscribe((result) => console.log("inside comp -->", result))
 

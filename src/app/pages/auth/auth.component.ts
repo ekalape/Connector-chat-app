@@ -9,6 +9,10 @@ import { SignupFormComponent } from './components/signup-form/signup-form.compon
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { Store, StoreModule } from '@ngrx/store';
+import { selectProfileData } from 'app/store/selectors/profile.selectors';
+import { authReducer } from 'app/store/reducers/auth.reducer';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -20,9 +24,9 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
     InputTextModule,
     LoginFormComponent,
     RouterModule,
-    ToastModule,
-    SignupFormComponent],
-  providers: [MessageService],
+    SignupFormComponent,
+  ],
+  providers: [],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss'
 })
@@ -30,7 +34,10 @@ export class AuthComponent {
 
   activeIndex = 0;
 
-  constructor(private messageService: MessageService,
+  data = this.store.select(selectProfileData)
+  sub: Subscription | undefined
+
+  constructor(private store: Store,
     private router: Router) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -38,6 +45,12 @@ export class AuthComponent {
       }
     });
   }
+
+  ngOnInit() {
+    this.sub = this.data.subscribe(x => console.log("store data -->", x))
+  }
+
+
 
   changeTab(event: TabViewCloseEvent) {
     console.log('event.index :>> ', event.index);
@@ -49,16 +62,10 @@ export class AuthComponent {
     /*     if (index === 3) { this.showSuccess(); this.activeIndex = 0; this.router.navigate(["/signin"]) }
         else { this.activeIndex = index; this.router.navigate(["/signup"]) } */
   }
-  showSuccess() {
-    this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Thank you! Now you can login', life: 60000 });
+  ngOnDestroy() {
+    this.sub?.unsubscribe()
   }
-  showError() {
-    this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Your registration ended up with an error. Try again' });
-  }
+
 }
 
-/*     if (event.index === 1) {
-      console.log('event.index :>> ', event.index);
-      this.router.navigate(["/signup"])
-    };
-    if (event.index === 0) { console.log('event.index :>> ', event.index); this.router.navigate(["/signin"]) }; */
+

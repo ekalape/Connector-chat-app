@@ -7,6 +7,10 @@ import { authReducer } from './reducers/auth.reducer';
 
 export const StoreInitialState: IState = {
   authorization: {
+    id: "1",
+    name: "aaa",
+    email: "aaa@mail.ru",
+    createdAt: "11/25/2023",
     loggedIn: false,
     token: ""
 

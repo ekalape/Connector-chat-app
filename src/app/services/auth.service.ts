@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IAuthResponse, IAuthServiceResponse, IHttpError } from 'app/models/auth.model';
+import { IHeaderData } from 'app/store/models/headers-data.model';
 import { catchError, map, of, tap, throwError } from 'rxjs';
 
 @Injectable({
@@ -18,11 +19,10 @@ export class AuthService {
 
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type': 'text/plain',
-        //Authorization: 'my-auth-token'
+        'Content-Type': 'application/json',
       })
     };
-    return this.httpClient.post<IHttpError>("https://tasks.app.rs.school/angular/login", {
+    return this.httpClient.post<{ token: string, uid: string }>("https://tasks.app.rs.school/angular/login", {
       email,
       password
     }, httpOptions)
@@ -30,7 +30,6 @@ export class AuthService {
         tap(res => console.log('inside tap :>> ', res)),
         catchError(this.handleError)
       )
-    //.subscribe(res => console.log('inside subs :>> ', res))
 
   }
 
@@ -44,22 +43,26 @@ export class AuthService {
           'Content-Type': 'application/json',
         })
       }
-    )
+    ).pipe(catchError(err => this.handleError(err)))
 
   }
-  logout() { }
+  logout(headersData: IHeaderData) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'text/plain',
+        'rs-uid': headersData.uid,
+        'rs-email': headersData.email,
+        'Authorization': "Bearer " + headersData.token
+      })
+    };
+    return this.httpClient.delete("https://tasks.app.rs.school/angular/logout", httpOptions).pipe(catchError(err => this.handleError(err)))
+  }
 
 
   private handleError(error: HttpErrorResponse) {
     console.log('error status:>> ', error.status);
     console.log('error all:>> ', error);
-    /*     if (error.status === 0) {
-          console.error('An error occurred:', error.error);
-        } else {
-          console.error(
-            `Backend returned code ${error.status}, body was: `, error.error);
-        } */
-    // Return an observable with a user-facing error message.
+
     return throwError(() => new Error(error.message));
   }
 }
