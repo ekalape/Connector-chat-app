@@ -9,9 +9,17 @@
   align-items: center;
   width: 100%;
   padding: 1rem 0;
+  position: relative;
   & :first-child {
     margin-right: 1rem;
   }
+}
+.connecting-info {
+  position: absolute;
+  color: green;
+  font-size: 0.8rem;
+  font-style: italic;
+  top: 0px;
 }
 .auth-form {
   display: flex;

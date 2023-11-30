@@ -16,9 +16,8 @@ export class GetProfileEffects {
   constructor(private actions$: Actions,
     private store: Store,
     private httpService: HttpService) {
-
-
   }
+
   loadProfile$ = createEffect(() => this.actions$
     .pipe(
       ofType(getProfileAction),
@@ -26,8 +25,10 @@ export class GetProfileEffects {
       mergeMap(([action, headersData]) => {
         return this.httpService.getProfile(headersData)
           .pipe(
+            tap(res => console.log(res)),
             map((res: IProfileResponse) =>
-              getProfileSuccessAction({ name: res.name.S, createdAt: res.createdAt.S })),
+              getProfileSuccessAction({ name: res.name.S, createdAt: res.createdAt.S })
+            ),
             catchError((err: any) => {
               console.log('err :>> ', err);
               return EMPTY

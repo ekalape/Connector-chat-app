@@ -62,7 +62,6 @@ export class HeaderComponent {
   }
 
   checkactivestate(givenlink: string) {
-    console.log(this.router.url);
     if (this.router.url.indexOf(givenlink) === -1) {
       return false;
     } else {

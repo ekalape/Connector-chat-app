@@ -9,8 +9,6 @@ export interface IAutorizationSlice {
   loggedIn: boolean,
   token: string,
   loading: boolean,
-  error: IHttpError | null
-
 }
 
 export interface IState {

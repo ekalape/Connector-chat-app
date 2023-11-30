@@ -26,7 +26,8 @@
     </div>
   </div>
   <div class="btn-container">
-    <p-button type="submit" [disabled]="!loginForm.valid">
+    <span class="connecting-info" *ngIf="(isLoading|async)?.loading">Connecting...</span>
+    <p-button type="submit" [disabled]="!loginForm.valid|| (isLoading|async)?.loading">
       <i class="pi pi-sign-in"></i>
       Login</p-button>
     <p-button [text]="true" type="button" (click)="onTabSwitch()">Have no

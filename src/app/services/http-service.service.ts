@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IProfileResponse } from 'app/models/http-responses.model';
 import { IHeaderData } from 'app/store/models/headers-data.model';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +22,11 @@ export class HttpService {
         'Authorization': "Bearer " + headersData.token
       })
     };
+    console.log("inside get profile service", httpOptions);
 
-    return this.httpClient.get<IProfileResponse>("https://tasks.app.rs.school/angular/profile", httpOptions)
+    const res = this.httpClient.get<IProfileResponse>("https://tasks.app.rs.school/angular/profile", httpOptions)
+    //res.pipe(take(1)).subscribe(x => console.log(x))
+    return res;
 
   }
 

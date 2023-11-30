@@ -1,25 +1,25 @@
-import { ActionReducerMap } from '@ngrx/store';
+import { ActionReducerMap, combineReducers } from '@ngrx/store';
 import { IState } from './models/store.model';
-import { authReducer } from './reducers/auth.reducer';
+
+import { profileReducer } from './reducers/profile.reducer';
 
 
 
 
 export const StoreInitialState: IState = {
   authorization: {
-    id: "1",
-    name: "aaa",
-    email: "aaa@mail.ru",
-    createdAt: "11/25/2023",
+    id: "",
+    name: "",
+    email: "",
+    createdAt: "",
     loggedIn: false,
     token: "",
     loading: false,
-    error: null
-
   }
 }
 
 
 export const reducers: ActionReducerMap<IState> = {
-  authorization: authReducer
+  authorization: profileReducer
+
 }

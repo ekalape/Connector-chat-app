@@ -6,7 +6,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { Location } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Subscription, map } from 'rxjs';
+import { Subscription, map, tap } from 'rxjs';
 
 
 @Component({
@@ -32,13 +32,15 @@ export class ProfileComponent {
   constructor(private store: Store, private location: Location) { }
 
   ngOnInit() {
-    this.sub = this.profileData$.subscribe(data => {
-      this.oldName = data.name;
-      this.nameField.setValue(data.name);
-      this.emailField.setValue(data.email);
-      this.creationField.setValue(data.createdAt)
-    })
 
+    this.sub = this.profileData$
+      .pipe(tap(data => console.log("profileData ", data)))
+      .subscribe(data => {
+        this.oldName = data.name;
+        this.nameField.setValue(data.name);
+        this.emailField.setValue(data.email);
+        this.creationField.setValue(data.createdAt)
+      })
   }
 
   editField() {
