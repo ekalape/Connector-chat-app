@@ -58,7 +58,11 @@ export class LoginFormComponent {
     console.log('form :>> ', this.loginForm.value);
     this.result = this.httpService.login(this.email.value, this.password.value)
       .pipe(take(1),
-        map(res => this.store.dispatch(logInAction({ token: res.token, uid: res.uid, email: this.email.value })))
+        map(res => {
+          if ("token" in res)
+            this.store.dispatch(logInAction({ token: res.token, uid: res.uid, email: this.email.value }));
+
+        })
       )
 
     //res.subscribe((result) => console.log("inside comp -->", result))

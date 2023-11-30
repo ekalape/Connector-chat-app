@@ -1,3 +1,4 @@
+import { IHttpError } from 'app/models/auth.model'
 
 
 export interface IAutorizationSlice {
@@ -6,7 +7,9 @@ export interface IAutorizationSlice {
   email: string,
   createdAt: string,
   loggedIn: boolean,
-  token: string
+  token: string,
+  loading: boolean,
+  error: IHttpError | null
 
 }
 

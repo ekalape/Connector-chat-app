@@ -43,7 +43,9 @@ export class AuthService {
           'Content-Type': 'application/json',
         })
       }
-    ).pipe(catchError(err => this.handleError(err)))
+    ).pipe(
+      tap(res => console.log("get on register response -->", res)),
+      catchError(err => this.handleError(err)))
 
   }
   logout(headersData: IHeaderData) {
@@ -63,6 +65,8 @@ export class AuthService {
     console.log('error status:>> ', error.status);
     console.log('error all:>> ', error);
 
-    return throwError(() => new Error(error.message));
+    return of({ type: error.error.type, message: error.error.message })
+    /* throwError(() => new Error(error.message)) */
+
   }
 }

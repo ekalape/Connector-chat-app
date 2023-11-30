@@ -12,7 +12,9 @@ export const StoreInitialState: IState = {
     email: "aaa@mail.ru",
     createdAt: "11/25/2023",
     loggedIn: false,
-    token: ""
+    token: "",
+    loading: false,
+    error: null
 
   }
 }

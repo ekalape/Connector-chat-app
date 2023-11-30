@@ -48,7 +48,9 @@
     </div>
   </div>
   <div class="btn-container">
-    <p-button type="submit" [disabled]="!signupForm.valid">Sign in</p-button>
+    <span class="connecting-info" *ngIf="(isLoading|async)?.loading">Connecting...</span>
+    <p-button type="submit"
+      [disabled]="!signupForm.valid || (isLoading|async)?.loading">Sign in</p-button>
     <p-button [text]="true" type="button" (click)="onTabSwitch()">Have an
       account?</p-button>
   </div>

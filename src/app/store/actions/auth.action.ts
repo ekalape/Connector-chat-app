@@ -4,3 +4,4 @@ export const logInAction = createAction("[auth] Login", props<{ token: string, e
 export const logOutAction = createAction("[auth] Logout");
 
 
+export const setLoadingAction = createAction("[auth] Set Loading", props<{ loading: boolean }>());
