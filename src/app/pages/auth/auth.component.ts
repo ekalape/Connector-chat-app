@@ -56,24 +56,26 @@ export class AuthComponent {
   ngOnInit() {
     this.sub = this.data.subscribe(x => console.log("store data -->", x))
     this.datasub = this.dataExchange.successful.subscribe(x => {
-      console.log("dataExchange---> ", x)
       if (x.action && x.success) {
+        console.log("dataExchange on success", x);
         this.showSuccess(x.message);
         if (x.action === authActions.LOGIN) {
           this.store.dispatch(getProfileAction());
-          this.router.navigate([Pathes.PROFILE]);
+          setTimeout(() => {          // because navigating too fast and success toast is not visible
+            console.log("inside timeout");
+            this.router.navigate([Pathes.PROFILE]);
+          }, 1500)
         }
-        if (x.action === authActions.REG)
-          this.router.navigate([Pathes.SIGN_IN])
+        /* if (x.action === authActions.REG)
+          setTimeout(() => {
+            this.router.navigate([Pathes.SIGN_IN])
+          }, 15000) */
       }
       else if (x.action && !x.success) {
         this.showError(x.message)
       }
-
     })
   }
-
-
 
   changeTab(event: TabViewCloseEvent) {
     this.router.navigate([event.index === 0 ? "/signin" : "/signup"]);
@@ -81,12 +83,13 @@ export class AuthComponent {
 
 
   ngOnDestroy() {
-    // this.dataExchange.reset()
+    this.dataExchange.reset()
     this.sub?.unsubscribe();
     this.datasub?.unsubscribe();
   }
 
   showSuccess(message: string | undefined) {
+    console.log("inside show success message");
     this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: message || 'Thank you!' });
   }
   showError(errorMessage: string | undefined) {

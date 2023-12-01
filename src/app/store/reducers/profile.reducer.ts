@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { getProfileSuccessAction, updateProfileSuccessAction } from '../actions/profile.action';
+import { getProfileSuccessAction, setErrorAction, updateProfileSuccessAction } from '../actions/profile.action';
 
 import { IAutorizationSlice } from '../models/store.model';
 import { logInAction, logOutAction, setLoadingAction } from '../actions/auth.action';
@@ -12,7 +12,8 @@ const initState: IAutorizationSlice = {
   createdAt: "",
   loggedIn: false,
   token: "",
-  loading: false
+  loading: false,
+  error: null
 
 }
 
@@ -38,12 +39,17 @@ export const profileReducer = createReducer(initState,
       console.log("inside reducer", "name:", name, "createdAt:", createdAt);
       return {
         ...state,
-        name, createdAt
+        name, createdAt, loading: false
       }
     }),
   on(updateProfileSuccessAction,
     (state, { name }) => ({
       ...state,
-      name
-    }))
+      name, loading: false
+    })),
+  on(setErrorAction, (state, { error }) => ({
+    ...state,
+    error, loading: false
+  }))
+
 )

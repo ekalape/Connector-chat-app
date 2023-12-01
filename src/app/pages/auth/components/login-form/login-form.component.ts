@@ -70,6 +70,9 @@ export class LoginFormComponent {
         }
         else if (res && "type" in res) {
           this.dataExchange.setFail(res.message, authActions.LOGIN)
+          if (res.type === "NotFoundException") {
+            this.loginForm.setErrors({ invalid: true })
+          }
         }
         this.store.dispatch(setLoadingAction({ loading: false }))
       })

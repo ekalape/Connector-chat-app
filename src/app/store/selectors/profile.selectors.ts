@@ -6,3 +6,5 @@ export const selectProfileData = createFeatureSelector<IAutorizationSlice>('auth
 
 
 export const selectProfileHeaders = createSelector(selectProfileData, (data) => ({ uid: data.id, email: data.email, token: data.token }));
+
+export const selectError = createSelector(selectProfileData, (data) => data.error);

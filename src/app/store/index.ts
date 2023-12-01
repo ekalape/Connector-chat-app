@@ -1,4 +1,4 @@
-import { ActionReducerMap, combineReducers } from '@ngrx/store';
+import { ActionReducerMap } from '@ngrx/store';
 import { IState } from './models/store.model';
 
 import { profileReducer } from './reducers/profile.reducer';
@@ -15,6 +15,7 @@ export const StoreInitialState: IState = {
     loggedIn: false,
     token: "",
     loading: false,
+    error: null
   }
 }
 

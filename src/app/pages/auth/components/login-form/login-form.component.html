@@ -12,6 +12,11 @@
         E-mail is not valid.
       </p>
     </div>
+    <div class="errors-container">
+      <p class="errors-message" *ngIf="loginForm.errors?.['invalid']">
+        This email or password was not found.
+      </p>
+    </div>
   </div>
   <div class="input-container">
     <span class="p-float-label">
@@ -22,6 +27,11 @@
       *ngIf="password.invalid&&(password.dirty||password.touched)">
       <p class="errors-message" *ngIf="password.errors?.['required']">
         Password cannot be empty.
+      </p>
+    </div>
+    <div class="errors-container">
+      <p class="errors-message" *ngIf="loginForm.errors?.['invalid']">
+        This email or password was not found.
       </p>
     </div>
   </div>

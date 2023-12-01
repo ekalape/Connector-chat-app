@@ -30,6 +30,11 @@
         E-mail is not valid.
       </p>
     </div>
+    <div class="errors-container">
+      <p class="errors-message" *ngIf="email.errors?.['pattern']">
+        This e-mail already exists.
+      </p>
+    </div>
   </div>
   <div class="input-container">
     <span class="p-float-label">

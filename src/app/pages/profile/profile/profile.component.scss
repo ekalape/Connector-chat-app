@@ -17,6 +17,13 @@
   justify-content: start;
   padding-left: 2rem;
 }
+.connecting-info {
+  position: absolute;
+  color: green;
+  font-size: 0.8rem;
+  font-style: italic;
+  top: 0px;
+}
 
 .page-content {
   width: 100%;
@@ -31,6 +38,7 @@
   display: flex;
   gap: 1rem;
   padding: 1rem 0;
+  position: relative;
   & ::ng-deep .p-ripple {
     width: 100%;
   }
