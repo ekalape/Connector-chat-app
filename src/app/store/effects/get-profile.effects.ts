@@ -23,18 +23,19 @@ export class GetProfileEffects {
   loadProfile$ = createEffect(() => this.actions$
     .pipe(
       ofType(getProfileAction),
-      withLatestFrom(this.store.select(selectProfileHeaders), this.store.select(selectLoggedIn)),
+      withLatestFrom(this.store.select(selectLoggedIn)),
 
-      mergeMap(([action, headersData, loggedIn]) => {
+      mergeMap(([action, loggedIn]) => {
         if (loggedIn) {
           this.store.dispatch(setLoadingAction({ loading: true }));
-          return this.httpService.getProfile(headersData)
+          return this.httpService.getProfile()
             .pipe(
               map((res: IProfileResponse) =>
                 getProfileSuccessAction({ name: res.name.S, createdAt: res.createdAt.S })
               ),
               catchError((err) => {
-                this.store.dispatch(setErrorAction({ error: err.error }))
+                this.store.dispatch(setErrorAction({ error: err.error }));
+                console.log(err.error);
                 return EMPTY
               })
             )
@@ -46,11 +47,11 @@ export class GetProfileEffects {
   loadUpdateProfile$ = createEffect(() => this.actions$
     .pipe(
       ofType(updateProfileAction),
-      withLatestFrom(this.store.select(selectProfileHeaders), this.store.select(selectLoggedIn)),
-      mergeMap(([action, headersData, loggedIn]) => {
+      withLatestFrom(this.store.select(selectLoggedIn)),
+      mergeMap(([action, loggedIn]) => {
         if (loggedIn) {
           this.store.dispatch(setLoadingAction({ loading: true }));
-          return this.httpService.updateProfile(action.name, headersData).pipe(
+          return this.httpService.updateProfile(action.name).pipe(
             map(() => {
               return updateProfileSuccessAction({ name: action.name });
             }),

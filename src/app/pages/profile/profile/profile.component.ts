@@ -57,6 +57,12 @@ export class ProfileComponent {
         this.emailField.setValue(data.email);
         this.creationField.setValue(data.createdAt)
       })
+
+    this.errorsub = this.error$
+      .subscribe(x => {
+        if (x)
+          this.showError(x?.message)
+      })
   }
 
   editField() {
@@ -79,12 +85,7 @@ export class ProfileComponent {
     if (this.nameField.value?.trim()) {
       this.savenabled = false;
       this.nameField.disable();
-      this.store.dispatch(updateProfileAction({ name: this.nameField.value || "" }))
-      this.errorsub = this.error$
-        .subscribe(x => {
-          if (x)
-            this.showError(x?.message)
-        })
+      this.store.dispatch(updateProfileAction({ name: this.nameField.value }))
 
     }
   }

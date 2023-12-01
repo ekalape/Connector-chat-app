@@ -1,9 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { IAuthResponse, IAuthServiceResponse, IHttpError } from 'app/models/auth.model';
-import { IHeaderData } from 'app/store/models/headers-data.model';
-import { catchError, map, of, tap, throwError } from 'rxjs';
+import { BASE_URL } from 'app/utils/enums/pathes';
+import { catchError, of, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +20,7 @@ export class AuthService {
         'Content-Type': 'application/json',
       })
     };
-    return this.httpClient.post<{ token: string, uid: string }>("https://tasks.app.rs.school/angular/login", {
+    return this.httpClient.post<{ token: string, uid: string }>(`${BASE_URL}/login`, {
       email,
       password
     }, httpOptions)
@@ -36,7 +34,7 @@ export class AuthService {
 
   register(name: string, email: string, password: string) {
     console.log("inside service");
-    return this.httpClient.post("https://tasks.app.rs.school/angular/registration",
+    return this.httpClient.post(`${BASE_URL}/registration`,
       { email, name, password },
       {
         headers: new HttpHeaders({
@@ -48,16 +46,9 @@ export class AuthService {
       catchError(err => this.handleError(err)))
 
   }
-  logout(headersData: IHeaderData) {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'text/plain',
-        'rs-uid': headersData.uid,
-        'rs-email': headersData.email,
-        'Authorization': "Bearer " + headersData.token
-      })
-    };
-    return this.httpClient.delete("https://tasks.app.rs.school/angular/logout", httpOptions).pipe(catchError(err => this.handleError(err)))
+  logout() {
+
+    return this.httpClient.delete(`${BASE_URL}/logout`).pipe(catchError(err => this.handleError(err)))
   }
 
 
@@ -66,7 +57,7 @@ export class AuthService {
     console.log('error all:>> ', error);
 
     return of({ type: error.error.type, message: error.error.message })
-    /* throwError(() => new Error(error.message)) */
+    //throwError(() => new Error(error.message))
 
   }
 }

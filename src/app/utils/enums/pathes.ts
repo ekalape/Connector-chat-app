@@ -6,3 +6,6 @@ export enum Pathes {
   GROUP = "/group",
   CONVERSATION = "/conversation",
 }
+
+
+export const BASE_URL = "https://tasks.app.rs.school/angular";
