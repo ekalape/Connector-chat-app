@@ -10,6 +10,7 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { reducers } from './store';
 import { GetProfileEffects } from './store/effects/get-profile.effects';
 import { AuthorizationInterceptor } from './interceptors/authorization.interceptor';
+import { LogoutEffects } from './store/effects/logout.effect';
 
 export const httpInterceptorProviders = [{ provide: HTTP_INTERCEPTORS, useClass: AuthorizationInterceptor, multi: true }]
 
@@ -19,6 +20,6 @@ export const appConfig: ApplicationConfig = {
   importProvidersFrom(HttpClientModule),
     httpInterceptorProviders,
   provideStore(reducers),
-  provideEffects([GetProfileEffects]),
+  provideEffects([GetProfileEffects, LogoutEffects]),
   provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() })]
 };

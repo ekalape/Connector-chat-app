@@ -8,7 +8,10 @@ import { Observable, first, switchMap } from 'rxjs';
 export class AuthorizationInterceptor implements HttpInterceptor {
   constructor(private store: Store) { }
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    if (request.url.includes("profile")) { //also "groups", "conversations", "logout"
+    console.log("inside interceptor");
+    if (request.url.includes("profile") || request.url.includes("logout")
+      || request.url.includes("groups") || request.url.includes("conversations")) {
+
       return this.store.select(selectProfileHeaders)
         .pipe(first(),
           switchMap(headers => {

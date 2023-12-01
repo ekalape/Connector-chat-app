@@ -35,12 +35,14 @@ export class ProfileComponent {
 
 
 
+  idField = new FormControl({ value: '', disabled: true });
   nameField = new FormControl({ value: '', disabled: true });
   emailField = new FormControl({ value: '', disabled: true });
   creationField = new FormControl({ value: '', disabled: true });
 
   savenabled = false;
-  oldName = ""
+  oldName = "";
+  dateSeconds = "";
 
   sub: Subscription | undefined;
   errorsub: Subscription | undefined;
@@ -53,9 +55,10 @@ export class ProfileComponent {
     this.sub = this.profileData$
       .subscribe(data => {
         this.oldName = data.name;
+        this.idField.setValue(data.id)
         this.nameField.setValue(data.name);
         this.emailField.setValue(data.email);
-        this.creationField.setValue(data.createdAt)
+        this.dateSeconds = data.createdAt
       })
 
     this.errorsub = this.error$

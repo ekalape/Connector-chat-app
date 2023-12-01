@@ -1,10 +1,23 @@
-<p-menubar [model]="menuItems" class="header">
-  <ng-template pTemplate="start">
-    <a routerLink="">
-      <img src="assets/connect-logo.png" height="40" alt="logo" class="logo" /></a>
-  </ng-template>
-  <div>baba</div>
-  <ng-template pTemplate="end">
-    theme
-  </ng-template>
-</p-menubar>
+<header>
+  <a routerLink="">
+    <img src="assets/connect-logo.png" height="40" alt="logo" class="logo" />
+  </a>
+  <div class="admin-panel">
+    <a class="header__menu-item" routerLink=""
+      [class.active]="isActive('/signin')||isActive('/signup')">
+      <i class="pi pi-fw pi-home"></i>
+      <span>Home</span>
+    </a>
+    <a class="header__menu-item" routerLink="/profile" routerLinkActive="active"
+      [routerLinkActiveOptions]="{exact:
+      true}">
+      <i class="pi pi-fw pi-user"></i>
+      <span>Profile</span>
+    </a>
+    <a class="header__menu-item" (click)="logout()">
+      <i class="pi pi-fw pi-sign-out"></i>
+      <span>Log-out</span>
+    </a>
+  </div>
+  <div class="theme-switcher">theme</div>
+</header>

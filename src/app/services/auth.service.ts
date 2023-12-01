@@ -47,7 +47,6 @@ export class AuthService {
 
   }
   logout() {
-
     return this.httpClient.delete(`${BASE_URL}/logout`).pipe(catchError(err => this.handleError(err)))
   }
 

@@ -2,7 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 import { getProfileSuccessAction, setErrorAction, updateProfileSuccessAction } from '../actions/profile.action';
 
 import { IAutorizationSlice } from '../models/store.model';
-import { logInAction, logOutAction, setLoadingAction } from '../actions/auth.action';
+import { logInAction, logOutAction, logOutSuccessAction, setLoadingAction } from '../actions/auth.action';
 
 
 const initState: IAutorizationSlice = {
@@ -14,7 +14,6 @@ const initState: IAutorizationSlice = {
   token: "",
   loading: false,
   error: null
-
 }
 
 
@@ -25,18 +24,12 @@ export const profileReducer = createReducer(initState,
     token, email,
     id: uid
   })),
-  on(logOutAction, (state) => ({
-    ...state,
-    loggedIn: false,
-    token: ""
-  })),
   on(setLoadingAction, (state, { loading }) => ({
     ...state,
     loading
   })),
   on(getProfileSuccessAction,
     (state, { name, createdAt }) => {
-      console.log("inside reducer", "name:", name, "createdAt:", createdAt);
       return {
         ...state,
         name, createdAt, loading: false
@@ -50,6 +43,7 @@ export const profileReducer = createReducer(initState,
   on(setErrorAction, (state, { error }) => ({
     ...state,
     error, loading: false
-  }))
+  })),
+  on(logOutSuccessAction, (state) => initState)
 
 )

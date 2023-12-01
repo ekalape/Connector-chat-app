@@ -7,6 +7,11 @@
 
   <div class="page-content">
     <div class="profile-field">
+      <label>User ID: </label>
+      <input type="text" pInputText [formControl]="idField">
+
+    </div>
+    <div class="profile-field">
       <label>Name: </label>
       <span class="profile-field__editable">
         <input type="text" pInputText [formControl]="nameField">
@@ -19,6 +24,7 @@
     </div>
     <div class="profile-field">
       <label>Created: </label>
+      <span class="not-editable-input-text">{{dateSeconds|date}}</span>
       <input type="text" pInputText [formControl]="creationField">
     </div>
   </div>

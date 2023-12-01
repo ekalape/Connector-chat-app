@@ -6,6 +6,10 @@ import { MenuItem, MenuItemCommandEvent } from 'primeng/api';
 import { Router } from '@angular/router';
 import { Pathes } from 'app/utils/enums/pathes';
 
+import { AuthService } from 'app/services/auth.service';
+import { Store } from '@ngrx/store';
+import { logOutAction } from 'app/store/actions/auth.action';
+
 
 @Component({
   selector: 'app-header',
@@ -19,54 +23,19 @@ export class HeaderComponent {
   menuItems: MenuItem[] = [];
 
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private store: Store) {
 
   }
 
   ngOnInit() {
-    this.menuItems = [
-      {
-        label: 'Home',
-        icon: 'pi pi-fw pi-home',
-        routerLink: Pathes.HOME,
-        command: (event: MenuItemCommandEvent) => { // TODO disable on selected
-          this.router.navigate([Pathes.HOME]);
-
-        },
-        disabled: this.checkactivestate("home"),
-
-        routerLinkActiveOptions: { exact: true }
-
-      },
-      {
-        label: 'Profile',
-        icon: 'pi pi-fw pi-user',
-        routerLink: Pathes.PROFILE,
-        command: (event: MenuItemCommandEvent) => { // TODO disable on selected
-          this.router.navigate([Pathes.PROFILE])
-        },
-        disabled: this.checkactivestate("profile"),
-        routerLinkActiveOptions: { exact: true }
-      },
-      {
-        label: 'Log-out',
-        icon: 'pi pi-fw pi-sign-out',
-        //routerLink: '/profile',
-        command: (event: MenuItemCommandEvent) => {
-          console.log("logout");
-        },
-        disabled: this.checkactivestate("profile"),
-        routerLinkActiveOptions: { exact: true }
-      },
-    ]
   }
 
-  checkactivestate(givenlink: string) {
-    if (this.router.url.indexOf(givenlink) === -1) {
-      return false;
-    } else {
-      return true;
-    }
+  isActive(route: string): boolean {
+    return this.router.url === route;
+  }
+
+  logout() {
+    this.store.dispatch(logOutAction())
   }
 
 }

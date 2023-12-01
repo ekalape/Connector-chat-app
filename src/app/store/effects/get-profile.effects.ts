@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { getProfileAction, getProfileSuccessAction, setErrorAction, updateProfileAction, updateProfileSuccessAction } from '../actions/profile.action';
-import { EMPTY, catchError, map, mergeMap, of, tap, throwError, withLatestFrom } from 'rxjs';
+import { EMPTY, catchError, map, mergeMap, withLatestFrom } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { selectProfileHeaders } from '../selectors/profile.selectors';
 import { HttpService } from 'app/services/http-service.service';
 import { IProfileResponse } from 'app/models/http-responses.model';
 import { setLoadingAction } from '../actions/auth.action';
-import { IHttpError } from 'app/models/auth.model';
-import { selectLoadingState, selectLoggedIn } from '../selectors/auth.selectors';
+import { selectLoggedIn } from '../selectors/auth.selectors';
 
 
 
