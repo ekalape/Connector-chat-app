@@ -63,13 +63,9 @@ export class AuthComponent {
           this.store.dispatch(getProfileAction());
           setTimeout(() => {          // because navigating too fast and success toast is not visible
             console.log("inside timeout");
-            this.router.navigate([Pathes.PROFILE]);
-          }, 1500)
+            this.router.navigate([Pathes.HOME]);
+          }, 800)
         }
-        /* if (x.action === authActions.REG)
-          setTimeout(() => {
-            this.router.navigate([Pathes.SIGN_IN])
-          }, 15000) */
       }
       else if (x.action && !x.success) {
         this.showError(x.message)
