@@ -54,7 +54,7 @@ export class AuthComponent {
   }
 
   ngOnInit() {
-    this.sub = this.data.subscribe(x => console.log("store data -->", x))
+
     this.datasub = this.dataExchange.successful.subscribe(x => {
       if (x.action && x.success) {
         console.log("dataExchange on success", x);

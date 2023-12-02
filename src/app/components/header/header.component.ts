@@ -36,6 +36,7 @@ export class HeaderComponent {
 
   logout() {
     this.store.dispatch(logOutAction())
+    this.router.navigate([Pathes.SIGN_IN])
   }
 
 }

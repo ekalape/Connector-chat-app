@@ -11,8 +11,10 @@ import { reducers } from './store';
 import { GetProfileEffects } from './store/effects/get-profile.effects';
 import { AuthorizationInterceptor } from './interceptors/authorization.interceptor';
 import { LogoutEffects } from './store/effects/logout.effect';
+import { LstorageSaveInterceptor } from './interceptors/lstorage-save.interceptor';
 
-export const httpInterceptorProviders = [{ provide: HTTP_INTERCEPTORS, useClass: AuthorizationInterceptor, multi: true }]
+export const httpInterceptorProviders = [{ provide: HTTP_INTERCEPTORS, useClass: AuthorizationInterceptor, multi: true },
+{ provide: HTTP_INTERCEPTORS, useClass: LstorageSaveInterceptor, multi: true }]
 
 export const appConfig: ApplicationConfig = {
   providers: [provideRouter(routes),
