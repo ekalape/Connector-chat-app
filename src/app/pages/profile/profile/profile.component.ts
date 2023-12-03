@@ -6,11 +6,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { Location } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { setErrorAction, updateProfileAction } from 'app/store/actions/profile.action';
+import { Subscription, map, tap } from 'rxjs';
+import { getProfileAction, setErrorAction, updateProfileAction } from 'app/store/actions/profile.action';
 import { selectLoadingState } from 'app/store/selectors/auth.selectors';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { StorageKeys } from 'app/utils/enums/local-storage-keys';
+import { IStorageInfo } from 'app/models/auth.model';
 
 
 
@@ -50,15 +52,28 @@ export class ProfileComponent {
     private messageService: MessageService,) { }
 
   ngOnInit() {
+    let profile;
+    const storagedData = localStorage.getItem(StorageKeys.LOGIN_KEY);
+    if (storagedData) {
+      profile = JSON.parse(storagedData) as IStorageInfo;
+      this.idField.setValue(profile.uid);
+      this.emailField.setValue(profile.email);
+    }
+
 
     this.sub = this.profileData$
       .subscribe(data => {
         this.oldName = data.name;
-        this.idField.setValue(data.id)
         this.nameField.setValue(data.name);
-        this.emailField.setValue(data.email);
-        this.dateSeconds = data.createdAt
+        this.dateSeconds = data.createdAt;
+
       })
+
+    if (!this.nameField.value) {
+      console.log("---name is missing make request---");
+
+      this.store.dispatch(getProfileAction())
+    }
 
     this.errorsub = this.error$
       .subscribe(x => {

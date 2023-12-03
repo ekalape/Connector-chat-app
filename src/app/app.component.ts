@@ -17,11 +17,11 @@ export class AppComponent {
   title = 'connector app';
 
   ngOnInit() {
-    window.addEventListener('beforeunload', this.clearLocalStorage);
+    // window.addEventListener('beforeunload', this.clearLocalStorage);
   }
 
   ngOnDestroy() {
-    window.removeEventListener('beforeunload', this.clearLocalStorage);
+    //window.removeEventListener('beforeunload', this.clearLocalStorage);
   }
 
   clearLocalStorage() {
