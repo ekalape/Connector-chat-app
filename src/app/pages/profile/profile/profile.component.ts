@@ -6,13 +6,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { Location } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Observable, Subscription, map, take, tap } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { setErrorAction, updateProfileAction } from 'app/store/actions/profile.action';
 import { selectLoadingState } from 'app/store/selectors/auth.selectors';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { IHttpError } from 'app/models/auth.model';
-import { HttpErrorResponse } from '@angular/common/http';
+
 
 
 @Component({

@@ -1,0 +1,8 @@
+<ng-container>
+  <p-button icon="pi pi-arrow-left" [rounded]="true" [text]="true" (click)="goBack()"
+    *ngIf="kind.includes('private')"></p-button>
+  <h2><ng-content></ng-content></h2>
+  <p-button label="Update" [raised]="true" [text]="true" (click)="update()"></p-button>
+  <p-button icon="pi pi-plus" [rounded]="true" [text]="true" (click)="add()"
+    *ngIf="kind==='groups'"></p-button>
+</ng-container>

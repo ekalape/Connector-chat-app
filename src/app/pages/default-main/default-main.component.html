@@ -1,7 +1,11 @@
 <div class="list-container groups">
-  <div class="chat-container">
-    <app-message></app-message>
+  <app-title-controls [kind]="titleKinds.GROUPS" (updateContent)="updateContent($event)"
+    (addGroup)="addGroup()">Groups</app-title-controls>
+  <div class="groups__container">
+    <app-group-card></app-group-card>
   </div>
 
 </div>
-<div class="list-container people">groups</div>
+<div class="list-container people">
+  <app-title-controls (updateContent)="updateContent($event)">People</app-title-controls>
+</div>

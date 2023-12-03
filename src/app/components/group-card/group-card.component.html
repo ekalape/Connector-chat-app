@@ -1,0 +1,5 @@
+<div class="group-container" [ngClass]="mine?'mine':''" (click)="onClick()">
+  <p class="group-name">Group name</p>
+  <p-button icon="pi pi-times" [rounded]="true" [text]="true" (click)="deleteGroup()"
+    *ngIf="mine"></p-button>
+</div>

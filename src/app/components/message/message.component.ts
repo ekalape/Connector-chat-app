@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { PanelModule } from 'primeng/panel';
@@ -13,9 +13,9 @@ import { IMessages, ISingleMessage } from 'app/models/conversations.model';
 })
 export class MessageComponent {
 
-  others = true;
+  mine = true;
 
-  messageData: ISingleMessage | undefined;
+  @Input() messageData: ISingleMessage | undefined;
 
   ngOnInit() {
     this.messageData = {
