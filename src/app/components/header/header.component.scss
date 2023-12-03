@@ -1,3 +1,5 @@
+@import "assets/style-variables.scss";
+
 header {
   display: flex;
   width: 100vw;
@@ -8,27 +10,27 @@ header {
   right: 0;
   justify-content: space-around;
   align-items: center;
-  background-color: rgb(224, 224, 224);
+  background-color: $lighter-gray;
 
   .header__menu-item {
     display: flex;
     align-items: center;
     width: 100px;
     gap: 0.4rem;
-    color: rgb(90, 90, 90);
+    color: $darker-gray;
     text-decoration: none;
     transition: 0.1s;
     font-weight: 500;
 
     &:hover {
       cursor: pointer;
-      color: black;
+      color: $black;
 
       // text-decoration: underline;
     }
 
     &.active {
-      color: #449e48;
+      color: $primary_green;
       text-decoration: underline;
     }
   }

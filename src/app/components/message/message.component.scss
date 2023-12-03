@@ -1,0 +1,65 @@
+@import "assets/style-variables.scss";
+
+@mixin title {
+  position: absolute;
+  width: fit-content;
+  padding: 0.5rem;
+  background-color: $white;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: -20px;
+  border: 1px solid $medium-gray;
+  z-index: 2;
+  font-style: italic;
+  @media (max-width: 1000px) {
+    padding: 0.2rem;
+    top: -15px;
+  }
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  width: 80%;
+  min-width: 40%;
+  background-color: $lighter-gray;
+  position: relative;
+  padding: 1.5rem 1rem 1rem 1rem;
+  z-index: 1;
+  box-shadow: 1px 1px 4px $medium-gray;
+  border-radius: 4px;
+  margin-left: auto;
+
+  &__name-title {
+    @include title;
+    left: 10px;
+    padding: 0.5rem 1rem;
+    & span {
+      font-weight: bold;
+      padding-left: 5px;
+    }
+  }
+  &__date-title {
+    @include title;
+    right: 10px;
+    top: -18px;
+    font-size: 0.8rem;
+    font-style: italic;
+    @media (max-width: 1000px) {
+      left: 10px;
+      top: 16px;
+    }
+  }
+  @media (max-width: 1000px) {
+    padding-top: 3rem;
+  }
+}
+
+.others {
+  background-color: $light-gray;
+  margin-left: 0;
+  align-items: start;
+}

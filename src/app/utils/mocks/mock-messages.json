@@ -1,0 +1,38 @@
+{
+  "Count": 3,
+  "Items": [
+    {
+      "authorID": {
+        "S": "usdh45sother"
+      },
+      "message": {
+        "S": "Hello user!"
+      },
+      "createdAt": {
+        "S": "1701534031539"
+      }
+    },
+    {
+      "authorID": {
+        "S": "memyself"
+      },
+      "message": {
+        "S": "Goodday"
+      },
+      "createdAt": {
+        "S": "1701534041600"
+      }
+    },
+    {
+      "authorID": {
+        "S": "0sedhed7other"
+      },
+      "message": {
+        "S": "Hello user!"
+      },
+      "createdAt": {
+        "S": "1701534041828"
+      }
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+<div class="message" [ngClass]="others?'others':''">
+  <div class="message__name-title">From: <span> {{messageData?.authorID}}</span></div>
+  <div class="message__date-title">{{messageData?.createdAt|date}}</div>
+  {{messageData?.message}}
+</div>

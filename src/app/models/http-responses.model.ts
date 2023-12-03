@@ -1,15 +1,15 @@
 export interface IProfileResponse {
-  "email": {
-    "S": "string"
+  email: {
+    S: string
   },
-  "name": {
-    "S": "string"
+  name: {
+    S: string
   },
-  "uid": {
-    "S": "string"
+  uid: {
+    S: string
   },
-  "createdAt": {
-    "S": "string" // unix timestamp in milliseconds
+  createdAt: {
+    S: string // unix timestamp in milliseconds
   }
 }
 export interface ILoginResponse {

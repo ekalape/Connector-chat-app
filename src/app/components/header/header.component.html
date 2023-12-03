@@ -3,14 +3,12 @@
     <img src="assets/connect-logo.png" height="40" alt="logo" class="logo" />
   </a>
   <div class="admin-panel">
-    <a class="header__menu-item" routerLink=""
-      [class.active]="isActive('/signin')||isActive('/signup')">
+    <a class="header__menu-item" routerLink="" [class.active]="isActive()">
       <i class="pi pi-fw pi-home"></i>
       <span>Home</span>
     </a>
     <a class="header__menu-item" routerLink="/profile" routerLinkActive="active"
-      [routerLinkActiveOptions]="{exact:
-      true}">
+      [routerLinkActiveOptions]="{exact:true}">
       <i class="pi pi-fw pi-user"></i>
       <span>Profile</span>
     </a>

@@ -22,7 +22,6 @@ export class HeaderComponent {
 
   menuItems: MenuItem[] = [];
 
-
   constructor(private router: Router, private store: Store) {
 
   }
@@ -30,8 +29,9 @@ export class HeaderComponent {
   ngOnInit() {
   }
 
-  isActive(route: string): boolean {
-    return this.router.url === route;
+  isActive(): boolean {
+    const routes = ["/signin", "/signup", "group", "conversation", "/"]
+    return routes.some(r => this.router.url === r)
   }
 
   logout() {

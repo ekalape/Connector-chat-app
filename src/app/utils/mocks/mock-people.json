@@ -1,0 +1,37 @@
+{
+  "Count": 3,
+  "Items": [
+    {
+      "name": {
+        "S": "first"
+      },
+      "uid": {
+        "S": "other"
+      }
+    },
+    {
+      "name": {
+        "S": "second"
+      },
+      "uid": {
+        "S": "usdh45sother"
+      }
+    },
+    {
+      "name": {
+        "S": "third"
+      },
+      "uid": {
+        "S": "xtd6other"
+      }
+    },
+    {
+      "name": {
+        "S": "me"
+      },
+      "uid": {
+        "S": "memyself"
+      }
+    }
+  ]
+}
