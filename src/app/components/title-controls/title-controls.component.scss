@@ -1,6 +1,15 @@
+@import "assets/style-variables.scss";
+
 :host {
   display: flex;
   align-items: center;
   justify-content: space-around;
+  gap: 2rem;
   padding: 0 1rem;
+  color: $primary_green;
+  & a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  }
 }

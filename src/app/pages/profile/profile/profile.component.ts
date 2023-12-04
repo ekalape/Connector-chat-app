@@ -71,7 +71,6 @@ export class ProfileComponent {
 
     if (!this.nameField.value) {
       console.log("---name is missing make request---");
-
       this.store.dispatch(getProfileAction())
     }
 

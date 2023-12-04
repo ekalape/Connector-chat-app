@@ -57,12 +57,10 @@ export class AuthComponent {
 
     this.datasub = this.dataExchange.successful.subscribe(x => {
       if (x.action && x.success) {
-        console.log("dataExchange on success", x);
         this.showSuccess(x.message);
         if (x.action === authActions.LOGIN) {
           this.store.dispatch(getProfileAction());
           setTimeout(() => {          // because navigating too fast and success toast is not visible
-            console.log("inside timeout");
             this.router.navigate([Pathes.HOME]);
           }, 800)
         }
@@ -85,7 +83,6 @@ export class AuthComponent {
   }
 
   showSuccess(message: string | undefined) {
-    console.log("inside show success message");
     this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: message || 'Thank you!' });
   }
   showError(errorMessage: string | undefined) {

@@ -2,9 +2,8 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpHeaders } fro
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStorageInfo } from 'app/models/auth.model';
-import { selectProfileHeaders } from 'app/store/selectors/profile.selectors';
 import { StorageKeys } from 'app/utils/enums/local-storage-keys';
-import { Observable, first, switchMap } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class AuthorizationInterceptor implements HttpInterceptor {
@@ -17,7 +16,6 @@ export class AuthorizationInterceptor implements HttpInterceptor {
       const storageData = localStorage.getItem(StorageKeys.LOGIN_KEY)
       if (storageData) {
         headersData = JSON.parse(storageData) as IStorageInfo;
-        console.log('headersData inside auth interceptor :>> ', headersData);
         const finalizedReq = request.clone(
           {
             headers: new HttpHeaders({
@@ -31,7 +29,6 @@ export class AuthorizationInterceptor implements HttpInterceptor {
         );
         return next.handle(finalizedReq);
       }
-      console.log("---------------------adress not corrisponding selected");
       return next.handle(request)
       /*       return this.store.select(selectProfileHeaders)
               .pipe(first(),

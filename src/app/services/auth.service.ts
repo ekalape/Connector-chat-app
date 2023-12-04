@@ -25,7 +25,6 @@ export class AuthService {
       password
     }, httpOptions)
       .pipe(
-        tap(res => console.log('inside tap :>> ', res)),
         catchError(this.handleError)
       )
 
@@ -33,7 +32,6 @@ export class AuthService {
 
 
   register(name: string, email: string, password: string) {
-    console.log("inside service");
     return this.httpClient.post(`${BASE_URL}/registration`,
       { email, name, password },
       {
@@ -42,7 +40,6 @@ export class AuthService {
         })
       }
     ).pipe(
-      tap(res => console.log("get on register response -->", res)),
       catchError(err => this.handleError(err)))
 
   }
@@ -52,9 +49,6 @@ export class AuthService {
 
 
   private handleError(error: HttpErrorResponse) {
-    console.log('error status:>> ', error.status);
-    console.log('error all:>> ', error);
-
     return of({ type: error.error.type, message: error.error.message })
     //throwError(() => new Error(error.message))
 

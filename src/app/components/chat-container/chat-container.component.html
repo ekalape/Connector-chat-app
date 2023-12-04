@@ -1,0 +1,7 @@
+<div class="chat-container">
+  <ng-content></ng-content>
+</div>
+<form class="input-block" (ngSubmit)="sendMessage()">
+  <input type="text" pInputText [formControl]="messageInput" />
+  <p-button icon="pi pi-comment" type="submit"></p-button>
+</form>

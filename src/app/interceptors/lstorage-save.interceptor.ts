@@ -14,16 +14,12 @@ export class LstorageSaveInterceptor implements HttpInterceptor {
   constructor(private store: Store) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    console.log("inside response interceptor ");
-    console.log('request.url :>> ', request.url);
     if (request.url.includes("login")) {
       return next.handle(request).pipe(
         map((event) => {
           if (event.type === HttpEventType.Response) {
             const resp = event.body;
             if ("token" in resp) {
-              console.log('resp :>> ', resp);
-              console.log('request :>> ', request);
               const authInfo = JSON.stringify({ uid: resp.uid, token: resp.token, email: (request.body as ISigninRequest).email })
               localStorage.setItem(StorageKeys.LOGIN_KEY, authInfo)
             }
@@ -36,7 +32,6 @@ export class LstorageSaveInterceptor implements HttpInterceptor {
       return next.handle(request).pipe(
         map((event) => {
           if (event.type === HttpEventType.Response) {
-            console.log('event on logout:>> ', event);
             localStorage.removeItem(StorageKeys.LOGIN_KEY)
           }
           return event

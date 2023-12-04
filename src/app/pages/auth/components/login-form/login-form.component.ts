@@ -56,12 +56,10 @@ export class LoginFormComponent {
   }
 
   onSubmit() {
-    console.log('form :>> ', this.loginForm.value);
     this.store.dispatch(setLoadingAction({ loading: true }))
     this.authService.login(this.email.value, this.password.value)
       .pipe(take(1))
       .subscribe(res => {
-        console.log("res-->", res);
         if (res && "token" in res) {
           this.store.dispatch(logInAction({ token: res.token, uid: res.uid, email: this.email.value }));
           this.dataExchange.setSuccess("You are logged now!", authActions.LOGIN);

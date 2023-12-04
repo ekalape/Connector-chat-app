@@ -5,11 +5,12 @@ import { ButtonModule } from 'primeng/button';
 import { Store } from '@ngrx/store';
 import { selectProfileData } from 'app/store/selectors/profile.selectors';
 import { map, take } from 'rxjs';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-group-card',
   standalone: true,
-  imports: [CommonModule, ButtonModule],
+  imports: [CommonModule, ButtonModule, RouterModule],
   templateUrl: './group-card.component.html',
   styleUrl: './group-card.component.scss'
 })
@@ -17,7 +18,6 @@ export class GroupCardComponent {
 
   @Input() groupData: ISingleGroup | undefined;
 
-  @Output() clickGroup = new EventEmitter()
 
   mine: boolean = false;
 
@@ -25,16 +25,12 @@ export class GroupCardComponent {
   }
 
   ngOnInit() {
-    /*     this.store.select(selectProfileData).pipe(
-          take(1),
-          map(x=>{if(x.id===this.groupData?.id) this.mine=true;})) */
+    console.log('object :>> ', this.groupData, "mine? ", this.mine);
   }
 
   deleteGroup() {
     console.log("delete group", this.groupData?.id);
   }
 
-  onClick() {
-    this.clickGroup.emit(this.groupData?.id)
-  }
+
 }

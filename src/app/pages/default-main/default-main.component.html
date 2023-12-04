@@ -1,8 +1,8 @@
 <div class="list-container groups">
   <app-title-controls [kind]="titleKinds.GROUPS" (updateContent)="updateContent($event)"
     (addGroup)="addGroup()">Groups</app-title-controls>
-  <div class="groups__container">
-    <app-group-card></app-group-card>
+  <div class="groups__container" *ngIf="allGroups|async as groups">
+    <app-group-card *ngFor="let gr of groups" [groupData]="gr"></app-group-card>
   </div>
 
 </div>

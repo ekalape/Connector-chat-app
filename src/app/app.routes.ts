@@ -21,7 +21,12 @@ export const routes: Routes = [
       [
         { path: "", component: LoginFormComponent }]
   },
-  { path: "", component: DefaultMainComponent/* , canActivate: [authGuard] */ },
+  {
+    path: "group/:groupId", component: GroupComponent
+  },
+  {
+    path: "", component: DefaultMainComponent/* , canActivate: [authGuard] */
+  },
   { path: "**", component: NotFoundComponent }
 
 ];

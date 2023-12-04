@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 })
 export class HttpService {
 
-  constructor(private httpClient: HttpClient, private store: Store) {
+  constructor(private httpClient: HttpClient) {
   }
 
   getProfile(): Observable<IProfileResponse> {

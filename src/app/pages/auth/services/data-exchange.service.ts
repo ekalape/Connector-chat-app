@@ -17,7 +17,6 @@ export class DataExchangeService {
     this.successful.next({ action, success: true, message })
   }
   setFail(message: string, action: string) {
-    console.log("inside dataExchange, message: ", message);
     this.successful.next({ action, success: false, message })
   }
 

@@ -17,13 +17,9 @@ export const authGuard: CanActivateFn = async () => {
   console.log('isLogged :>> ', isLogged);
 
   if (isLogged) {
-    console.log("[auth] -- Logged, return true");
-
     return true;
   }
   else {
-    console.log("[auth] -- Not Logged, return false");
-
     router.navigate([Pathes.SIGN_IN])
     return false;
   }
