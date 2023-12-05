@@ -12,4 +12,9 @@
     align-items: center;
     text-decoration: none;
   }
+  & ::ng-deep .update-btn {
+    width: 100px;
+    display: flex;
+    justify-content: center;
+  }
 }

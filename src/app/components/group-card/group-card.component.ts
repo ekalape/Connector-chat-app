@@ -35,7 +35,6 @@ export class GroupCardComponent {
   }
 
   delete(event: Event) {
-    console.log('event :>> ', event);
     if (this.groupData?.id) {
       event.preventDefault();
       this.deleteGroup.emit(this.groupData.id)

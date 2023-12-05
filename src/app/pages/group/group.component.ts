@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TitleControlsComponent } from 'app/components/title-controls/title-controls.component';
 import { titleKinds } from 'app/utils/enums/title-controls';
-import { ISingleGroup, ISingleMessage } from 'app/models/conversations.model';
+import { IGroupMessage, ISingleGroup, ISingleMessage } from 'app/models/conversations.model';
 import { Store } from '@ngrx/store';
 import { selectGroupMessages, selectSingleGroup } from 'app/store/selectors/group.selectors';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { ChatContainerComponent } from 'app/components/chat-container/chat-container.component';
-import { getGroupMessages } from 'app/store/actions/group.action';
+import { getGroupMessages, sendGroupMessages } from 'app/store/actions/group.action';
 import { MessageComponent } from 'app/components/message/message.component';
 
 @Component({
@@ -20,11 +20,11 @@ import { MessageComponent } from 'app/components/message/message.component';
 })
 export class GroupComponent {
 
-  groupId: string | null = "";
+  groupId: string | null;
   titleKinds = titleKinds;
 
   groupData: Observable<ISingleGroup | undefined> | undefined;
-  groupMessages = this.store.select(selectGroupMessages(this.groupId))
+  groupMessages: Observable<ISingleMessage[]> | undefined;
 
   constructor(private route: ActivatedRoute, private store: Store) {
     this.groupId = this.route.snapshot.paramMap.get('groupId');
@@ -32,21 +32,25 @@ export class GroupComponent {
 
   ngOnInit() {
     console.log('groupId :>> ', this.groupId);
-    if (this.groupId)
+    if (this.groupId) {
       this.groupData = this.store.select(selectSingleGroup(this.groupId));
-    //this.groupMessages
+      this.groupMessages = this.store.select(selectGroupMessages(this.groupId)).pipe(tap((res) => console.log("inside group component", res)))
+
+    }
     console.log("messages ", this.groupMessages);
 
-  }
-  updateGroupMessages(event: string) {
-    console.log('event :>> ', event);
 
+  }
+  updateGroupMessages() {
     if (this.groupId)
       this.store.dispatch(getGroupMessages({ groupId: this.groupId }))
   }
 
   sendMessage(message: string) {
-    console.log('message :>> ', message);
+    if (this.groupId && message.trim()) {
+      this.store.dispatch(sendGroupMessages({ groupId: this.groupId, message }))
+      console.log('message :>> ', message);
+    }
 
   }
 

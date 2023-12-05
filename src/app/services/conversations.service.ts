@@ -26,10 +26,15 @@ export class ConversationsService {
   }
 
   getMessages(groupId: string, since?: number) {
-    const params = new HttpParams().set("groupID", groupId);
+    let params = new HttpParams().set("groupID", groupId);
     if (since)
-      params.append("since", since);
+      params = params.append("since", since);
+    console.log('params :>> ', params);
     return this.httpClient.get<IMessages>(`${BASE_URL}/groups/read`, { params })
+  }
+
+  sendGroupMessage(groupID: string, message: string) {
+    return this.httpClient.post(`${BASE_URL}/groups/append`, { groupID, message })
   }
 
 }

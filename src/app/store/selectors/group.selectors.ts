@@ -18,7 +18,7 @@ export const selectSingleGroup = (groupId: string) =>
 
 export const selectGroupMessages = (groupId: string | null) =>
   createSelector(selectAllGroupMessages, (data) => {
-
+    console.log('groupId inside selector:>> ', groupId);
     if (groupId) {
       const storedMessages = data.find(d =>
         d.groupId === groupId)?.messages;

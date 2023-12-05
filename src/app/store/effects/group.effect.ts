@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { withLatestFrom, mergeMap, map, catchError, EMPTY, switchMap, of, concatMap, tap, throwError } from 'rxjs';
 
-import { addNewGroup, addNewGroupSuccess, deleteGroup, deleteGroupSuccess, getAllGroups, getAllGroupsSuccess, getGroupMessages, getGroupMessagesSuccess } from '../actions/group.action';
+import { addNewGroup, addNewGroupSuccess, deleteGroup, deleteGroupSuccess, getAllGroups, getAllGroupsSuccess, getGroupMessages, getGroupMessagesSuccess, sendGroupMessages, sendGroupMessagesSuccess } from '../actions/group.action';
 import { ConversationsService } from 'app/services/conversations.service';
 import { IGroupResponce, IGroups, ISingleGroup } from 'app/models/conversations.model';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -93,6 +93,30 @@ export class GroupsEffects {
     )
   )
 
+  loadSendGroupMessage$ = createEffect(() => this.actions$
+    .pipe(
+      ofType(sendGroupMessages),
+      withLatestFrom(this.store.select(selectMyID)),
+      switchMap(([action, mydata]) => {
+        console.log('inside send message effect :>> message: ', action.message, "my ID: ", mydata.id);
+        return this.service.sendGroupMessage(action.groupId, action.message).pipe(
+          map(() => sendGroupMessagesSuccess({
+            groupId: action.groupId, message: {
+              authorID: mydata.id,
+              message: action.message,
+              createdAt: Date.now() + ""
+            }
+          })),
+          catchError((err) => {
+            console.log("err --> ", err);
+            this.handleError(err);
+            return EMPTY;
+          })
+        )
+      })
+
+    ))
+
 
   loadGroupMessages$ = createEffect(() => this.actions$
     .pipe(
@@ -106,12 +130,12 @@ export class GroupsEffects {
 
         let lastMessageDate: string | undefined;
         if (storedMessages) {
-          storedMessages.sort((a, b) => Number(a.createdAt) - Number(b.createdAt));
-          lastMessageDate = storedMessages[storedMessages.length - 1]?.createdAt;
+          const sortedMessages = [...storedMessages].sort((a, b) => Number(a.createdAt) - Number(b.createdAt));
+          lastMessageDate = sortedMessages[sortedMessages.length - 1]?.createdAt;
         }
 
         console.log('lastMessageDate :>> ', lastMessageDate);
-        return this.service.getMessages(action.groupId, Number(lastMessageDate)).pipe(
+        return this.service.getMessages(action.groupId, Number(lastMessageDate) + 1).pipe(
           tap(res => { console.log('inside tap, res--> :>> ', res); }),
           map(res => res.Items.map(x => ({
             authorID: x.authorID.S,

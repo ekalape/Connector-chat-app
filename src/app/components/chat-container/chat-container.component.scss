@@ -1,3 +1,5 @@
+@import "assets/style-variables.scss";
+
 :host {
   width: 80%;
   display: flex;
@@ -13,9 +15,10 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  gap: 1rem;
   align-items: center;
-  border: 1px solid red;
-  padding: 1rem;
+  box-shadow: inset 1px 1px 4px $medium-gray;
+  padding: 2.5rem 1rem 1rem 1rem;
   overflow-y: auto;
 }
 

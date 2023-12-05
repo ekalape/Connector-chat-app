@@ -29,6 +29,11 @@ export interface IGroupResponce {
   groupID: string
 }
 
+export interface IGroupMessage {
+  groupID: string,
+  message: string
+}
+
 
 export interface IMessages {
   Count: number,
