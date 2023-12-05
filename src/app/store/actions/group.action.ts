@@ -4,7 +4,7 @@ import { ISingleGroup, ISingleMessage } from 'app/models/conversations.model';
 
 
 
-export const addNewGroup = createAction("[group] Add Group", props<Partial<ISingleGroup>>())
+export const addNewGroup = createAction("[group] Add Group", props<{ groupName: string }>())
 export const addNewGroupSuccess = createAction("[group] Add Group Success", props<{ group: ISingleGroup }>());
 
 
@@ -17,3 +17,6 @@ export const getAllGroupsSuccess = createAction("[group] Get All Groups Success"
 export const getGroupMessages = createAction("[group] Get Group Messages", props<{ groupId: string }>());
 export const getGroupMessagesSuccess = createAction("[group] Get Group Messages Success", props<{ groupId: string, messages: ISingleMessage[] }>());
 
+
+export const deleteGroup = createAction("[group] Delete Group", props<{ groupId: string }>())
+export const deleteGroupSuccess = createAction("[group] Delete Group Success", props<{ groupId: string }>());

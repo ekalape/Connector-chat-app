@@ -1,9 +1,19 @@
 @import "assets/style-variables.scss";
 
+:host {
+  position: relative;
+  & ::ng-deep .p-button {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+  }
+}
+
 .group-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   gap: 2rem;
   width: 100%;
   background-color: $lighter-gray;
@@ -21,6 +31,5 @@
 
 .mine {
   background-color: $light-gray;
-
   font-weight: 500;
 }

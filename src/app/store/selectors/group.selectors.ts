@@ -16,5 +16,13 @@ export const selectSingleGroup = (groupId: string) =>
   createSelector(selectGroups, (data) => data.find(gr => gr.id === groupId))
 
 
-export const selectGroupMessages = (groupId: string) =>
-  createSelector(selectAllGroupMessages, (data) => data.find(d => d.groupId === groupId)?.messages.sort((a, b) => Number(a.createdAt) - Number(b.createdAt)))
+export const selectGroupMessages = (groupId: string | null) =>
+  createSelector(selectAllGroupMessages, (data) => {
+
+    if (groupId) {
+      const storedMessages = data.find(d =>
+        d.groupId === groupId)?.messages;
+      return storedMessages ? storedMessages : []
+    }
+    else return []
+  })

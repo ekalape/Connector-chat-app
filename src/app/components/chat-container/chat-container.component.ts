@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -14,10 +14,14 @@ import { InputTextModule } from 'primeng/inputtext';
 export class ChatContainerComponent {
 
   messageInput = new FormControl("");
+  @Output() sendEvent = new EventEmitter<string>()
+
 
   sendMessage() {
-    console.log('message :>> ', this.messageInput.value);
-    this.messageInput.reset()
+    if (this.messageInput.value?.trim()) {
+      this.sendEvent.emit(this.messageInput.value)
+      this.messageInput.reset()
+    }
   }
 
 }

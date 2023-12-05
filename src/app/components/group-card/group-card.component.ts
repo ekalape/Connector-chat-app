@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ISingleGroup } from 'app/models/conversations.model';
 import { ButtonModule } from 'primeng/button';
 import { Store } from '@ngrx/store';
-import { selectProfileData } from 'app/store/selectors/profile.selectors';
-import { map, take } from 'rxjs';
+import { selectMyID, selectProfileData } from 'app/store/selectors/profile.selectors';
+import { Subscription, map, take } from 'rxjs';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -18,18 +18,33 @@ export class GroupCardComponent {
 
   @Input() groupData: ISingleGroup | undefined;
 
+  @Output() deleteGroup = new EventEmitter<string>()
+
 
   mine: boolean = false;
+  myData = this.store.select(selectMyID);
+  sub: Subscription | undefined
 
   constructor(private store: Store) {
   }
 
   ngOnInit() {
-    console.log('object :>> ', this.groupData, "mine? ", this.mine);
+    this.sub = this.myData.subscribe(data => {
+      if (data.id === this.groupData?.createdBy) this.mine = true;
+    })
   }
 
-  deleteGroup() {
-    console.log("delete group", this.groupData?.id);
+  delete(event: Event) {
+    console.log('event :>> ', event);
+    if (this.groupData?.id) {
+      event.preventDefault();
+      this.deleteGroup.emit(this.groupData.id)
+      console.log("delete group", this.groupData?.id);
+    }
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe()
   }
 
 

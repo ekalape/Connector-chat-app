@@ -2,10 +2,31 @@
   <app-title-controls [kind]="titleKinds.GROUPS" (updateContent)="updateContent($event)"
     (addGroup)="addGroup()">Groups</app-title-controls>
   <div class="groups__container" *ngIf="allGroups|async as groups">
-    <app-group-card *ngFor="let gr of groups" [groupData]="gr"></app-group-card>
+    <app-group-card *ngFor="let gr of groups" [groupData]="gr"
+      (deleteGroup)="deleteGroup($event)"></app-group-card>
   </div>
 
 </div>
 <div class="list-container people">
   <app-title-controls (updateContent)="updateContent($event)">People</app-title-controls>
 </div>
+
+<p-dialog header="Enter group name:" [(visible)]="openDialog" [modal]="true"
+  [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+  <div class="new-group-dialog-content">
+    <input type="text" pInputText [formControl]="groupName">
+
+    <p-button (click)="confirmGroupCreation()" label="Create"
+      [disabled]="!groupName.valid"></p-button>
+    <p-button label="Cancel" (click)="cancelGroupCreation()"></p-button>
+  </div>
+  <span class="errors-container"
+    *ngIf="(groupName.touched || groupName.dirty) && groupName.errors?.['required']">Name
+    is
+    required</span>
+  <span class="errors-container"
+    *ngIf="(groupName.touched || groupName.dirty) && groupName.errors?.['maxlength']">Maximum
+    30 letters</span>
+</p-dialog>
+
+<!-- *ngIf="(groupName.touched || groupName.dirty) && groupName.errors" -->

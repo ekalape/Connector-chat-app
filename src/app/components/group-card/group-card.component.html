@@ -1,6 +1,6 @@
-<a class="group-container" [ngClass]="mine?'mine':''"
+<a class="group-container" [ngClass]="mine ?'mine':''"
   [routerLink]="['/group', groupData?.id]">
   <p class="group-name">{{groupData?.name}}</p>
-  <p-button icon="pi pi-times" [rounded]="true" [text]="true" (click)="deleteGroup()"
-    *ngIf="mine"></p-button>
 </a>
+<p-button icon="pi pi-times" [rounded]="true" [text]="true" (click)="delete($event)"
+  *ngIf="mine"></p-button>

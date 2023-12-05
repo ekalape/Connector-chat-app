@@ -4,6 +4,8 @@ import { RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { HeaderComponent } from './components/header/header.component';
 import { StorageKeys } from './utils/enums/local-storage-keys';
+import { Store } from '@ngrx/store';
+import { logInAction } from './store/actions/auth.action';
 
 
 @Component({
@@ -16,8 +18,15 @@ import { StorageKeys } from './utils/enums/local-storage-keys';
 export class AppComponent {
   title = 'connector app';
 
+  constructor(private store: Store) { }
+
   ngOnInit() {
     // window.addEventListener('beforeunload', this.clearLocalStorage);
+    const personalData = localStorage.getItem(StorageKeys.LOGIN_KEY);
+    if (personalData) {
+      const { token, email, uid } = JSON.parse(personalData)
+      this.store.dispatch(logInAction({ token, email, uid }))
+    }
   }
 
   ngOnDestroy() {

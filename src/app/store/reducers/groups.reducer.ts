@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 
-import { addNewGroupSuccess, getAllGroups, getAllGroupsSuccess, getGroupMessagesSuccess } from '../actions/group.action';
+import { addNewGroupSuccess, deleteGroupSuccess, getAllGroups, getAllGroupsSuccess, getGroupMessagesSuccess } from '../actions/group.action';
 import { ISingleGroup } from 'app/models/conversations.model';
 import { IGroupsMessagesState } from '../models/store.model';
 /* import { GroupsActions } from './groups.actions'; */
@@ -25,10 +25,15 @@ export const groupsReducer = createReducer(
     //add logic to check if there some deleted group, that I still have messages history in the store
     return groups;
   }),
-  on(addNewGroupSuccess, (state, { group }) => ({
+  on(addNewGroupSuccess, (state, { group }) => ([
     ...state,
     group
-  }))
+  ])),
+  on(deleteGroupSuccess, (state, { groupId }) => {
+    return [
+      ...state.filter(d => d.id !== groupId)
+    ]
+  })
 );
 
 export const groupMessagesReducer = createReducer(
@@ -36,10 +41,10 @@ export const groupMessagesReducer = createReducer(
   on(getGroupMessagesSuccess, (state, { groupId, messages }) => {
     const group = state.find(d => d.groupId === groupId)
     if (group) {
-      group.messages = [...group.messages, ...messages]
-      return { ...state, group }
+      //group.messages = [...group.messages, ...messages]
+      return [...state, { ...group, messages: [...group.messages, ...messages] }]
     }
-    else return { ...state, groupID: messages }
+    else return [...state, { groupId, messages }]
   })
 
 )

@@ -1,5 +1,7 @@
-<app-title-controls [kind]="titleKinds.PRIVATE_GROUP">Group {{(groupData|async)?.name}}
+<app-title-controls [kind]="titleKinds.PRIVATE_GROUP"
+  (updateContent)="updateGroupMessages($event)">Group "{{(groupData|async)?.name}}"
 </app-title-controls>
-<app-chat-container>
-
+<app-chat-container (sendEvent)="sendMessage($event)">
+  <app-message *ngFor="let message of groupMessages|async"
+    [messageData]="message"></app-message>
 </app-chat-container>
