@@ -12,6 +12,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { PeopleComponent } from 'app/components/people/people.component';
 
 
 @Component({
@@ -25,7 +26,8 @@ import { InputTextModule } from 'primeng/inputtext';
     ButtonModule,
     InputTextModule,
     GroupCardComponent,
-    TitleControlsComponent],
+    TitleControlsComponent,
+    PeopleComponent],
   templateUrl: './default-main.component.html',
   styleUrl: './default-main.component.scss'
 })
@@ -38,6 +40,8 @@ export class DefaultMainComponent {
   groupName = new FormControl('', [Validators.required, Validators.maxLength(30)])
 
   openDialog = false;
+
+
 
   constructor(private store: Store) {
 

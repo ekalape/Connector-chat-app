@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { withLatestFrom, mergeMap, map, catchError, EMPTY, switchMap, of, concatMap, tap, throwError } from 'rxjs';
 
-import { addNewGroup, addNewGroupSuccess, deleteGroup, deleteGroupSuccess, getAllGroups, getAllGroupsSuccess, getGroupMessages, getGroupMessagesSuccess, sendGroupMessages, sendGroupMessagesSuccess } from '../actions/group.action';
+import { addNewGroup, addNewGroupSuccess, deleteGroup, deleteGroupSuccess, getAllGroups, getAllGroupsSuccess, getGroupMessages, getGroupMessagesSuccess, sendGroupMessage, sendGroupMessagesSuccess } from '../actions/group.action';
 import { ConversationsService } from 'app/services/conversations.service';
 import { IGroupResponce, IGroups, ISingleGroup } from 'app/models/conversations.model';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -95,7 +95,7 @@ export class GroupsEffects {
 
   loadSendGroupMessage$ = createEffect(() => this.actions$
     .pipe(
-      ofType(sendGroupMessages),
+      ofType(sendGroupMessage),
       withLatestFrom(this.store.select(selectMyID)),
       switchMap(([action, mydata]) => {
         console.log('inside send message effect :>> message: ', action.message, "my ID: ", mydata.id);

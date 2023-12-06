@@ -1,0 +1,37 @@
+@import "assets/style-variables.scss";
+
+:host {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+}
+
+.conv__container {
+  display: flex;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  width: 80%;
+  gap: 0.4rem;
+  padding-top: 0.5rem;
+  padding-left: 1rem;
+  & a {
+    display: flex;
+    align-items: center;
+    padding: 0.4rem 1.5rem;
+    background-color: $lighter-gray;
+    text-decoration: none;
+    color: $darker-gray;
+    box-shadow: 1px 1px 4px $medium-gray;
+    border-radius: 5px;
+    &:hover {
+      box-shadow: 1px 1px 5px $primary_green;
+      cursor: pointer;
+    }
+  }
+  .mine {
+    background-color: $light-gray;
+    font-weight: 500;
+  }
+}

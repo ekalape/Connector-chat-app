@@ -8,7 +8,7 @@ import { Store } from '@ngrx/store';
 import { selectGroupMessages, selectSingleGroup } from 'app/store/selectors/group.selectors';
 import { Observable, tap } from 'rxjs';
 import { ChatContainerComponent } from 'app/components/chat-container/chat-container.component';
-import { getGroupMessages, sendGroupMessages } from 'app/store/actions/group.action';
+import { getGroupMessages, sendGroupMessage } from 'app/store/actions/group.action';
 import { MessageComponent } from 'app/components/message/message.component';
 
 @Component({
@@ -48,7 +48,7 @@ export class GroupComponent {
 
   sendMessage(message: string) {
     if (this.groupId && message.trim()) {
-      this.store.dispatch(sendGroupMessages({ groupId: this.groupId, message }))
+      this.store.dispatch(sendGroupMessage({ groupId: this.groupId, message }))
       console.log('message :>> ', message);
     }
 

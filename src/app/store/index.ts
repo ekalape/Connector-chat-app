@@ -3,6 +3,7 @@ import { IState } from './models/store.model';
 
 import { profileReducer } from './reducers/profile.reducer';
 import { groupMessagesReducer, groupsReducer } from './reducers/groups.reducer';
+import { peopleReducer } from './reducers/people.reducer';
 
 
 
@@ -19,13 +20,19 @@ export const StoreInitialState: IState = {
     error: null
   },
   groups: [],
-  groupsMessages: []
+  groupsMessages: [],
+  people: {
+    users: [],
+    conversations: [],
+    messages: []
+  }
 }
 
 
 export const reducers: ActionReducerMap<IState> = {
   authorization: profileReducer,
   groups: groupsReducer,
-  groupsMessages: groupMessagesReducer
+  groupsMessages: groupMessagesReducer,
+  people: peopleReducer,
 
 }

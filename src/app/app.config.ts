@@ -13,6 +13,7 @@ import { AuthorizationInterceptor } from './interceptors/authorization.intercept
 import { LogoutEffects } from './store/effects/logout.effect';
 import { LstorageSaveInterceptor } from './interceptors/lstorage-save.interceptor';
 import { GroupsEffects } from './store/effects/group.effect';
+import { PeopleEffects } from './store/effects/people.effect';
 
 export const httpInterceptorProviders = [{ provide: HTTP_INTERCEPTORS, useClass: AuthorizationInterceptor, multi: true },
 { provide: HTTP_INTERCEPTORS, useClass: LstorageSaveInterceptor, multi: true }]
@@ -23,6 +24,6 @@ export const appConfig: ApplicationConfig = {
   importProvidersFrom(HttpClientModule),
     httpInterceptorProviders,
   provideStore(reducers),
-  provideEffects([GetProfileEffects, LogoutEffects, GroupsEffects]),
+  provideEffects([GetProfileEffects, LogoutEffects, GroupsEffects, PeopleEffects]),
   provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() })]
 };

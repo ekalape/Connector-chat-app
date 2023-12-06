@@ -11,7 +11,8 @@ export class AuthorizationInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 
     if (request.url.includes("profile") || request.url.includes("logout")
-      || request.url.includes("groups") || request.url.includes("conversations")) {
+      || request.url.includes("groups") || request.url.includes("conversations")
+      || request.url.includes("users")) {
       let headersData;
       const storageData = localStorage.getItem(StorageKeys.LOGIN_KEY)
       if (storageData) {

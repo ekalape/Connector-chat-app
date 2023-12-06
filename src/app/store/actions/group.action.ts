@@ -22,7 +22,7 @@ export const getGroupMessages = createAction("[group] Get Group Messages",
 export const getGroupMessagesSuccess = createAction("[group] Get Group Messages Success",
   props<{ groupId: string, messages: ISingleMessage[] }>());
 
-export const sendGroupMessages = createAction("[group] Send Group Messages",
+export const sendGroupMessage = createAction("[group] Send Group Messages",
   props<{ groupId: string, message: string }>());
 export const sendGroupMessagesSuccess = createAction("[group] Send Group Messages Success",
   props<{ groupId: string, message: ISingleMessage }>());

@@ -1,0 +1,5 @@
+<app-title-controls (updateContent)="updateContent($event)">People</app-title-controls>
+<div class="conv__container" *ngIf="(people|async) as people">
+  <a *ngFor="let user of people" [routerLink]="['/conversation', user.uid]"
+    [ngClass]="">{{user.name}}</a>
+</div>

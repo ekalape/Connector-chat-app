@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 
-import { addNewGroupSuccess, deleteGroupSuccess, getAllGroups, getAllGroupsSuccess, getGroupMessagesSuccess, sendGroupMessages, sendGroupMessagesSuccess } from '../actions/group.action';
+import { addNewGroupSuccess, deleteGroupSuccess, getAllGroups, getAllGroupsSuccess, getGroupMessagesSuccess, sendGroupMessage, sendGroupMessagesSuccess } from '../actions/group.action';
 import { ISingleGroup } from 'app/models/conversations.model';
 import { IGroupsMessagesState } from '../models/store.model';
 /* import { GroupsActions } from './groups.actions'; */

@@ -1,5 +1,5 @@
 import { IHttpError } from 'app/models/auth.model'
-import { ISingleGroup, ISingleMessage } from 'app/models/conversations.model'
+import { ISingleGroup, ISingleMessage, ISingleUserConversation, IUser } from 'app/models/conversations.model'
 
 
 export interface IAutorizationSlice {
@@ -18,9 +18,18 @@ export interface IGroupsMessagesState {
   messages: ISingleMessage[]
 }
 
+export interface IPeopleState {
+  users: IUser[],
+  conversations: ISingleUserConversation[],
+  messages: {
+    author: string,
+    dialog: ISingleMessage[]
+  }[]
+}
 
 export interface IState {
   authorization: IAutorizationSlice,
   groups: ISingleGroup[],
-  groupsMessages: IGroupsMessagesState[]
+  groupsMessages: IGroupsMessagesState[],
+  people: IPeopleState;
 }
