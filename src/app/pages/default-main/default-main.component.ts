@@ -13,6 +13,7 @@ import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PeopleComponent } from 'app/components/people/people.component';
+import { OwnGroupsPipe } from 'app/pipes/own-groups.pipe';
 
 
 @Component({
@@ -27,7 +28,8 @@ import { PeopleComponent } from 'app/components/people/people.component';
     InputTextModule,
     GroupCardComponent,
     TitleControlsComponent,
-    PeopleComponent],
+    PeopleComponent,
+    OwnGroupsPipe],
   templateUrl: './default-main.component.html',
   styleUrl: './default-main.component.scss'
 })
@@ -41,14 +43,18 @@ export class DefaultMainComponent {
 
   openDialog = false;
 
-
+  filtered = false;
 
   constructor(private store: Store) {
 
   }
 
-  updateContent(value: titleKinds) {
-    console.log("this titleKind = ", value);
+  ngOnInit() {
+    // this.updateContent();
+  }
+
+  updateContent() {
+
     this.store.dispatch(getAllGroups())
   }
 
@@ -73,5 +79,16 @@ export class DefaultMainComponent {
     this.store.dispatch(deleteGroup({ groupId }))
   }
 
+  chooseFilter(opt: number) {
+    switch (opt) {
+      case 0:
+        this.filtered = false;
+        break;
+      case 1:
+        this.filtered = true;
+        break;
+      default: return;
+    }
 
+  }
 }

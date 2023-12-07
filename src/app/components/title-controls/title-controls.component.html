@@ -1,4 +1,4 @@
-<ng-container>
+<div class="title-container">
   <a *ngIf="kind.includes('private')" routerLink="">
     <i class="pi pi-arrow-left"></i></a>
   <h2><ng-content></ng-content></h2>
@@ -8,4 +8,4 @@
     *ngIf="kind==='groups'"></p-button>
   <p-button icon="pi pi-times" [rounded]="true" [text]="true" (click)="delete()"
     *ngIf="kind==='private-conversation'"></p-button>
-</ng-container>
+</div>

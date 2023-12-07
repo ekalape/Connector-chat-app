@@ -3,19 +3,20 @@
 :host {
   display: flex;
   flex-direction: column;
-
+  position: relative;
   width: 100%;
+  overflow-y: hidden;
 }
 
-.conv__container {
+.people_container {
   display: flex;
-  display: flex;
+  width: 100%;
   flex-direction: column;
   align-items: start;
-  width: 80%;
   gap: 0.4rem;
-  padding-top: 0.5rem;
-  padding-left: 1rem;
+  padding: 0.5rem 1rem;
+  overflow-y: auto;
+
   & a {
     display: flex;
     align-items: center;
@@ -33,5 +34,22 @@
   .mine {
     background-color: $light-gray;
     font-weight: 500;
+  }
+}
+.filter-menu {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: end;
+  gap: 1rem;
+  color: $medium-gray;
+  font-size: 0.8rem;
+  font-style: italic;
+  & a {
+    cursor: pointer;
+  }
+  & a.chosen {
+    color: $primary_green;
+    cursor: default;
   }
 }

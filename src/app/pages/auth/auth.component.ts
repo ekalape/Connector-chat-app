@@ -54,7 +54,6 @@ export class AuthComponent {
   }
 
   ngOnInit() {
-
     this.datasub = this.dataExchange.successful.subscribe(x => {
       if (x.action && x.success) {
         this.showSuccess(x.message);

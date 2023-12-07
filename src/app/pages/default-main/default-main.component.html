@@ -1,9 +1,14 @@
 <div class="list-container groups">
-  <app-title-controls [kind]="titleKinds.GROUPS" (updateContent)="updateContent($event)"
+  <app-title-controls [kind]="titleKinds.GROUPS" (updateContent)="updateContent()"
     (addGroup)="addGroup()">Groups</app-title-controls>
+  <div class="filter-menu">
+
+    <a [ngClass]="filtered?'':'chosen'" (click)="chooseFilter(0)">Show all</a>
+    <a [ngClass]="filtered?'chosen':''" (click)="chooseFilter(1)">My groups</a>
+  </div>
   <div class="groups__container" *ngIf="allGroups|async as groups">
-    <app-group-card *ngFor="let gr of groups" [groupData]="gr"
-      (deleteGroup)="deleteGroup($event)"></app-group-card>
+    <app-group-card *ngFor="let gr of (groups|ownGroups:filtered:(myGroups|async))"
+      [groupData]="gr" (deleteGroup)="deleteGroup($event)"></app-group-card>
   </div>
 
 </div>

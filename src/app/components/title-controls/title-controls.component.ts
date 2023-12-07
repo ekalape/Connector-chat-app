@@ -18,6 +18,7 @@ export class TitleControlsComponent {
   @Output() addGroup = new EventEmitter();
   @Output() deleteConversation = new EventEmitter();
 
+
   counterIsActive = false;
   count = 20; //TODO don't forget to change!
 
@@ -27,7 +28,6 @@ export class TitleControlsComponent {
     if (this.kind === titleKinds.PRIVATE_GROUP || this.kind === titleKinds.PRIVATE_CONVERSATION)
       this.update()
   }
-
 
   goBack() {
     this.location.back()
@@ -56,4 +56,5 @@ export class TitleControlsComponent {
   delete() {
     this.deleteConversation.emit(this.route.snapshot.paramMap.get('convID'))
   }
+
 }

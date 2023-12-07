@@ -1,5 +1,12 @@
-<app-title-controls (updateContent)="updateContent($event)">People</app-title-controls>
-<div class="conv__container" *ngIf="(people|async) as people">
-  <a *ngFor="let user of people" (click)="openConversation(user)"
+<app-title-controls (updateContent)="updateContent()">People</app-title-controls>
+<div class="filter-menu">
+
+  <a [ngClass]="filtered?'':'chosen'" (click)="chooseFilter(0)">Show all</a>
+  <a [ngClass]="filtered?'chosen':''" (click)="chooseFilter(1)">My chat partners</a>
+</div>
+<div class="people_container" *ngIf="(people|async) as people">
+  <a *ngFor="let user of (people | chatPartners:filtered:myOpps)"
+    (click)="openConversation(user)"
     [ngClass]="myOpps.includes(user.uid)?'mine':''">{{user.name}}</a>
 </div>
+<p-toast position="top-center" key="tc"></p-toast>

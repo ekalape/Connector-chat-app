@@ -9,7 +9,7 @@ export const selectAllGroupMessages = createFeatureSelector<IGroupsMessagesState
 
 
 export const selectMyGroups = createSelector(selectGroups, selectMyID, (data, myId) => {
-  return data.filter(d => d.id === myId.id).map(x => x.id)
+  return data.filter(d => d.createdBy === myId.id).map(x => x.id)
 });
 
 export const selectSingleGroup = (groupId: string) =>
