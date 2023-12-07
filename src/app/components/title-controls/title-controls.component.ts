@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Location } from '@angular/common';
 import { titleKinds } from 'app/utils/enums/title-controls';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-title-controls',
@@ -16,11 +16,12 @@ export class TitleControlsComponent {
   @Input() kind: titleKinds = titleKinds.PEOPLE;
   @Output() updateContent = new EventEmitter();
   @Output() addGroup = new EventEmitter();
+  @Output() deleteConversation = new EventEmitter();
 
   counterIsActive = false;
   count = 20; //TODO don't forget to change!
 
-  constructor(private location: Location) { }
+  constructor(private location: Location, private route: ActivatedRoute) { }
 
   ngOnInit() {
     if (this.kind === titleKinds.PRIVATE_GROUP || this.kind === titleKinds.PRIVATE_CONVERSATION)
@@ -52,5 +53,7 @@ export class TitleControlsComponent {
     }, 1000)
   }
 
-  delete() { }
+  delete() {
+    this.deleteConversation.emit(this.route.snapshot.paramMap.get('convID'))
+  }
 }

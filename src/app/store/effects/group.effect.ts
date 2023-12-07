@@ -10,13 +10,16 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { selectAllGroupMessages, selectGroupMessages, selectGroups } from '../selectors/group.selectors';
 import { selectMyID, selectProfileData } from '../selectors/profile.selectors';
 import { StorageKeys } from 'app/utils/enums/local-storage-keys';
+import { ErrorHandlingService } from 'app/services/error-handling.service';
+
 
 @Injectable()
 export class GroupsEffects {
 
   constructor(private actions$: Actions,
     private store: Store,
-    private service: ConversationsService) {
+    private service: ConversationsService,
+    private errorHandlingService: ErrorHandlingService) {
   }
 
   loadGroups$ = createEffect(() => this.actions$
@@ -32,7 +35,7 @@ export class GroupsEffects {
               getAllGroupsSuccess({ groups: res })
             ),
             catchError((err) => {
-              this.handleError(err)
+              this.errorHandlingService.handleError(err)
               return EMPTY
             })
           )
@@ -48,7 +51,6 @@ export class GroupsEffects {
           .pipe(
             map((res: IGroupResponce) => {
               if (myData.id) {
-                console.log("inside effect, map, groupId: ", res.groupID, "groupName: ", action.groupName, "myId: ", myData.id);
                 return ({
                   id: res.groupID,
                   name: action.groupName,
@@ -60,14 +62,13 @@ export class GroupsEffects {
             }),
             map((res: ISingleGroup | undefined) => {
               if (res) {
-                console.log("inside map after mergeMap", res);
                 return addNewGroupSuccess({ group: res })
               }
               else throw new HttpErrorResponse({ error: { type: "NoUserIDFund", message: "You have to login" } })
             }
             ),
             catchError((err) => {
-              this.handleError(err)
+              this.errorHandlingService.handleError(err)
               return EMPTY
             })
           )
@@ -84,8 +85,7 @@ export class GroupsEffects {
             return deleteGroupSuccess({ groupId: action.groupId })
           }),
           catchError((err) => {
-            console.log('err :>> ', err);
-            this.handleError(err);
+            this.errorHandlingService.handleError(err);
             return EMPTY
           })
         )
@@ -98,7 +98,6 @@ export class GroupsEffects {
       ofType(sendGroupMessage),
       withLatestFrom(this.store.select(selectMyID)),
       switchMap(([action, mydata]) => {
-        console.log('inside send message effect :>> message: ', action.message, "my ID: ", mydata.id);
         return this.service.sendGroupMessage(action.groupId, action.message).pipe(
           map(() => sendGroupMessagesSuccess({
             groupId: action.groupId, message: {
@@ -108,8 +107,7 @@ export class GroupsEffects {
             }
           })),
           catchError((err) => {
-            console.log("err --> ", err);
-            this.handleError(err);
+            this.errorHandlingService.handleError(err);
             return EMPTY;
           })
         )
@@ -125,18 +123,13 @@ export class GroupsEffects {
         withLatestFrom(this.store.select(selectGroupMessages(action.groupId))),
       )),
       mergeMap(([action, storedMessages]) => {
-        console.log('storedMessages :>> ', storedMessages);
-        console.log('action groupId:>> ', action.groupId);
-
         let lastMessageDate: string | undefined;
         if (storedMessages) {
           const sortedMessages = [...storedMessages].sort((a, b) => Number(a.createdAt) - Number(b.createdAt));
           lastMessageDate = sortedMessages[sortedMessages.length - 1]?.createdAt;
         }
 
-        console.log('lastMessageDate :>> ', lastMessageDate);
         return this.service.getMessages(action.groupId, Number(lastMessageDate) + 1).pipe(
-          tap(res => { console.log('inside tap, res--> :>> ', res); }),
           map(res => res.Items.map(x => ({
             authorID: x.authorID.S,
             message: x.message.S,
@@ -144,7 +137,7 @@ export class GroupsEffects {
           }))),
           map(messages => getGroupMessagesSuccess({ groupId: action.groupId, messages })),
           catchError((err) => {
-            this.handleError(err);
+            this.errorHandlingService.handleError(err);
             return EMPTY
           })
         )
@@ -154,11 +147,5 @@ export class GroupsEffects {
 
 
 
-  private handleError(error: HttpErrorResponse) {
-    console.log('error :>> ', error.error);
-    return of({ type: error.error.type, message: error.error.message })
-    //throwError(() => new Error(error.message))
-
-  }
 }
 

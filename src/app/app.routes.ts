@@ -26,7 +26,7 @@ export const routes: Routes = [
     path: "group/:groupId", component: GroupComponent
   },
   {
-    path: "conversation/:convId", component: ConversationComponent
+    path: "conversation/:convID", component: ConversationComponent
   },
   {
     path: "", component: DefaultMainComponent/* , canActivate: [authGuard] */

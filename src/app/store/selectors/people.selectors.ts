@@ -6,7 +6,7 @@ import { selectMyID } from './profile.selectors';
 export const selectPeopleData = createFeatureSelector<IPeopleState>('people');
 
 
-export const selectUsers = createSelector(selectPeopleData, (data) => data.users);
+export const selectUsers = createSelector(selectPeopleData, selectMyID, (data, myData) => data.users.filter(us => us.uid !== myData.id));
 export const selectConversations = createSelector(selectPeopleData, (data) => data.conversations);
 export const selectAllMessages = createSelector(selectPeopleData, (data) => data.messages);
 
@@ -22,3 +22,5 @@ export const selectMessagesByConversationId = (convID: string) => createSelector
   (data) => data.find(d => d.conversationID === convID)?.dialog)
 
 
+export const selectSingleConversation = (opponentID: string) => createSelector(selectConversations,
+  (data) => data.find(d => d.companionID === opponentID))

@@ -9,12 +9,15 @@ import { IPeople, ISingleMessage, ISingleUserConversation, IUser, IUserConversat
 import { HttpErrorResponse } from '@angular/common/http';
 import { selectMyID } from '../selectors/profile.selectors';
 
+import { ErrorHandlingService } from 'app/services/error-handling.service';
+
 @Injectable()
 export class PeopleEffects {
 
   constructor(private actions$: Actions,
     private store: Store,
-    private service: ConversationsService) {
+    private service: ConversationsService,
+    private errorHandlingService: ErrorHandlingService) {
   }
 
   loadPeopleAndConversations$ = createEffect(() => this.actions$
@@ -30,8 +33,7 @@ export class PeopleEffects {
                 return getPeopleAndConversationsSuccess({ users, conversations: res })
               }),
               catchError((err) => {
-                console.log('err :>> ', err);
-                this.handleError(err);
+                this.errorHandlingService.handleError(err);
                 return EMPTY;
               })
             )
@@ -79,8 +81,7 @@ export class PeopleEffects {
       switchMap((action) => this.service.createConversations(action.companion).pipe(
         map(({ conversationID }) => createConversationSuccess({ conversation: { id: conversationID, companionID: action.companion } })),
         catchError((err) => {
-          console.log('err :>> ', err);
-          this.handleError(err);
+          this.errorHandlingService.handleError(err);
           return EMPTY;
         })
       ))
@@ -92,8 +93,7 @@ export class PeopleEffects {
       switchMap((action) => this.service.deleteConversations(action.conversationID).pipe(
         map(() => deleteConversationSuccess({ conversationID: action.conversationID })),
         catchError((err) => {
-          console.log('err :>> ', err);
-          this.handleError(err);
+          this.errorHandlingService.handleError(err);
           return EMPTY;
         })
       ))
@@ -109,17 +109,11 @@ export class PeopleEffects {
           return sendPrivateMessageSuccess({ conversationID: action.conversationID, message: newMessage })
         }),
         catchError((err) => {
-          console.log('err :>> ', err);
-          this.handleError(err);
+          this.errorHandlingService.handleError(err);
           return EMPTY;
         })
       ))
     ))
 
-  private handleError(error: HttpErrorResponse) {
-    console.log('error :>> ', error.error);
-    return of({ type: error.error.type, message: error.error.message })
 
-
-  }
 }
