@@ -7,6 +7,7 @@ import { LoginFormComponent } from './pages/auth/components/login-form/login-for
 import { authGuard } from './guards/auth.guard';
 import { GroupComponent } from './pages/group/group.component';
 import { DefaultMainComponent } from './pages/default-main/default-main.component';
+import { ConversationComponent } from './pages/conversation/conversation.component';
 
 export const routes: Routes = [
   { path: "profile", component: ProfileComponent/* , canActivate: [authGuard] */ },
@@ -23,6 +24,9 @@ export const routes: Routes = [
   },
   {
     path: "group/:groupId", component: GroupComponent
+  },
+  {
+    path: "conversation/:convId", component: ConversationComponent
   },
   {
     path: "", component: DefaultMainComponent/* , canActivate: [authGuard] */

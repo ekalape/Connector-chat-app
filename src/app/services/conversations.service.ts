@@ -49,10 +49,11 @@ export class ConversationsService {
     return this.httpClient.post<IUserConversationsResponse>(`${BASE_URL}/conversations/create`, { companion });
   }
 
-  /*  deleteConversations() {
-     return this.httpClient.get<IUserConversations>(`${BASE_URL}/conversations/list`);
-   }
-  */
+  deleteConversations(convID: string) {
+    const params = new HttpParams().set("conversationID", convID)
+    return this.httpClient.delete(`${BASE_URL}/conversations/delete`, { params });
+  }
+
 
   getPrivateMessages(conversationID: string, since?: number) {
     let params = new HttpParams().set("conversationID", conversationID);
@@ -65,8 +66,6 @@ export class ConversationsService {
   sendPrivateMessage(conversationID: string, message: string) {
     return this.httpClient.post(`${BASE_URL}/conversations/append`, { conversationID, message });
   }
-
-
 
 
 }

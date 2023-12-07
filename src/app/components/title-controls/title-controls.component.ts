@@ -18,7 +18,7 @@ export class TitleControlsComponent {
   @Output() addGroup = new EventEmitter();
 
   counterIsActive = false;
-  count = 60;
+  count = 20; //TODO don't forget to change!
 
   constructor(private location: Location) { }
 
@@ -47,9 +47,10 @@ export class TitleControlsComponent {
       if (this.count === 0 && interval) {
         clearInterval(interval)
         this.counterIsActive = false;
-        this.count = 60;
+        this.count = 20;
       };
     }, 1000)
   }
 
+  delete() { }
 }

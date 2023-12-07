@@ -49,7 +49,9 @@ export class ProfileComponent {
   errorsub: Subscription | undefined;
 
   constructor(private store: Store, private location: Location,
-    private messageService: MessageService,) { }
+    private messageService: MessageService,) {
+
+  }
 
   ngOnInit() {
     let profile;

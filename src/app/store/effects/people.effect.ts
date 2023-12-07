@@ -3,10 +3,11 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { ConversationsService } from 'app/services/conversations.service';
 import { HttpService } from 'app/services/http-service.service';
-import { getActiveConversations, getActiveConversationsSuccess, getPeople, getPeopleAndConversations, getPeopleAndConversationsSuccess, getPeopleSuccess } from '../actions/people.action';
-import { map, switchMap, catchError, of, EMPTY, mergeMap, concatMap } from 'rxjs';
-import { IPeople, ISingleUserConversation, IUser, IUserConversations } from 'app/models/conversations.model';
+import { createConversation, createConversationSuccess, deleteConversation, deleteConversationSuccess, getActiveConversations, getActiveConversationsSuccess, getPeople, getPeopleAndConversations, getPeopleAndConversationsSuccess, getPeopleSuccess, sendPrivateMessage, sendPrivateMessageSuccess } from '../actions/people.action';
+import { map, switchMap, catchError, of, EMPTY, mergeMap, concatMap, withLatestFrom } from 'rxjs';
+import { IPeople, ISingleMessage, ISingleUserConversation, IUser, IUserConversations } from 'app/models/conversations.model';
 import { HttpErrorResponse } from '@angular/common/http';
+import { selectMyID } from '../selectors/profile.selectors';
 
 @Injectable()
 export class PeopleEffects {
@@ -72,7 +73,48 @@ export class PeopleEffects {
         })
       )) */
 
+  loadCreateConversation$ = createEffect(() => this.actions$
+    .pipe(
+      ofType(createConversation),
+      switchMap((action) => this.service.createConversations(action.companion).pipe(
+        map(({ conversationID }) => createConversationSuccess({ conversation: { id: conversationID, companionID: action.companion } })),
+        catchError((err) => {
+          console.log('err :>> ', err);
+          this.handleError(err);
+          return EMPTY;
+        })
+      ))
+    ))
 
+  loadDeleteConversation$ = createEffect(() => this.actions$
+    .pipe(
+      ofType(deleteConversation),
+      switchMap((action) => this.service.deleteConversations(action.conversationID).pipe(
+        map(() => deleteConversationSuccess({ conversationID: action.conversationID })),
+        catchError((err) => {
+          console.log('err :>> ', err);
+          this.handleError(err);
+          return EMPTY;
+        })
+      ))
+    ))
+
+  loadSendPrivateMessage$ = createEffect(() => this.actions$
+    .pipe(
+      ofType(sendPrivateMessage),
+      withLatestFrom(this.store.select(selectMyID)),
+      switchMap(([action, myData]) => this.service.sendPrivateMessage(action.conversationID, action.message).pipe(
+        map(() => {
+          const newMessage: ISingleMessage = { authorID: myData.id, message: action.message, createdAt: Date.now() + "" }
+          return sendPrivateMessageSuccess({ conversationID: action.conversationID, message: newMessage })
+        }),
+        catchError((err) => {
+          console.log('err :>> ', err);
+          this.handleError(err);
+          return EMPTY;
+        })
+      ))
+    ))
 
   private handleError(error: HttpErrorResponse) {
     console.log('error :>> ', error.error);

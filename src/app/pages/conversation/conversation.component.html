@@ -1,0 +1,8 @@
+<app-title-controls [kind]="titleKinds.PRIVATE_CONVERSATION"
+  (updateContent)="updatePrivateMessages()"><span
+    *ngIf="(opponent|async) as opponent">Conversation with {{opponent?.name}}</span>
+</app-title-controls>
+<app-chat-container (sendEvent)="sendMessage($event)">
+  <app-message *ngFor="let message of (privateMessages|async)"
+    [messageData]="message"></app-message>
+</app-chat-container>

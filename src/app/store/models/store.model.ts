@@ -22,7 +22,7 @@ export interface IPeopleState {
   users: IUser[],
   conversations: ISingleUserConversation[],
   messages: {
-    author: string,
+    conversationID: string,
     dialog: ISingleMessage[]
   }[]
 }

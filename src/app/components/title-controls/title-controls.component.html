@@ -6,4 +6,6 @@
     [disabled]="counterIsActive">{{counterIsActive?count:'Update'}}</p-button>
   <p-button icon="pi pi-plus" [rounded]="true" [text]="true" (click)="add()"
     *ngIf="kind==='groups'"></p-button>
+  <p-button icon="pi pi-times" [rounded]="true" [text]="true" (click)="delete()"
+    *ngIf="kind==='private-conversation'"></p-button>
 </ng-container>

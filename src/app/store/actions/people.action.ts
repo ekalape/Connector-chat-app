@@ -17,14 +17,19 @@ export const getActiveConversationsSuccess = createAction("[people] Get Active C
 
 export const getPrivateMessages = createAction("[people] Get Private Messages", props<{ conversationID: string }>());
 export const getPrivateMessagesSuccess = createAction("[people] Get Private Messages Success",
-  props<{ messages: ISingleMessage[] }>());
+  props<{ conversationID: string, dialog: ISingleMessage[] }>());
 
 export const sendPrivateMessage = createAction("[people] Send Private Message", props<{ conversationID: string, message: string }>());
 export const sendPrivateMessageSuccess = createAction("[people] Send Private Message Success",
-  props<{ message: ISingleMessage }>());
-
-//TODO delete conversation
+  props<{ conversationID: string, message: ISingleMessage }>());
 
 export const createConversation = createAction("[people] Create Conversation", props<{ companion: string }>());
 export const createConversationSuccess = createAction("[people] Create Conversation Success",
   props<{ conversation: ISingleUserConversation }>());
+
+export const deleteConversation = createAction("[people] Delete Conversation", props<{ conversationID: string }>());
+export const deleteConversationSuccess = createAction("[people] Delete Conversation Success",
+  props<{ conversationID: string }>());
+
+
+
