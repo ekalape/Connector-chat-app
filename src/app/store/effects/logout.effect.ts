@@ -17,7 +17,8 @@ export class LogoutEffects {
       ofType(logOutAction),
       switchMap((action) => {
         return this.authService.logout().pipe(
-          map(() => logOutSuccessAction()),
+          map(() => logOutSuccessAction()
+          ),
           catchError((err) => {
             return EMPTY
           })

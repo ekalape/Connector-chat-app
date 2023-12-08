@@ -2,7 +2,7 @@
   <a routerLink="">
     <img src="assets/connect-logo.png" height="40" alt="logo" class="logo" />
   </a>
-  <div class="admin-panel">
+  <div class="admin-panel" *ngIf="loggedIn">
     <a class="header__menu-item" routerLink="" [class.active]="isActive()">
       <i class="pi pi-fw pi-home"></i>
       <span>Home</span>

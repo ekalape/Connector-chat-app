@@ -10,27 +10,27 @@ import { DefaultMainComponent } from './pages/default-main/default-main.componen
 import { ConversationComponent } from './pages/conversation/conversation.component';
 
 export const routes: Routes = [
-  { path: "profile", component: ProfileComponent/* , canActivate: [authGuard] */ },
+  { path: "profile", component: ProfileComponent, canActivate: [authGuard], title: "Profile" },
   {
-    path: "signup", component: AuthComponent, children:
+    path: "signup", component: AuthComponent, title: "Sign-up", children:
       [
         { path: "", component: SignupFormComponent }
       ]
   },
   {
-    path: "signin", component: AuthComponent, children:
+    path: "signin", component: AuthComponent, title: "Sign-in", children:
       [
         { path: "", component: LoginFormComponent }]
   },
   {
-    path: "group/:groupId", component: GroupComponent
+    path: "group/:groupId", component: GroupComponent, title: "Group dialog", canActivate: [authGuard]
   },
   {
-    path: "conversation/:convID", component: ConversationComponent
+    path: "conversation/:convID", component: ConversationComponent, title: "Private conversation", canActivate: [authGuard]
   },
   {
-    path: "", component: DefaultMainComponent/* , canActivate: [authGuard] */
+    path: "", component: DefaultMainComponent, canActivate: [authGuard]
   },
-  { path: "**", component: NotFoundComponent }
+  { path: "**", component: NotFoundComponent, title: "Not found" }
 
 ];

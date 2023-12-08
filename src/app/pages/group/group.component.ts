@@ -6,7 +6,7 @@ import { titleKinds } from 'app/utils/enums/title-controls';
 import { ISingleGroup, ISingleMessage } from 'app/models/conversations.model';
 import { Store } from '@ngrx/store';
 import { selectFirstLoadedGroups, selectGroupMessages, selectSingleGroup } from 'app/store/selectors/group.selectors';
-import { Observable, first } from 'rxjs';
+import { Observable, first, map } from 'rxjs';
 import { ChatContainerComponent } from 'app/components/chat-container/chat-container.component';
 import { getAllGroups, getGroupMessages, sendGroupMessage } from 'app/store/actions/group.action';
 import { MessageComponent } from 'app/components/message/message.component';
@@ -37,12 +37,20 @@ export class GroupComponent {
       .subscribe(loaded => {
         if (!loaded) {
           this.store.dispatch(getAllGroups())
+
         }
       })
     if (this.groupId) {
       this.groupData = this.store.select(selectSingleGroup(this.groupId));
       this.groupMessages = this.store.select(selectGroupMessages(this.groupId))
+        .pipe(
+          map(messages => {
+            if (messages)
+              return [...messages]?.sort((a, b) => Number(a.createdAt) - Number(b.createdAt));
+            return []
+          }))
     }
+
 
   }
 

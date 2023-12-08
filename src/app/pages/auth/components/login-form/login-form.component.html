@@ -28,9 +28,6 @@
       <p class="errors-message" *ngIf="password.errors?.['required']">
         Password cannot be empty.
       </p>
-      <p class="errors-message" *ngIf="password.errors?.['weakPassword']">
-        {{password.errors?.['weakPassword']}}
-      </p>
     </div>
     <div class="errors-container">
       <p class="errors-message" *ngIf="loginForm.errors?.['invalid']">

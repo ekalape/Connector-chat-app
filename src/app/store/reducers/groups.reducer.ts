@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 
-import { addNewGroupSuccess, deleteGroupSuccess, getAllGroups, getAllGroupsSuccess, getGroupMessagesSuccess, sendGroupMessage, sendGroupMessagesSuccess } from '../actions/group.action';
+import { addNewGroupSuccess, deleteGroupSuccess, getAllGroups, getAllGroupsSuccess, getGroupMessagesSuccess, resetGroupSlice, sendGroupMessage, sendGroupMessagesSuccess } from '../actions/group.action';
 import { ISingleGroup } from 'app/models/conversations.model';
 import { IGroupsMessagesState } from '../models/store.model';
 /* import { GroupsActions } from './groups.actions'; */
@@ -9,31 +9,8 @@ export const groupsFeatureKey = 'groups';
 
 
 
-export const initialState: ISingleGroup[] = [
-  /*  {
-     id: "11111",
-     name: "New group",
-     createdAt: "1701534041400",
-     createdBy: "vxgdbfu"
-   } */
-]
-export const messagesInitialState: IGroupsMessagesState[] = [
-  /*  {
-     groupId: "11111",
-     messages: [
-       {
-         authorID: "290jaobb6b8",
-         message: "hello there",
-         createdAt: "1701534041600"
-       },
-       {
-         authorID: "tsfsrdk",
-         message: "Nice to meet you",
-         createdAt: "1701534041690"
-       },
-     ]
-   } */
-]
+export const initialState: ISingleGroup[] = []
+export const messagesInitialState: IGroupsMessagesState[] = []
 
 export const groupsReducer = createReducer(
   initialState,
@@ -49,7 +26,8 @@ export const groupsReducer = createReducer(
     return [
       ...state.filter(d => d.id !== groupId)
     ]
-  })
+  }),
+  on(resetGroupSlice, (state)=>initialState)
 );
 
 export const groupMessagesReducer = createReducer(

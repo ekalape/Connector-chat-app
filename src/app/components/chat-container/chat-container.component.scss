@@ -1,25 +1,46 @@
 @import "assets/style-variables.scss";
 
 :host {
+  position: relative;
   width: 80%;
   display: flex;
   flex-direction: column;
   padding: 0.5rem 2rem;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 1rem;
+  height: 100%;
+  z-index: 1;
+  height: 75vh;
   & ::ng-deep input {
     width: 100%;
   }
 }
 .chat-container {
+  position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
+
   width: 100%;
   gap: 1rem;
   align-items: center;
   box-shadow: inset 1px 1px 4px $medium-gray;
   padding: 2.5rem 1rem 1rem 1rem;
-  overflow-y: auto;
+
+  overflow-y: scroll;
+
+  &__messages {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 100%;
+    gap: 1rem;
+    height: calc(72vh - 1rem);
+    align-items: center;
+
+    z-index: 0;
+  }
 }
 
 .input-block {

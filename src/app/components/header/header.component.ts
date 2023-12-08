@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
 import { MenubarModule } from 'primeng/menubar';
-import { MenuItem, MenuItemCommandEvent } from 'primeng/api';
+import { MenuItem } from 'primeng/api';
 import { Router } from '@angular/router';
 import { Pathes } from 'app/utils/enums/pathes';
-
-import { AuthService } from 'app/services/auth.service';
 import { Store } from '@ngrx/store';
 import { logOutAction } from 'app/store/actions/auth.action';
+import { Subscription } from 'rxjs';
+import { selectLoggedIn } from 'app/store/selectors/auth.selectors';
 
 
 @Component({
@@ -21,12 +21,15 @@ import { logOutAction } from 'app/store/actions/auth.action';
 export class HeaderComponent {
 
   menuItems: MenuItem[] = [];
+  loggedIn = false;
+  sub: Subscription | undefined //-----!!!!!!
 
   constructor(private router: Router, private store: Store) {
 
   }
 
   ngOnInit() {
+    this.sub = this.store.select(selectLoggedIn).subscribe(x => this.loggedIn = x.loggedIn)
   }
 
   isActive(): boolean {
@@ -35,8 +38,11 @@ export class HeaderComponent {
   }
 
   logout() {
-    this.store.dispatch(logOutAction())
-    this.router.navigate([Pathes.SIGN_IN])
+    if (this.loggedIn) {
+      this.store.dispatch(logOutAction())
+      this.router.navigate([Pathes.SIGN_IN])
+
+    }
   }
 
 }

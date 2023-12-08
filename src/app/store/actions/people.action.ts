@@ -31,5 +31,5 @@ export const deleteConversation = createAction("[people] Delete Conversation", p
 export const deleteConversationSuccess = createAction("[people] Delete Conversation Success",
   props<{ conversationID: string }>());
 
-
+export const resetPeopleSlice = createAction("[people] Reset People Slice");
 

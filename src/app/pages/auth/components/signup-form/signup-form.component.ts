@@ -78,7 +78,7 @@ export class SignupFormComponent {
           this.signupForm.reset();
           setTimeout(() => {
             this.router.navigate([Pathes.SIGN_IN])
-          }, 15000)
+          }, 800)
         }
         this.store.dispatch(setLoadingAction({ loading: false }))
       })

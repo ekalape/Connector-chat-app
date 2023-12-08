@@ -3,13 +3,14 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { ConversationsService } from 'app/services/conversations.service';
 import { HttpService } from 'app/services/http-service.service';
-import { createConversation, createConversationSuccess, deleteConversation, deleteConversationSuccess, getActiveConversations, getActiveConversationsSuccess, getPeople, getPeopleAndConversations, getPeopleAndConversationsSuccess, getPeopleSuccess, sendPrivateMessage, sendPrivateMessageSuccess } from '../actions/people.action';
+import { createConversation, createConversationSuccess, deleteConversation, deleteConversationSuccess, getActiveConversations, getActiveConversationsSuccess, getPeople, getPeopleAndConversations, getPeopleAndConversationsSuccess, getPeopleSuccess, getPrivateMessages, getPrivateMessagesSuccess, sendPrivateMessage, sendPrivateMessageSuccess } from '../actions/people.action';
 import { map, switchMap, catchError, of, EMPTY, mergeMap, concatMap, withLatestFrom } from 'rxjs';
 import { IPeople, ISingleMessage, ISingleUserConversation, IUser, IUserConversations } from 'app/models/conversations.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { selectMyID } from '../selectors/profile.selectors';
 
 import { ErrorHandlingService } from 'app/services/error-handling.service';
+import { selectMessagesByConversationId } from '../selectors/people.selectors';
 
 @Injectable()
 export class PeopleEffects {
@@ -41,6 +42,36 @@ export class PeopleEffects {
 
         )
       }))
+  )
+
+  loadGetPrivateMessages$ = createEffect(() => this.actions$
+    .pipe(
+      ofType(getPrivateMessages),
+      concatMap(action => of(action).pipe(
+        withLatestFrom(this.store.select(selectMessagesByConversationId(action.conversationID)))
+      )),
+      mergeMap(([action, storedMessages]) => {
+        let lastMessageDate: string | undefined;
+        if (storedMessages) {
+          const sortedMessages = [...storedMessages].sort((a, b) => Number(a.createdAt) - Number(b.createdAt));
+          lastMessageDate = sortedMessages[sortedMessages.length - 1]?.createdAt;
+        }
+        return this.service.getPrivateMessages(action.conversationID).pipe(
+          map(res => res.Items.map(m => ({
+            authorID: m.authorID.S,
+            message: m.message.S,
+            createdAt: m.createdAt.S
+          }))),
+          map(res => getPrivateMessagesSuccess({ conversationID: action.conversationID, dialog: res })),
+          catchError((err) => {
+            this.errorHandlingService.handleError(err);
+            return EMPTY;
+          })
+        )
+      })
+
+    )
+
   )
   /*
     loadPeople$ = createEffect(() => this.actions$

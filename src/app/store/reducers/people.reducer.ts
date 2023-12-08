@@ -1,4 +1,4 @@
-import { createConversationSuccess, deleteConversationSuccess, getActiveConversationsSuccess, getPeople, getPeopleAndConversationsSuccess, getPeopleSuccess, getPrivateMessagesSuccess, sendPrivateMessageSuccess } from '../actions/people.action';
+import { createConversationSuccess, deleteConversationSuccess, getActiveConversationsSuccess, getPeople, getPeopleAndConversationsSuccess, getPeopleSuccess, getPrivateMessagesSuccess, resetPeopleSlice, sendPrivateMessageSuccess } from '../actions/people.action';
 import { IPeopleState } from '../models/store.model';
 import { createReducer, on } from '@ngrx/store';
 
@@ -60,6 +60,7 @@ export const peopleReducer = createReducer(
       ...state,
       messages: [...state.messages, { conversationID, dialog: [message] }]
     }
-  })
+  }),
+  on(resetPeopleSlice, (state) => peopleInitState)
 
 )

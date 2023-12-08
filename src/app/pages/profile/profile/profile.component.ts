@@ -109,7 +109,8 @@ export class ProfileComponent {
   }
   onCancel() {
     this.nameField.setValue(this.oldName);
-    this.nameField.disable()
+    this.nameField.disable();
+    this.savenabled = false;
   }
 
   showError(errorMessage: string | undefined) {

@@ -12,7 +12,7 @@ import { logInAction, setLoadingAction } from 'app/store/actions/auth.action';
 import { DataExchangeService } from '../../services/data-exchange.service';
 import { selectLoadingState } from 'app/store/selectors/auth.selectors';
 import { authActions } from 'app/utils/enums/authActions';
-import { ComplexPasswordValidator } from 'app/directives/complex-password-validator.directive';
+
 
 
 
@@ -33,7 +33,7 @@ export class LoginFormComponent {
 
   loginForm: FormGroup = this.fb.group({
     emailInput: ['', [Validators.required, Validators.email]],
-    passInput: ['', [Validators.required, ComplexPasswordValidator()]],
+    passInput: ['', [Validators.required]],
   });
 
   get email() {

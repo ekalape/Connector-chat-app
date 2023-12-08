@@ -26,3 +26,6 @@ export const sendGroupMessage = createAction("[group] Send Group Messages",
   props<{ groupId: string, message: string }>());
 export const sendGroupMessagesSuccess = createAction("[group] Send Group Messages Success",
   props<{ groupId: string, message: ISingleMessage }>());
+
+
+export const resetGroupSlice = createAction("[group] Reset Group Slice");

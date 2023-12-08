@@ -7,7 +7,7 @@ import { ChatContainerComponent } from 'app/components/chat-container/chat-conta
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { selectFirstLoadedPeople, selectMessagesByConversationId, selectSingleUser } from 'app/store/selectors/people.selectors';
-import { Observable, first } from 'rxjs';
+import { Observable, first, map } from 'rxjs';
 import { ISingleMessage, IUser } from 'app/models/conversations.model';
 import { deleteConversation, getPeopleAndConversations, getPrivateMessages, sendPrivateMessage } from 'app/store/actions/people.action';
 import { Pathes } from 'app/utils/enums/pathes';
@@ -30,6 +30,9 @@ export class ConversationComponent {
 
   constructor(private route: ActivatedRoute, private store: Store, private router: Router) {
     this.convID = this.route.snapshot.paramMap.get('convID');
+    console.log('this.convID :>> ', this.convID);
+    /*  if (this.convID)
+       this.store.dispatch(getPrivateMessages({ conversationID: this.convID })) */
   }
 
   ngOnInit() {
@@ -38,12 +41,19 @@ export class ConversationComponent {
     )
       .subscribe(loaded => {
         if (!loaded) {
-          this.store.dispatch(getPeopleAndConversations())
+          this.store.dispatch(getPeopleAndConversations());
+
         }
       })
     if (this.convID) {
       this.opponent = this.store.select(selectSingleUser(this.convID));
       this.privateMessages = this.store.select(selectMessagesByConversationId(this.convID))
+        .pipe(
+          map(messages => {
+            if (messages)
+              return [...messages]?.sort((a, b) => Number(a.createdAt) - Number(b.createdAt));
+            return []
+          }))
     }
 
   }
