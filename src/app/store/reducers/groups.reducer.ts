@@ -10,29 +10,29 @@ export const groupsFeatureKey = 'groups';
 
 
 export const initialState: ISingleGroup[] = [
-  {
-    id: "11111",
-    name: "New group",
-    createdAt: "1701534041400",
-    createdBy: "vxgdbfu"
-  }
+  /*  {
+     id: "11111",
+     name: "New group",
+     createdAt: "1701534041400",
+     createdBy: "vxgdbfu"
+   } */
 ]
 export const messagesInitialState: IGroupsMessagesState[] = [
-  {
-    groupId: "11111",
-    messages: [
-      {
-        authorID: "290jaobb6b8",
-        message: "hello there",
-        createdAt: "1701534041600"
-      },
-      {
-        authorID: "tsfsrdk",
-        message: "Nice to meet you",
-        createdAt: "1701534041690"
-      },
-    ]
-  }
+  /*  {
+     groupId: "11111",
+     messages: [
+       {
+         authorID: "290jaobb6b8",
+         message: "hello there",
+         createdAt: "1701534041600"
+       },
+       {
+         authorID: "tsfsrdk",
+         message: "Nice to meet you",
+         createdAt: "1701534041690"
+       },
+     ]
+   } */
 ]
 
 export const groupsReducer = createReducer(

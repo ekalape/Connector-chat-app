@@ -1,4 +1,5 @@
-<app-title-controls (updateContent)="updateContent()">People</app-title-controls>
+<app-title-controls (updateContent)="updateContent()"
+  [blockUpdateButton]="blockUpdateButton">People</app-title-controls>
 <div class="filter-menu">
 
   <a [ngClass]="filtered?'':'chosen'" (click)="chooseFilter(0)">Show all</a>

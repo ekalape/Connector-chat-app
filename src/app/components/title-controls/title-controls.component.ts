@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Location } from '@angular/common';
 import { titleKinds } from 'app/utils/enums/title-controls';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+
 
 @Component({
   selector: 'app-title-controls',
@@ -18,13 +19,19 @@ export class TitleControlsComponent {
   @Output() addGroup = new EventEmitter();
   @Output() deleteConversation = new EventEmitter();
 
+  @Input() blockUpdateButton: boolean = false;
+
 
   counterIsActive = false;
-  count = 20; //TODO don't forget to change!
+  count = 60;
 
-  constructor(private location: Location, private route: ActivatedRoute) { }
+  constructor(private location: Location, private route: ActivatedRoute,
+  ) {
+  }
 
   ngOnInit() {
+    if (this.blockUpdateButton) this.startCounter()
+
     if (this.kind === titleKinds.PRIVATE_GROUP || this.kind === titleKinds.PRIVATE_CONVERSATION)
       this.update()
   }
@@ -37,6 +44,7 @@ export class TitleControlsComponent {
     this.updateContent.emit(this.kind);
     this.startCounter()
   }
+
   add() {
     this.addGroup.emit()
   }
@@ -48,7 +56,7 @@ export class TitleControlsComponent {
       if (this.count === 0 && interval) {
         clearInterval(interval)
         this.counterIsActive = false;
-        this.count = 20;
+        this.count = 60;
       };
     }, 1000)
   }

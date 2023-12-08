@@ -1,10 +1,8 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { IPeopleState } from '../models/store.model';
-import { IUser } from 'app/models/conversations.model';
 import { selectMyID } from './profile.selectors';
 
 export const selectPeopleData = createFeatureSelector<IPeopleState>('people');
-
 
 export const selectUsers = createSelector(selectPeopleData, selectMyID, (data, myData) => data.users.filter(us => us.uid !== myData.id));
 export const selectConversations = createSelector(selectPeopleData, (data) => data.conversations);
@@ -24,3 +22,9 @@ export const selectMessagesByConversationId = (convID: string) => createSelector
 
 export const selectSingleConversation = (opponentID: string) => createSelector(selectConversations,
   (data) => data.find(d => d.companionID === opponentID))
+
+
+export const selectFirstLoadedPeople = createSelector(selectUsers, (users) => {
+  if (users.length) return true;
+  return false;
+})

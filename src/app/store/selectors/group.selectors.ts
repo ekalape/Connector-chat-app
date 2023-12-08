@@ -1,7 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { IAutorizationSlice, IGroupsMessagesState } from '../models/store.model';
+import { IGroupsMessagesState } from '../models/store.model';
 import { ISingleGroup } from 'app/models/conversations.model';
-import { selectMyID, selectProfileData } from './profile.selectors';
+import { selectMyID } from './profile.selectors';
 
 
 export const selectGroups = createFeatureSelector<ISingleGroup[]>('groups');
@@ -18,7 +18,6 @@ export const selectSingleGroup = (groupId: string) =>
 
 export const selectGroupMessages = (groupId: string | null) =>
   createSelector(selectAllGroupMessages, (data) => {
-    console.log('groupId inside selector:>> ', groupId);
     if (groupId) {
       const storedMessages = data.find(d =>
         d.groupId === groupId)?.messages;
@@ -26,3 +25,8 @@ export const selectGroupMessages = (groupId: string | null) =>
     }
     else return []
   })
+
+export const selectFirstLoadedGroups = createSelector(selectGroups, (groups) => {
+  if (groups.length) return true;
+  return false;
+})

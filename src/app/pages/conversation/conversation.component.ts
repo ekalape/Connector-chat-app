@@ -6,10 +6,10 @@ import { TitleControlsComponent } from 'app/components/title-controls/title-cont
 import { ChatContainerComponent } from 'app/components/chat-container/chat-container.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { selectMessagesByConversationId, selectSingleUser } from 'app/store/selectors/people.selectors';
-import { Observable } from 'rxjs';
+import { selectFirstLoadedPeople, selectMessagesByConversationId, selectSingleUser } from 'app/store/selectors/people.selectors';
+import { Observable, first } from 'rxjs';
 import { ISingleMessage, IUser } from 'app/models/conversations.model';
-import { deleteConversation, getPrivateMessages, sendPrivateMessage } from 'app/store/actions/people.action';
+import { deleteConversation, getPeopleAndConversations, getPrivateMessages, sendPrivateMessage } from 'app/store/actions/people.action';
 import { Pathes } from 'app/utils/enums/pathes';
 
 @Component({
@@ -30,31 +30,33 @@ export class ConversationComponent {
 
   constructor(private route: ActivatedRoute, private store: Store, private router: Router) {
     this.convID = this.route.snapshot.paramMap.get('convID');
-    console.log('this.convID in the constructor:>> ', this.convID);
   }
 
   ngOnInit() {
-    console.log('inside conv comp this.convID :>> ', this.convID);
+    this.store.select(selectFirstLoadedPeople).pipe(
+      first(),
+    )
+      .subscribe(loaded => {
+        if (!loaded) {
+          this.store.dispatch(getPeopleAndConversations())
+        }
+      })
     if (this.convID) {
       this.opponent = this.store.select(selectSingleUser(this.convID));
       this.privateMessages = this.store.select(selectMessagesByConversationId(this.convID))
     }
-    this.updatePrivateMessages()
-    console.log('inside conv comp this.opponent :>> ', this.opponent);
-    //TODO if the page was refreshed need to request by convId?
+
   }
 
   sendMessage(message: string) {
     if (this.convID) { this.store.dispatch(sendPrivateMessage({ conversationID: this.convID, message })) }
   }
   updatePrivateMessages() {
-    console.log('inside conv comp UPDATE_MESSAGES with ');
     if (this.convID) { this.store.dispatch(getPrivateMessages({ conversationID: this.convID })) }
   }
   deleteConversation(conversationID: string) {
     this.store.dispatch(deleteConversation({ conversationID }));
     this.router.navigate([Pathes.HOME])
-
   }
 
 }

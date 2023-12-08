@@ -6,14 +6,14 @@ import { TitleControlsComponent } from 'app/components/title-controls/title-cont
 import { titleKinds } from 'app/utils/enums/title-controls';
 import { Store } from '@ngrx/store';
 import { addNewGroup, deleteGroup, getAllGroups } from 'app/store/actions/group.action';
-import { selectGroups, selectMyGroups } from 'app/store/selectors/group.selectors';
+import { selectFirstLoadedGroups, selectGroups, selectMyGroups } from 'app/store/selectors/group.selectors';
 import { DialogModule } from 'primeng/dialog';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { PeopleComponent } from 'app/components/people/people.component';
+import { PeopleComponent } from 'app/pages/default-main/people/people.component';
 import { OwnGroupsPipe } from 'app/pipes/own-groups.pipe';
+import { first } from 'rxjs';
 
 
 @Component({
@@ -44,17 +44,24 @@ export class DefaultMainComponent {
   openDialog = false;
 
   filtered = false;
+  blockUpdateButton = false;
 
   constructor(private store: Store) {
-
   }
 
   ngOnInit() {
-    // this.updateContent();
+    this.store.select(selectFirstLoadedGroups).pipe(
+      first(),
+    )
+      .subscribe(loaded => {
+        if (!loaded) {
+          this.updateContent();
+          this.blockUpdateButton = true;
+        }
+      })
   }
 
   updateContent() {
-
     this.store.dispatch(getAllGroups())
   }
 
@@ -62,10 +69,8 @@ export class DefaultMainComponent {
     this.openDialog = true;
   }
   confirmGroupCreation() {
-    console.log('groupName :>> ', this.groupName.value);
     if (this.groupName.value?.trim()) {
       this.store.dispatch(addNewGroup({ groupName: this.groupName.value }))
-      console.log("added new group");
       this.openDialog = false;
       this.groupName.reset()
     }
