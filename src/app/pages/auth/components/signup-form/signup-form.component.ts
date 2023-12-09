@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 
 import { Pathes } from 'app/utils/enums/pathes';
 import { AuthService } from 'app/services/auth.service';
-import { distinctUntilChanged, take, tap } from 'rxjs';
+import { take, } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { setLoadingAction } from 'app/store/actions/auth.action';
 import { selectLoadingState } from 'app/store/selectors/auth.selectors';
@@ -31,7 +31,7 @@ export class SignupFormComponent {
   emailValidators = [Validators.required, Validators.email]
 
   signupForm: FormGroup = this.fb.group({
-    firstNameInput: ["", [Validators.required, Validators.minLength(3), Validators.pattern(/^[A-Za-z\s]*$/)]],
+    firstNameInput: ["", [Validators.required, Validators.minLength(3), Validators.pattern(/^[A-Za-zА-Яа-я\s]*$/), Validators.maxLength(40)]],
     emailInput: ['', this.emailValidators],
     passInput: ['', [Validators.required, ComplexPasswordValidator()]],
   });

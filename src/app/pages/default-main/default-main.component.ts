@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { GroupCardComponent } from 'app/components/group-card/group-card.component';
 import { TitleControlsComponent } from 'app/components/title-controls/title-controls.component';
 import { titleKinds } from 'app/utils/enums/title-controls';
@@ -14,6 +14,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PeopleComponent } from 'app/pages/default-main/people/people.component';
 import { OwnGroupsPipe } from 'app/pipes/own-groups.pipe';
 import { first } from 'rxjs';
+import { selectLoggedIn } from 'app/store/selectors/auth.selectors';
+import { Pathes } from 'app/utils/enums/pathes';
 
 
 @Component({
@@ -44,19 +46,21 @@ export class DefaultMainComponent {
   openDialog = false;
 
   filtered = false;
-  blockUpdateButton = false;
+
 
   constructor(private store: Store) {
   }
 
   ngOnInit() {
+
+
     this.store.select(selectFirstLoadedGroups).pipe(
       first(),
     )
       .subscribe(loaded => {
         if (!loaded) {
           this.updateContent();
-          this.blockUpdateButton = true;
+
         }
       })
   }

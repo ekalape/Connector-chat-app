@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TitleControlsComponent } from '../../../components/title-controls/title-controls.component';
 import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { createConversation, getPeopleAndConversations } from 'app/store/actions/people.action';
+import { createConversation, getPeopleAndConversations, getPrivateMessages } from 'app/store/actions/people.action';
 import { selectConversations, selectFirstLoadedPeople, selectSingleConversation, selectUsers } from 'app/store/selectors/people.selectors';
 import { ISingleUserConversation, IUser } from 'app/models/conversations.model';
 import { Subscription, first } from 'rxjs';
@@ -40,7 +40,7 @@ export class PeopleComponent {
   errorSub: Subscription | undefined;
   errorData: IErrorHandle | undefined;
   convID: string | undefined;
-  blockUpdateButton = false;
+
 
   filtered = false;
 
@@ -64,7 +64,7 @@ export class PeopleComponent {
       .subscribe(loaded => {
         if (!loaded) {
           this.updateContent();
-          this.blockUpdateButton = true;
+
         }
       })
   }
@@ -75,7 +75,7 @@ export class PeopleComponent {
   }
 
   openConversation(user: IUser) {
-    if (this.myOpps.includes(user.uid)) {
+    if (/* this.myOpps.includes(user.uid) */this.myConvs.find(c => c.companionID === user.uid)) {
       const convID = this.myConvs.find(c => c.companionID === user.uid)?.id
       this.router.navigate([`/conversation/${convID}`])
     }
@@ -85,7 +85,8 @@ export class PeopleComponent {
         this.singleConvSub = this.store.select(selectSingleConversation(user.uid))
           .subscribe(data => {
             if (data) {
-              this.router.navigate([`/conversation/${data.id}`])
+              console.log('coversationID for navigation:>> ', data.id);
+              this.router.navigate([`/conversation/${data.id}`]);
             }
           })
       } else {

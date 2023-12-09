@@ -22,7 +22,7 @@ export class HeaderComponent {
 
   menuItems: MenuItem[] = [];
   loggedIn = false;
-  sub: Subscription | undefined //-----!!!!!!
+  sub: Subscription | undefined
 
   constructor(private router: Router, private store: Store) {
 

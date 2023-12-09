@@ -41,12 +41,14 @@ export class GroupComponent {
         }
       })
     if (this.groupId) {
+      this.updateGroupMessages()
+
       this.groupData = this.store.select(selectSingleGroup(this.groupId));
       this.groupMessages = this.store.select(selectGroupMessages(this.groupId))
         .pipe(
           map(messages => {
             if (messages)
-              return [...messages]?.sort((a, b) => Number(a.createdAt) - Number(b.createdAt));
+              return [...messages]?.sort((a, b) => Number(b.createdAt) - Number(a.createdAt));
             return []
           }))
     }

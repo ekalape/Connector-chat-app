@@ -4,7 +4,7 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { SignupFormComponent } from './pages/auth/components/signup-form/signup-form.component';
 import { ProfileComponent } from './pages/profile/profile/profile.component';
 import { LoginFormComponent } from './pages/auth/components/login-form/login-form.component';
-import { authGuard } from './guards/auth.guard';
+import { authGuard, guestGuard } from './guards/auth.guard';
 import { GroupComponent } from './pages/group/group.component';
 import { DefaultMainComponent } from './pages/default-main/default-main.component';
 import { ConversationComponent } from './pages/conversation/conversation.component';
@@ -12,13 +12,13 @@ import { ConversationComponent } from './pages/conversation/conversation.compone
 export const routes: Routes = [
   { path: "profile", component: ProfileComponent, canActivate: [authGuard], title: "Profile" },
   {
-    path: "signup", component: AuthComponent, title: "Sign-up", children:
+    path: "signup", component: AuthComponent, title: "Sign-up"/* , canActivate: [authGuard] */, pathMatch: "full", children:
       [
         { path: "", component: SignupFormComponent }
       ]
   },
   {
-    path: "signin", component: AuthComponent, title: "Sign-in", children:
+    path: "signin", component: AuthComponent, title: "Sign-in"/* , canActivate: [authGuard] */, pathMatch: "full", children:
       [
         { path: "", component: LoginFormComponent }]
   },
@@ -29,7 +29,7 @@ export const routes: Routes = [
     path: "conversation/:convID", component: ConversationComponent, title: "Private conversation", canActivate: [authGuard]
   },
   {
-    path: "", component: DefaultMainComponent, canActivate: [authGuard]
+    path: "", component: DefaultMainComponent, canActivate: [authGuard], title: "Connector App", pathMatch: "full"
   },
   { path: "**", component: NotFoundComponent, title: "Not found" }
 

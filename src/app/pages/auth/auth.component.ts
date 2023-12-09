@@ -9,12 +9,13 @@ import { MessageService } from 'primeng/api';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { selectProfileData } from 'app/store/selectors/profile.selectors';
-import { Subscription } from 'rxjs';
+import { Subscription, first } from 'rxjs';
 import { DataExchangeService } from './services/data-exchange.service';
 import { LoginFormComponent } from './components/login-form/login-form.component';
 import { Pathes } from 'app/utils/enums/pathes';
 import { authActions } from 'app/utils/enums/authActions';
 import { getProfileAction } from 'app/store/actions/profile.action';
+import { selectLoggedIn } from 'app/store/selectors/auth.selectors';
 
 
 @Component({
@@ -37,7 +38,7 @@ export class AuthComponent {
 
   activeIndex = 0;
 
-  data = this.store.select(selectProfileData)
+  //data = this.store.select(selectProfileData)
   sub: Subscription | undefined;
   datasub: Subscription | undefined;
 
@@ -46,7 +47,7 @@ export class AuthComponent {
     private dataExchange: DataExchangeService,
     private messageService: MessageService,
   ) {
-    this.router.events.subscribe(event => {
+    this.sub = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.activeIndex = event.urlAfterRedirects.includes("signup") ? 1 : 0;
       }
@@ -54,7 +55,11 @@ export class AuthComponent {
   }
 
   ngOnInit() {
+    /*     this.store.select(selectLoggedIn).pipe(first()).subscribe(data => {
+          if (data.loggedIn) this.router.navigate([Pathes.HOME])
+        }) */
     this.datasub = this.dataExchange.successful.subscribe(x => {
+      console.log('dataExchange :>> ', x);
       if (x.action && x.success) {
         this.showSuccess(x.message);
         if (x.action === authActions.LOGIN) {

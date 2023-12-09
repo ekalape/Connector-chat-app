@@ -7,10 +7,12 @@ import { ChatContainerComponent } from 'app/components/chat-container/chat-conta
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { selectFirstLoadedPeople, selectMessagesByConversationId, selectSingleUser } from 'app/store/selectors/people.selectors';
-import { Observable, first, map } from 'rxjs';
+import { Observable, Subscription, first, map } from 'rxjs';
 import { ISingleMessage, IUser } from 'app/models/conversations.model';
 import { deleteConversation, getPeopleAndConversations, getPrivateMessages, sendPrivateMessage } from 'app/store/actions/people.action';
 import { Pathes } from 'app/utils/enums/pathes';
+import { ErrorHandlingService, IErrorHandle } from 'app/services/error-handling.service';
+import { RequestStatus } from 'app/utils/enums/request-status';
 
 @Component({
   selector: 'app-conversation',
@@ -26,16 +28,25 @@ export class ConversationComponent {
 
   opponent: Observable<IUser | undefined> | undefined;
   privateMessages: Observable<ISingleMessage[] | undefined> | undefined;
+  errorSub: Subscription | undefined;
+  errors: IErrorHandle | undefined;
 
-
-  constructor(private route: ActivatedRoute, private store: Store, private router: Router) {
+  constructor(private route: ActivatedRoute,
+    private store: Store,
+    private router: Router,
+    private errorHandlingService: ErrorHandlingService) {
     this.convID = this.route.snapshot.paramMap.get('convID');
     console.log('this.convID :>> ', this.convID);
-    /*  if (this.convID)
-       this.store.dispatch(getPrivateMessages({ conversationID: this.convID })) */
+    /*      if (this.convID)
+         this.updatePrivateMessages() */
   }
 
   ngOnInit() {
+    this.errorSub = this.errorHandlingService.errorHandling$
+      .subscribe(data => {
+        //  console.log("errors: ", data)
+        this.errors = data
+      })
     this.store.select(selectFirstLoadedPeople).pipe(
       first(),
     )
@@ -46,27 +57,42 @@ export class ConversationComponent {
         }
       })
     if (this.convID) {
+
+      this.updatePrivateMessages();
+
+
       this.opponent = this.store.select(selectSingleUser(this.convID));
       this.privateMessages = this.store.select(selectMessagesByConversationId(this.convID))
         .pipe(
           map(messages => {
             if (messages)
-              return [...messages]?.sort((a, b) => Number(a.createdAt) - Number(b.createdAt));
+              return [...messages]?.sort((a, b) => Number(b.createdAt) - Number(a.createdAt));
             return []
           }))
     }
 
   }
 
+  /*   ngAfterContentInit() {
+      this.updatePrivateMessages();
+
+    } */
   sendMessage(message: string) {
     if (this.convID) { this.store.dispatch(sendPrivateMessage({ conversationID: this.convID, message })) }
   }
   updatePrivateMessages() {
-    if (this.convID) { this.store.dispatch(getPrivateMessages({ conversationID: this.convID })) }
+    if (this.convID) {
+      console.log('conversationID :>> ', this.convID);
+      this.store.dispatch(getPrivateMessages({ conversationID: this.convID }))
+    }
   }
   deleteConversation(conversationID: string) {
     this.store.dispatch(deleteConversation({ conversationID }));
     this.router.navigate([Pathes.HOME])
+  }
+  ngOnDestroy() {
+    this.errorHandlingService.reset()
+    this.errorSub?.unsubscribe()
   }
 
 }

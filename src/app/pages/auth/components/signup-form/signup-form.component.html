@@ -15,6 +15,9 @@
       <p class="errors-message" *ngIf="firstName.errors?.['pattern']">
         Only letters and spaces are allowed.
       </p>
+      <p class="errors-message" *ngIf="firstName.errors?.['maxlength']">
+        The name is too long.
+      </p>
     </div>
   </div>
   <div class="input-container">

@@ -15,8 +15,9 @@ import { LstorageSaveInterceptor } from './interceptors/lstorage-save.intercepto
 import { GroupsEffects } from './store/effects/group.effect';
 import { PeopleEffects } from './store/effects/people.effect';
 
-export const httpInterceptorProviders = [{ provide: HTTP_INTERCEPTORS, useClass: AuthorizationInterceptor, multi: true },
-{ provide: HTTP_INTERCEPTORS, useClass: LstorageSaveInterceptor, multi: true }]
+export const httpInterceptorProviders = [
+  { provide: HTTP_INTERCEPTORS, useClass: AuthorizationInterceptor, multi: true },
+  { provide: HTTP_INTERCEPTORS, useClass: LstorageSaveInterceptor, multi: true }]
 
 export const appConfig: ApplicationConfig = {
   providers: [provideRouter(routes),

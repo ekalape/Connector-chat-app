@@ -1,7 +1,7 @@
 <div class="chat-container">
-  <div class="chat-container__messages">
-    <ng-content></ng-content>
-  </div>
+
+  <ng-content></ng-content>
+
 </div>
 <form class="input-block" (ngSubmit)="sendMessage()">
   <input type="text" pInputText [formControl]="messageInput" />

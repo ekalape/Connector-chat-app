@@ -31,7 +31,7 @@ export class ErrorHandlingService {
     this.errHandle.next({ ...this.errHandle.value, isLoading })
   }
   handleError(err: HttpErrorResponse) {
-    console.log('err :>> ', err);
+    //console.log('err :>> ', err);
     this.errHandle.next({ isLoading: false, errorType: err.error.type, errorMessage: err.error.message, status: RequestStatus.ERROR })
   }
   reset() {
@@ -41,6 +41,8 @@ export class ErrorHandlingService {
       errorMessage: null,
       status: RequestStatus.WAITING
     })
+
+    //console.log("error service resetted", this.errHandle.value);
   }
 
 }

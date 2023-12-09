@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { ConversationsService } from 'app/services/conversations.service';
 import { HttpService } from 'app/services/http-service.service';
 import { createConversation, createConversationSuccess, deleteConversation, deleteConversationSuccess, getActiveConversations, getActiveConversationsSuccess, getPeople, getPeopleAndConversations, getPeopleAndConversationsSuccess, getPeopleSuccess, getPrivateMessages, getPrivateMessagesSuccess, sendPrivateMessage, sendPrivateMessageSuccess } from '../actions/people.action';
-import { map, switchMap, catchError, of, EMPTY, mergeMap, concatMap, withLatestFrom } from 'rxjs';
+import { map, switchMap, catchError, of, EMPTY, mergeMap, concatMap, withLatestFrom, delay, tap } from 'rxjs';
 import { IPeople, ISingleMessage, ISingleUserConversation, IUser, IUserConversations } from 'app/models/conversations.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { selectMyID } from '../selectors/profile.selectors';
@@ -50,13 +50,16 @@ export class PeopleEffects {
       concatMap(action => of(action).pipe(
         withLatestFrom(this.store.select(selectMessagesByConversationId(action.conversationID)))
       )),
-      mergeMap(([action, storedMessages]) => {
-        let lastMessageDate: string | undefined;
-        if (storedMessages) {
+      concatMap(([action, storedMessages]) => {
+        let lastMessageDate: number | undefined;
+        if (storedMessages && storedMessages.length) {
+          // console.log("storedMessages exists: ", storedMessages);
           const sortedMessages = [...storedMessages].sort((a, b) => Number(a.createdAt) - Number(b.createdAt));
-          lastMessageDate = sortedMessages[sortedMessages.length - 1]?.createdAt;
+          lastMessageDate = Number(sortedMessages[sortedMessages.length - 1]?.createdAt) + 1;
         }
-        return this.service.getPrivateMessages(action.conversationID).pipe(
+        // console.log('lastMessageDate :>> ', lastMessageDate);
+        console.log("ID sent to get messages from", action.conversationID)
+        return this.service.getPrivateMessages(action.conversationID, lastMessageDate).pipe(
           map(res => res.Items.map(m => ({
             authorID: m.authorID.S,
             message: m.message.S,
@@ -110,6 +113,7 @@ export class PeopleEffects {
     .pipe(
       ofType(createConversation),
       switchMap((action) => this.service.createConversations(action.companion).pipe(
+        tap((res) => console.log("ID returns from create request", res.conversationID)),
         map(({ conversationID }) => createConversationSuccess({ conversation: { id: conversationID, companionID: action.companion } })),
         catchError((err) => {
           this.errorHandlingService.handleError(err);

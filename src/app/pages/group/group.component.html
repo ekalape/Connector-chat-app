@@ -1,5 +1,6 @@
 <app-title-controls [kind]="titleKinds.PRIVATE_GROUP"
-  (updateContent)="updateGroupMessages()">Group "{{(groupData|async)?.name || groupId}}"
+  (updateContent)="updateGroupMessages()">Group
+  "{{(groupData|async)?.name || groupId}}"
 </app-title-controls>
 <app-chat-container (sendEvent)="sendMessage($event)">
   <app-message *ngFor="let message of (groupMessages|async)"

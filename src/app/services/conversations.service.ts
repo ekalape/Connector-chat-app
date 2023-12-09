@@ -59,7 +59,8 @@ export class ConversationsService {
     let params = new HttpParams().set("conversationID", conversationID);
     if (since)
       params = params.append("since", since);
-    console.log('params :>> ', params);
+    console.log('inside service since :>> ', since, "conversationID :>>", conversationID);
+
     return this.httpClient.get<IMessages>(`${BASE_URL}/conversations/read`, { params });
   }
 

@@ -4,5 +4,8 @@
   flex-direction: column;
   align-items: center;
   position: relative;
-  overflow-y: auto;
+  height: calc(100vh - 80px);
+  & app-chat-container {
+    overflow-y: auto;
+  }
 }

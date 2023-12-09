@@ -31,9 +31,9 @@ export class TitleControlsComponent {
 
   ngOnInit() {
     if (this.blockUpdateButton) this.startCounter()
-
-    if (this.kind === titleKinds.PRIVATE_GROUP || this.kind === titleKinds.PRIVATE_CONVERSATION)
-      this.update()
+    /*
+        if (this.kind === titleKinds.PRIVATE_GROUP || this.kind === titleKinds.PRIVATE_CONVERSATION)
+          this.update() */
   }
 
   goBack() {
