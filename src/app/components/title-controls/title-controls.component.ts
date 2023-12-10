@@ -1,9 +1,13 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Location } from '@angular/common';
 import { titleKinds } from 'app/utils/enums/title-controls';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { selectErrorState } from 'app/store/selectors/error.selectors';
+import { Subscription, first, tap } from 'rxjs';
+import { RequestStatus } from 'app/utils/enums/request-status';
 
 
 @Component({
@@ -18,32 +22,43 @@ export class TitleControlsComponent {
   @Output() updateContent = new EventEmitter();
   @Output() addGroup = new EventEmitter();
   @Output() deleteConversation = new EventEmitter();
+  @Input() blockBtn = false
 
-  @Input() blockUpdateButton: boolean = false;
 
+  errorSub: Subscription | undefined;
+  status: RequestStatus | undefined
 
   counterIsActive = false;
-  count = 60;
+  count = 10;
 
-  constructor(private location: Location, private route: ActivatedRoute,
+  constructor(private location: Location,
+    private route: ActivatedRoute,
+    private store: Store
   ) {
   }
 
   ngOnInit() {
-    if (this.blockUpdateButton) this.startCounter()
-    /*
-        if (this.kind === titleKinds.PRIVATE_GROUP || this.kind === titleKinds.PRIVATE_CONVERSATION)
-          this.update() */
   }
 
   goBack() {
     this.location.back()
+
   }
 
   update() {
     this.updateContent.emit(this.kind);
-    this.startCounter()
+    console.log('this.blockBtn :>> ', this.blockBtn);
+
+    if (this.blockBtn)
+      this.startCounter()
   }
+
+  /*   ngOnChanges() {
+      if (this.blockBtn)
+        this.startCounter()
+    } */
+
+
 
   add() {
     this.addGroup.emit()
@@ -56,13 +71,18 @@ export class TitleControlsComponent {
       if (this.count === 0 && interval) {
         clearInterval(interval)
         this.counterIsActive = false;
-        this.count = 60;
+        this.count = 10;
       };
     }, 1000)
+
   }
 
   delete() {
     this.deleteConversation.emit(this.route.snapshot.paramMap.get('convID'))
+  }
+
+  ngOnDestroy() {
+    this.errorSub?.unsubscribe()
   }
 
 }

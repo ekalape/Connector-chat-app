@@ -1,6 +1,9 @@
 import { IHttpError } from 'app/models/auth.model'
 import { ISingleGroup, ISingleMessage, ISingleUserConversation, IUser } from 'app/models/conversations.model'
 
+import { RequestStatus } from 'app/utils/enums/request-status'
+import { titleKinds } from 'app/utils/enums/title-controls'
+
 
 export interface IAutorizationSlice {
   id: string,
@@ -26,10 +29,19 @@ export interface IPeopleState {
     dialog: ISingleMessage[]
   }[]
 }
+export interface IErrorHandle {
+  isLoading: boolean;
+  errorType: string | null | undefined;
+  errorMessage: string | null;
+  status: RequestStatus;
+  kind?: titleKinds | null
+}
 
 export interface IState {
   authorization: IAutorizationSlice,
   groups: ISingleGroup[],
   groupsMessages: IGroupsMessagesState[],
-  people: IPeopleState;
+  people: IPeopleState,
+  error: IErrorHandle
+
 }

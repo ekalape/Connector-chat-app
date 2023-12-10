@@ -11,6 +11,8 @@ import { selectAllGroupMessages, selectGroupMessages, selectGroups } from '../se
 import { selectMyID, selectProfileData } from '../selectors/profile.selectors';
 import { StorageKeys } from 'app/utils/enums/local-storage-keys';
 import { ErrorHandlingService } from 'app/services/error-handling.service';
+import { errorHandleAction, setMainLoadingState, setSuccessAction } from '../actions/error-handle.action';
+import { titleKinds } from 'app/utils/enums/title-controls';
 
 
 @Injectable()
@@ -19,24 +21,26 @@ export class GroupsEffects {
   constructor(private actions$: Actions,
     private store: Store,
     private service: ConversationsService,
-    private errorHandlingService: ErrorHandlingService) {
+  ) {
   }
 
   loadGroups$ = createEffect(() => this.actions$
     .pipe(
       ofType(getAllGroups),
+      tap(() => { this.store.dispatch(setMainLoadingState({ isLoading: true })) }),
       switchMap((action) => {
         return this.service.getGroups()
           .pipe(
             map((res: IGroups) => {
               return res.Items.map((x) => ({ id: x.id.S, name: x.name.S, createdAt: x.createdAt.S, createdBy: x.createdBy.S }))
             }),
-            map((res: ISingleGroup[]) =>
-              getAllGroupsSuccess({ groups: res })
+            map((res: ISingleGroup[]) => {
+              this.store.dispatch(setSuccessAction({ kind: titleKinds.GROUPS }))
+              return getAllGroupsSuccess({ groups: res })
+            }
             ),
             catchError((err) => {
-              this.errorHandlingService.handleError(err)
-              return EMPTY
+              return of(errorHandleAction({ error: err.error }));
             })
           )
       })
@@ -45,6 +49,7 @@ export class GroupsEffects {
   loadNewGroup$ = createEffect(() => this.actions$
     .pipe(
       ofType(addNewGroup),
+      tap(() => { this.store.dispatch(setMainLoadingState({ isLoading: true })) }),
       withLatestFrom(this.store.select(selectMyID)),
       switchMap(([action, myData]) => {
         return this.service.addNewGroup(action.groupName)
@@ -62,14 +67,14 @@ export class GroupsEffects {
             }),
             map((res: ISingleGroup | undefined) => {
               if (res) {
+                this.store.dispatch(setSuccessAction({ kind: null }))
                 return addNewGroupSuccess({ group: res })
               }
               else throw new HttpErrorResponse({ error: { type: "NoUserIDFund", message: "You have to login" } })
             }
             ),
             catchError((err) => {
-              this.errorHandlingService.handleError(err)
-              return EMPTY
+              return of(errorHandleAction({ error: err.error }));
             })
           )
       })
@@ -78,15 +83,15 @@ export class GroupsEffects {
   loadDeleteGroup$ = createEffect(() => this.actions$
     .pipe(
       ofType(deleteGroup),
-      //withLatestFrom(this.store.select(selectAllGroupMessages)),
+      tap(() => { this.store.dispatch(setMainLoadingState({ isLoading: true })) }),
       switchMap((action) => {
         return this.service.deleteGroup(action.groupId).pipe(
           map(res => {
+            this.store.dispatch(setSuccessAction({ kind: null }))
             return deleteGroupSuccess({ groupId: action.groupId })
           }),
           catchError((err) => {
-            this.errorHandlingService.handleError(err);
-            return EMPTY
+            return of(errorHandleAction({ error: err.error }));
           })
         )
       })
@@ -96,19 +101,22 @@ export class GroupsEffects {
   loadSendGroupMessage$ = createEffect(() => this.actions$
     .pipe(
       ofType(sendGroupMessage),
+      tap(() => { this.store.dispatch(setMainLoadingState({ isLoading: true })) }),
       withLatestFrom(this.store.select(selectMyID)),
       switchMap(([action, mydata]) => {
         return this.service.sendGroupMessage(action.groupId, action.message).pipe(
-          map(() => sendGroupMessagesSuccess({
-            groupId: action.groupId, message: {
-              authorID: mydata.id,
-              message: action.message,
-              createdAt: Date.now() + ""
-            }
-          })),
+          map(() => {
+            this.store.dispatch(setSuccessAction({ kind: null }))
+            return sendGroupMessagesSuccess({
+              groupId: action.groupId, message: {
+                authorID: mydata.id,
+                message: action.message,
+                createdAt: Date.now() + ""
+              }
+            })
+          }),
           catchError((err) => {
-            this.errorHandlingService.handleError(err);
-            return EMPTY;
+            return of(errorHandleAction({ error: err.error }));
           })
         )
       })
@@ -119,6 +127,7 @@ export class GroupsEffects {
   loadGroupMessages$ = createEffect(() => this.actions$
     .pipe(
       ofType(getGroupMessages),
+      tap(() => { this.store.dispatch(setMainLoadingState({ isLoading: true })) }),
       concatMap(action => of(action).pipe(
         withLatestFrom(this.store.select(selectGroupMessages(action.groupId))),
       )),
@@ -135,10 +144,12 @@ export class GroupsEffects {
             message: x.message.S,
             createdAt: x.createdAt.S
           }))),
-          map(messages => getGroupMessagesSuccess({ groupId: action.groupId, messages })),
+          map(messages => {
+            this.store.dispatch(setSuccessAction({ kind: titleKinds.PRIVATE_GROUP }))
+            return getGroupMessagesSuccess({ groupId: action.groupId, messages })
+          }),
           catchError((err) => {
-            this.errorHandlingService.handleError(err);
-            return EMPTY
+            return of(errorHandleAction({ error: err.error }));
           })
         )
       })

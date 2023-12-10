@@ -9,7 +9,7 @@ import { Store } from '@ngrx/store';
 import { logOutAction } from 'app/store/actions/auth.action';
 import { Subscription } from 'rxjs';
 import { selectLoggedIn } from 'app/store/selectors/auth.selectors';
-import { ErrorHandlingService, IErrorHandle } from 'app/services/error-handling.service';
+
 
 
 @Component({

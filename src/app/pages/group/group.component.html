@@ -1,5 +1,6 @@
 <app-title-controls [kind]="titleKinds.PRIVATE_GROUP"
-  (updateContent)="updateGroupMessages()">Group
+  (updateContent)="updateGroupMessages()"
+  [blockBtn]="(errorState|async)?.status===RequestStatus.SUCCESS && (errorState|async)?.kind===titleKinds.PRIVATE_GROUP">Group
   "{{(groupData|async)?.name || groupId}}"
 </app-title-controls>
 <app-chat-container (sendEvent)="sendMessage($event)">

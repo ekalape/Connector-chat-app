@@ -2,13 +2,15 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IGroupResponce, IGroups, IMessages, IPeople, IUserConversations, IUserConversationsResponse } from 'app/models/conversations.model';
 import { BASE_URL } from 'app/utils/enums/pathes';
+import { catchError } from 'rxjs';
+import { ErrorHandlingService } from './error-handling.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConversationsService {
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private errService: ErrorHandlingService) { }
 
   getGroups() {
     return this.httpClient.get<IGroups>(`${BASE_URL}/groups/list`)
@@ -46,7 +48,7 @@ export class ConversationsService {
   }
 
   createConversations(companion: string) {
-    return this.httpClient.post<IUserConversationsResponse>(`${BASE_URL}/conversations/create`, { companion });
+    return this.httpClient.post<IUserConversationsResponse>(`${BASE_URL}/conversations/create`, { companion })
   }
 
   deleteConversations(convID: string) {

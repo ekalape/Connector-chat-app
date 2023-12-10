@@ -1,4 +1,5 @@
-<app-title-controls (updateContent)="updateContent()">People</app-title-controls>
+<app-title-controls (updateContent)="updateContent()"
+  [blockBtn]="(errorState|async)?.status===RequestStatus.SUCCESS&&(errorState|async)?.kind===titleKinds.PEOPLE">People</app-title-controls>
 <div class="filter-menu">
 
   <a [ngClass]="filtered?'':'chosen'" (click)="chooseFilter(0)">Show all</a>
@@ -10,3 +11,5 @@
     [ngClass]="myOpps.includes(user.uid)?'mine':''">{{user.name}}</a>
 </div>
 <p-toast position="top-center" key="tc"></p-toast>
+
+<!-- <app-loading-overlay [show]="(errorState|async)?.isLoading"></app-loading-overlay> -->

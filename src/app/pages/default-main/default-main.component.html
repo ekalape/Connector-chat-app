@@ -1,6 +1,7 @@
 <div class="list-container groups">
   <app-title-controls [kind]="titleKinds.GROUPS" (updateContent)="updateContent()"
-    (addGroup)="addGroup()">Groups</app-title-controls>
+    (addGroup)="addGroup()"
+    [blockBtn]="(errorState|async)?.status===RequestStatus.SUCCESS && (errorState|async)?.kind===titleKinds.GROUPS">Groups</app-title-controls>
   <div class="filter-menu">
 
     <a [ngClass]="filtered?'':'chosen'" (click)="chooseFilter(0)">Show all</a>
@@ -33,3 +34,7 @@
     *ngIf="(groupName.touched || groupName.dirty) && groupName.errors?.['maxlength']">Maximum
     30 letters</span>
 </p-dialog>
+
+<p-toast position="top-center" key="tc"></p-toast>
+
+<app-loading-overlay [show]="(errorState|async)?.isLoading"></app-loading-overlay>

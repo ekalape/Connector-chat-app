@@ -6,12 +6,17 @@ import { Store } from '@ngrx/store';
 import { createConversation, getPeopleAndConversations, getPrivateMessages } from 'app/store/actions/people.action';
 import { selectConversations, selectFirstLoadedPeople, selectSingleConversation, selectUsers } from 'app/store/selectors/people.selectors';
 import { ISingleUserConversation, IUser } from 'app/models/conversations.model';
-import { Subscription, first } from 'rxjs';
-import { ErrorHandlingService, IErrorHandle } from 'app/services/error-handling.service';
+import { Observable, Subscription, first, tap } from 'rxjs';
+import { ErrorHandlingService } from 'app/services/error-handling.service';
 import { RequestStatus } from 'app/utils/enums/request-status';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ChatPartnersPipe } from 'app/pipes/chat-partners.pipe';
+import { selectErrorState } from 'app/store/selectors/error.selectors';
+import { resetErrorAction, setMainLoadingState } from 'app/store/actions/error-handle.action';
+import { LoadingOverlayComponent } from 'app/components/loading-overlay/loading-overlay.component';
+import { IErrorHandle } from 'app/store/models/store.model';
+import { titleKinds } from 'app/utils/enums/title-controls';
 
 
 
@@ -22,24 +27,30 @@ import { ChatPartnersPipe } from 'app/pipes/chat-partners.pipe';
     TitleControlsComponent,
     RouterModule,
     ToastModule,
-    ChatPartnersPipe],
+    ChatPartnersPipe,
+    LoadingOverlayComponent],
   providers: [ErrorHandlingService, MessageService],
   templateUrl: './people.component.html',
   styleUrl: './people.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+
 })
 export class PeopleComponent {
 
+  RequestStatus = RequestStatus;
+  titleKinds = titleKinds
 
-  people = this.store.select(selectUsers)
+  people = this.store.select(selectUsers);
+  errorState = this.store.select(selectErrorState);
 
   myOpps: string[] = [];
   myConvs: ISingleUserConversation[] = [];
   allMyConvSub: Subscription | undefined;
   singleConvSub: Subscription | undefined;
   errorSub: Subscription | undefined;
-  errorData: IErrorHandle | undefined;
+  errorData: RequestStatus | undefined;
   convID: string | undefined;
+
+  isLoading = false;
 
 
   filtered = false;
@@ -55,8 +66,13 @@ export class PeopleComponent {
       this.myOpps = data.map(d => d.companionID);
       this.myConvs = data
     })
-    this.errorSub = this.errorHandlingService.errorHandling$
-      .subscribe((errorData: IErrorHandle) => this.errorData = errorData);
+    this.errorSub = this.errorState.subscribe((data: IErrorHandle) => {
+      this.errorData = data.status;
+      if (data.status === RequestStatus.ERROR) {
+        this.showError(data.errorMessage || "Something went wrong")
+      }
+    })
+
 
     this.store.select(selectFirstLoadedPeople).pipe(
       first(),
@@ -64,7 +80,6 @@ export class PeopleComponent {
       .subscribe(loaded => {
         if (!loaded) {
           this.updateContent();
-
         }
       })
   }
@@ -75,13 +90,15 @@ export class PeopleComponent {
   }
 
   openConversation(user: IUser) {
-    if (/* this.myOpps.includes(user.uid) */this.myConvs.find(c => c.companionID === user.uid)) {
+    if (this.myOpps.includes(user.uid)) {
       const convID = this.myConvs.find(c => c.companionID === user.uid)?.id
       this.router.navigate([`/conversation/${convID}`])
     }
     else {
+      this.store.dispatch(setMainLoadingState({ isLoading: true }))
       this.store.dispatch(createConversation({ companion: user.uid }))
-      if (this.errorData?.status !== RequestStatus.ERROR) {
+
+      if (this.errorData !== RequestStatus.ERROR) {
         this.singleConvSub = this.store.select(selectSingleConversation(user.uid))
           .subscribe(data => {
             if (data) {
@@ -89,8 +106,6 @@ export class PeopleComponent {
               this.router.navigate([`/conversation/${data.id}`]);
             }
           })
-      } else {
-        this.showError(this.errorData.errorMessage || "Something went wrong")
       }
     }
 
@@ -104,6 +119,8 @@ export class PeopleComponent {
   }
   showError(errorMessage: string | undefined) {
     this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: errorMessage || "Something went wrong, try again" });
+
+    //this.store.dispatch(resetErrorAction())
   }
 
   chooseFilter(opt: number) {

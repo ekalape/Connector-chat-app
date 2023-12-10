@@ -13,9 +13,14 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PeopleComponent } from 'app/pages/default-main/people/people.component';
 import { OwnGroupsPipe } from 'app/pipes/own-groups.pipe';
-import { first } from 'rxjs';
-import { selectLoggedIn } from 'app/store/selectors/auth.selectors';
-import { Pathes } from 'app/utils/enums/pathes';
+import { Subscription, first } from 'rxjs';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { LoadingOverlayComponent } from 'app/components/loading-overlay/loading-overlay.component';
+
+import { selectErrorState } from 'app/store/selectors/error.selectors';
+import { RequestStatus } from 'app/utils/enums/request-status';
+import { IErrorHandle } from 'app/store/models/store.model';
 
 
 @Component({
@@ -31,29 +36,31 @@ import { Pathes } from 'app/utils/enums/pathes';
     GroupCardComponent,
     TitleControlsComponent,
     PeopleComponent,
+    ToastModule,
+    LoadingOverlayComponent,
     OwnGroupsPipe],
+  providers: [MessageService],
   templateUrl: './default-main.component.html',
   styleUrl: './default-main.component.scss'
 })
 export class DefaultMainComponent {
   titleKinds = titleKinds;
+  RequestStatus = RequestStatus;
 
   allGroups = this.store.select(selectGroups);
   myGroups = this.store.select(selectMyGroups);
-
+  errorState = this.store.select(selectErrorState);
   groupName = new FormControl('', [Validators.required, Validators.maxLength(30)])
-
+  errorSub: Subscription | undefined;
   openDialog = false;
 
   filtered = false;
 
 
-  constructor(private store: Store) {
+  constructor(private store: Store, private messageService: MessageService) {
   }
 
   ngOnInit() {
-
-
     this.store.select(selectFirstLoadedGroups).pipe(
       first(),
     )
@@ -63,6 +70,12 @@ export class DefaultMainComponent {
 
         }
       })
+
+    this.errorSub = this.errorState.subscribe((data: IErrorHandle) => {
+      if (data.status === RequestStatus.ERROR) {
+        this.showError(data.errorMessage || "Something went wrong")
+      }
+    })
   }
 
   updateContent() {
@@ -99,5 +112,10 @@ export class DefaultMainComponent {
       default: return;
     }
 
+  }
+  showError(errorMessage: string | undefined) {
+    this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: errorMessage || "Something went wrong, try again" });
+
+    // this.store.dispatch(resetErrorAction())
   }
 }
