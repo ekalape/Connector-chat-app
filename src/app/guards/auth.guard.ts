@@ -7,7 +7,7 @@ import { Pathes } from 'app/utils/enums/pathes';
 import { take } from 'rxjs';
 
 
-export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
 
   const router = inject(Router);
 
@@ -26,7 +26,7 @@ export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, st
     return false;
   }
 };
-export const guestGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+export const guestGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
 
   const router = inject(Router);
 
@@ -39,14 +39,12 @@ export const guestGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, s
   console.log('route :>> ', route);
   console.log('state :>> ', state);
   if (isLogged) {
-    if (["/signin", "signup"].includes(state.url)) router.navigate([Pathes.HOME])
+
     return false;
   }
-  else {
-
-    return true;
-  }
+  else return true;
 };
+
 
 
 

@@ -9,6 +9,7 @@ import { Store } from '@ngrx/store';
 import { logOutAction } from 'app/store/actions/auth.action';
 import { Subscription } from 'rxjs';
 import { selectLoggedIn } from 'app/store/selectors/auth.selectors';
+import { ErrorHandlingService, IErrorHandle } from 'app/services/error-handling.service';
 
 
 @Component({
@@ -22,25 +23,28 @@ export class HeaderComponent {
 
   menuItems: MenuItem[] = [];
   loggedIn = false;
-  sub: Subscription | undefined
+  sub: Subscription | undefined;
 
-  constructor(private router: Router, private store: Store) {
+
+  constructor(private router: Router, private store: Store
+  ) {
 
   }
 
   ngOnInit() {
     this.sub = this.store.select(selectLoggedIn).subscribe(x => this.loggedIn = x.loggedIn)
+
   }
 
   isActive(): boolean {
     const routes = ["/signin", "/signup", "group", "conversation", "/"]
+
     return routes.some(r => this.router.url === r)
   }
 
   logout() {
     if (this.loggedIn) {
       this.store.dispatch(logOutAction())
-      this.router.navigate([Pathes.SIGN_IN])
 
     }
   }

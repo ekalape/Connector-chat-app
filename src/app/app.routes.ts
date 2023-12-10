@@ -12,13 +12,13 @@ import { ConversationComponent } from './pages/conversation/conversation.compone
 export const routes: Routes = [
   { path: "profile", component: ProfileComponent, canActivate: [authGuard], title: "Profile" },
   {
-    path: "signup", component: AuthComponent, title: "Sign-up"/* , canActivate: [authGuard] */, pathMatch: "full", children:
+    path: "signup", component: AuthComponent, title: "Sign-up", canActivate: [guestGuard], pathMatch: "full", children:
       [
         { path: "", component: SignupFormComponent }
       ]
   },
   {
-    path: "signin", component: AuthComponent, title: "Sign-in"/* , canActivate: [authGuard] */, pathMatch: "full", children:
+    path: "signin", component: AuthComponent, title: "Sign-in", canActivate: [guestGuard], pathMatch: "full", children:
       [
         { path: "", component: LoginFormComponent }]
   },
