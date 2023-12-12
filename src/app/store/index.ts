@@ -1,14 +1,15 @@
 import { ActionReducerMap } from '@ngrx/store';
-import { IState } from './models/store.model';
+import { IErrorState, IState } from './models/store.model';
 
 import { profileReducer } from './reducers/profile.reducer';
-import { groupMessagesReducer, groupsReducer } from './reducers/groups.reducer';
+import { groupsReducer } from './reducers/groups.reducer';
 import { peopleReducer } from './reducers/people.reducer';
-import { errorHandleReducer } from './reducers/error-handle.reducer';
 import { RequestStatus } from 'app/utils/enums/request-status';
 
 
-
+export const initErrorState: IErrorState = {
+  status: RequestStatus.WAITING
+}
 
 export const StoreInitialState: IState = {
   authorization: {
@@ -21,28 +22,40 @@ export const StoreInitialState: IState = {
     loading: false,
     error: null
   },
-  groups: [],
-  groupsMessages: [],
-  people: {
-    users: [],
-    conversations: [],
-    messages: []
+  groups: {
+    list: [],
+    history: [],
+    errors: {
+      main: initErrorState,
+      private: initErrorState,
+    },
+    counters: {
+      main: 0,
+      private: 0,
+    },
+    loading: false
   },
-  error: {
-    isLoading: false,
-    errorType: null,
-    errorMessage: null,
-    status: RequestStatus.WAITING
+  people: {
+    list: [],
+    myConvs: [],
+    history: [],
+    errors: {
+      main: initErrorState,
+      private: initErrorState,
+    },
+    counters: {
+      main: 0,
+      private: 0,
+    },
+    loading: false
+  },
 
-  }
 }
 
 
 export const reducers: ActionReducerMap<IState> = {
   authorization: profileReducer,
   groups: groupsReducer,
-  groupsMessages: groupMessagesReducer,
-  people: peopleReducer,
-  error: errorHandleReducer
+  people: peopleReducer
 
 }

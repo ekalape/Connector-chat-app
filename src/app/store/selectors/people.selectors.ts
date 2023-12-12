@@ -1,10 +1,30 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { IPeopleState } from '../models/store.model';
+import { IPeopleSlice } from '../models/store.model';
 import { selectMyID } from './profile.selectors';
 
-export const selectPeopleData = createFeatureSelector<IPeopleState>('people');
+export const selectPeopleData = createFeatureSelector<IPeopleSlice>('people');
 
-export const selectUsers = createSelector(selectPeopleData, selectMyID, (data, myData) => data.users.filter(us => us.uid !== myData.id));
+export const selectUsers = createSelector(selectPeopleData, selectMyID, (data, myData) => data.list.filter(us => us.uid !== myData.id));
+export const selectMyConversations = createSelector(selectPeopleData, (data) => data.myConvs);
+
+export const selectUserByConversationID = (convID: string) => createSelector(selectPeopleData, (data) => {
+  return data.myConvs.find(c => c.id === convID)?.companionID
+})
+
+export const selectMessagesByConversationId = (convID: string) => createSelector(selectPeopleData, (data) => {
+  return data.history.find(c => c.conversationID === convID)?.messages
+})
+
+export const selectConversationByCompanion = (opponentID: string) => createSelector(selectMyConversations,
+  data => data.find(c => c.companionID === opponentID)?.id)
+
+export const selectFirstLoadedPeople = createSelector(selectUsers, (users) => {
+  if (users.length) return true;
+  return false;
+})
+
+
+/* export const selectUsers = createSelector(selectPeopleData, selectMyID, (data, myData) => data.users.filter(us => us.uid !== myData.id));
 export const selectConversations = createSelector(selectPeopleData, (data) => data.conversations);
 export const selectAllMessages = createSelector(selectPeopleData, (data) => data.messages);
 
@@ -27,4 +47,14 @@ export const selectSingleConversation = (opponentID: string) => createSelector(s
 export const selectFirstLoadedPeople = createSelector(selectUsers, (users) => {
   if (users.length) return true;
   return false;
-})
+}) */
+
+
+export const selectMainPeopleErrorState = createSelector(selectPeopleData, (data) => data.errors.main);
+export const selectPrivatePeopleErrorState = createSelector(selectPeopleData, (data) => data.errors.private);
+
+export const selectPeopleMainCounterState = createSelector(selectPeopleData, (data) => data.counters.main);
+export const selectPeoplePrivateCounterState = createSelector(selectPeopleData, (data) => data.counters.private);
+
+
+export const selectPeopleLoadingState = createSelector(selectPeopleData, (data) => data.loading);

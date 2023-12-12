@@ -6,7 +6,7 @@ import { TitleControlsComponent } from 'app/components/title-controls/title-cont
 import { titleKinds } from 'app/utils/enums/title-controls';
 import { Store } from '@ngrx/store';
 import { addNewGroup, deleteGroup, getAllGroups } from 'app/store/actions/group.action';
-import { selectFirstLoadedGroups, selectGroups, selectMyGroups } from 'app/store/selectors/group.selectors';
+import { selectFirstLoadedGroups, selectGroupLoadingState, selectGroups, selectGroupsList, selectMainGroupErrorState, selectMyGroups } from 'app/store/selectors/group.selectors';
 import { DialogModule } from 'primeng/dialog';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -18,9 +18,9 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { LoadingOverlayComponent } from 'app/components/loading-overlay/loading-overlay.component';
 
-import { selectErrorState } from 'app/store/selectors/error.selectors';
 import { RequestStatus } from 'app/utils/enums/request-status';
-import { IErrorHandle } from 'app/store/models/store.model';
+import { IErrorState } from 'app/store/models/store.model';
+
 
 
 @Component({
@@ -47,15 +47,17 @@ export class DefaultMainComponent {
   titleKinds = titleKinds;
   RequestStatus = RequestStatus;
 
-  allGroups = this.store.select(selectGroups);
+  allGroups = this.store.select(selectGroupsList);
   myGroups = this.store.select(selectMyGroups);
-  errorState = this.store.select(selectErrorState);
-  groupName = new FormControl('', [Validators.required, Validators.maxLength(30)])
+  errorState: IErrorState | undefined
+
+  isLoading = this.store.select(selectGroupLoadingState)
+
+  groupName = new FormControl('', [Validators.required, Validators.maxLength(30)]);
+
   errorSub: Subscription | undefined;
   openDialog = false;
-
   filtered = false;
-
 
   constructor(private store: Store, private messageService: MessageService) {
   }
@@ -67,15 +69,14 @@ export class DefaultMainComponent {
       .subscribe(loaded => {
         if (!loaded) {
           this.updateContent();
-
         }
       })
 
-    this.errorSub = this.errorState.subscribe((data: IErrorHandle) => {
-      if (data.status === RequestStatus.ERROR) {
-        this.showError(data.errorMessage || "Something went wrong")
-      }
+    this.errorSub = this.store.select(selectMainGroupErrorState).subscribe((data) => {
+      this.errorState = data;
+      if (data.status === RequestStatus.ERROR) this.showError(data.message || "Something went wrong")
     })
+
   }
 
   updateContent() {
@@ -98,6 +99,7 @@ export class DefaultMainComponent {
   }
 
   deleteGroup(groupId: string) {
+    //TODO modal with confirmation
     this.store.dispatch(deleteGroup({ groupId }))
   }
 
@@ -116,6 +118,5 @@ export class DefaultMainComponent {
   showError(errorMessage: string | undefined) {
     this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: errorMessage || "Something went wrong, try again" });
 
-    // this.store.dispatch(resetErrorAction())
   }
 }

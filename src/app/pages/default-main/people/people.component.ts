@@ -1,21 +1,23 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TitleControlsComponent } from '../../../components/title-controls/title-controls.component';
 import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { createConversation, getPeopleAndConversations, getPrivateMessages } from 'app/store/actions/people.action';
-import { selectConversations, selectFirstLoadedPeople, selectSingleConversation, selectUsers } from 'app/store/selectors/people.selectors';
-import { ISingleUserConversation, IUser } from 'app/models/conversations.model';
-import { Observable, Subscription, first, tap } from 'rxjs';
-import { ErrorHandlingService } from 'app/services/error-handling.service';
+import { createConversation, getPeopleAndConversations } from 'app/store/actions/people.action';
+import {
+  selectConversationByCompanion, selectFirstLoadedPeople,
+  selectMainPeopleErrorState,
+  selectMyConversations, selectPeopleLoadingState,
+  selectUsers
+} from 'app/store/selectors/people.selectors';
+import { IUser } from 'app/models/conversations.model';
+import { first, tap } from 'rxjs';
 import { RequestStatus } from 'app/utils/enums/request-status';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ChatPartnersPipe } from 'app/pipes/chat-partners.pipe';
-import { selectErrorState } from 'app/store/selectors/error.selectors';
-import { resetErrorAction, setMainLoadingState } from 'app/store/actions/error-handle.action';
 import { LoadingOverlayComponent } from 'app/components/loading-overlay/loading-overlay.component';
-import { IErrorHandle } from 'app/store/models/store.model';
+import { IErrorState } from 'app/store/models/store.model';
 import { titleKinds } from 'app/utils/enums/title-controls';
 
 
@@ -29,7 +31,7 @@ import { titleKinds } from 'app/utils/enums/title-controls';
     ToastModule,
     ChatPartnersPipe,
     LoadingOverlayComponent],
-  providers: [ErrorHandlingService, MessageService],
+  providers: [MessageService],
   templateUrl: './people.component.html',
   styleUrl: './people.component.scss',
 
@@ -40,43 +42,37 @@ export class PeopleComponent {
   titleKinds = titleKinds
 
   people = this.store.select(selectUsers);
-  errorState = this.store.select(selectErrorState);
+  errorState = this.store.select(selectMainPeopleErrorState);
+  myConvs = this.store.select(selectMyConversations);
 
   myOpps: string[] = [];
-  myConvs: ISingleUserConversation[] = [];
-  allMyConvSub: Subscription | undefined;
-  singleConvSub: Subscription | undefined;
-  errorSub: Subscription | undefined;
-  errorData: RequestStatus | undefined;
   convID: string | undefined;
 
-  isLoading = false;
+  errorData: IErrorState | undefined;
 
-
+  isLoading = this.store.select(selectPeopleLoadingState);
   filtered = false;
 
   constructor(private store: Store,
-    private errorHandlingService: ErrorHandlingService,
     private router: Router,
     private messageService: MessageService,) {
 
   }
   ngOnInit() {
-    this.allMyConvSub = this.store.select(selectConversations).subscribe(data => {
-      this.myOpps = data.map(d => d.companionID);
-      this.myConvs = data
-    })
-    this.errorSub = this.errorState.subscribe((data: IErrorHandle) => {
-      this.errorData = data.status;
+    this.myConvs.pipe(
+      tap(data => { this.myOpps = data.map(x => x.companionID) })
+    )
+    this.errorState.pipe(
+      first()
+    ).subscribe((data: IErrorState) => {
       if (data.status === RequestStatus.ERROR) {
-        this.showError(data.errorMessage || "Something went wrong")
+        this.showError(data.message || "Something went wrong")
       }
     })
 
 
     this.store.select(selectFirstLoadedPeople).pipe(
-      first(),
-    )
+      first())
       .subscribe(loaded => {
         if (!loaded) {
           this.updateContent();
@@ -84,43 +80,36 @@ export class PeopleComponent {
       })
   }
 
-
   updateContent() {
     this.store.dispatch(getPeopleAndConversations())
   }
 
   openConversation(user: IUser) {
     if (this.myOpps.includes(user.uid)) {
-      const convID = this.myConvs.find(c => c.companionID === user.uid)?.id
-      this.router.navigate([`/conversation/${convID}`])
-    }
-    else {
-      this.store.dispatch(setMainLoadingState({ isLoading: true }))
+      this.myConvs.pipe(tap(
+        data => {
+          this.convID = data.find(x => x.companionID === user.uid)?.id;
+          this.router.navigate([`/conversation/${this.convID}`])
+        }
+      ))
+    } else {
       this.store.dispatch(createConversation({ companion: user.uid }))
-
-      if (this.errorData !== RequestStatus.ERROR) {
-        this.singleConvSub = this.store.select(selectSingleConversation(user.uid))
+      if (this.errorData?.status === RequestStatus.SUCCESS) {
+        this.store.select(selectConversationByCompanion(user.uid))
           .subscribe(data => {
-            if (data) {
-              console.log('coversationID for navigation:>> ', data.id);
-              this.router.navigate([`/conversation/${data.id}`]);
-            }
-          })
+            if (data) this.router.navigate([`/conversation/${data}`]);
+          }
+
+          )
+
       }
     }
 
   }
 
-  ngOnDestroy() {
-    this.allMyConvSub?.unsubscribe()
-    this.errorSub?.unsubscribe()
-    this.singleConvSub?.unsubscribe();
-    this.errorHandlingService.reset()
-  }
   showError(errorMessage: string | undefined) {
     this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: errorMessage || "Something went wrong, try again" });
 
-    //this.store.dispatch(resetErrorAction())
   }
 
   chooseFilter(opt: number) {

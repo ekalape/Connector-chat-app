@@ -1,5 +1,5 @@
 <app-title-controls (updateContent)="updateContent()"
-  [blockBtn]="(errorState|async)?.status===RequestStatus.SUCCESS&&(errorState|async)?.kind===titleKinds.PEOPLE">People</app-title-controls>
+  [blockBtn]="(errorState|async)?.status===RequestStatus.SUCCESS">People</app-title-controls>
 <div class="filter-menu">
 
   <a [ngClass]="filtered?'':'chosen'" (click)="chooseFilter(0)">Show all</a>
@@ -12,4 +12,4 @@
 </div>
 <p-toast position="top-center" key="tc"></p-toast>
 
-<!-- <app-loading-overlay [show]="(errorState|async)?.isLoading"></app-loading-overlay> -->
+<app-loading-overlay [show]="(isLoading|async)||false"></app-loading-overlay>

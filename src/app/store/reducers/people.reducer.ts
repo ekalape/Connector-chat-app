@@ -1,66 +1,88 @@
-import { createConversationSuccess, deleteConversationSuccess, getActiveConversationsSuccess, getPeople, getPeopleAndConversationsSuccess, getPeopleSuccess, getPrivateMessagesSuccess, resetPeopleSlice, sendPrivateMessageSuccess } from '../actions/people.action';
-import { IPeopleState } from '../models/store.model';
-import { createReducer, on } from '@ngrx/store';
+import { initErrorState } from '..';
+import { createConversationSuccess, deleteConversationSuccess, getPeopleAndConversationsSuccess, getPrivateMessagesSuccess, resetPeopleError, resetPeopleSlice, sendPrivateMessageSuccess, setPeopleCounter, setPeopleError, setPeopleSuccess } from '../actions/people.action';
 
-export const peopleInitState: IPeopleState = {
-  users: [],
-  conversations: [],
-  messages: []
+import { createReducer, on } from '@ngrx/store';
+import { IErrorState, IPeopleSlice } from '../models/store.model';
+import { RequestStatus } from 'app/utils/enums/request-status';
+
+export const peopleInitState: IPeopleSlice = {
+  list: [],
+  myConvs: [],
+  history: [],
+  errors: {
+    main: initErrorState,
+    private: initErrorState,
+  },
+  counters: {
+    main: 0,
+    private: 0,
+  },
+  loading: false
 }
 
 
 export const peopleReducer = createReducer(
   peopleInitState,
-  on(getPeopleSuccess, (state, { users }) => ({
-    ...state,
-    users
-  })),
-  on(getActiveConversationsSuccess, (state, { conversations }) => ({
-    ...state,
-    conversations
-  })),
   on(getPeopleAndConversationsSuccess, (state, { users, conversations }) => ({
     ...state,
-    users,
-    conversations
+    list: users,
+    myConvs: conversations
   })),
-  on(getPrivateMessagesSuccess, (state, { conversationID, dialog }) => {
-    const existent = state.messages.find(d => d.conversationID === conversationID);
-    if (existent) {
-      return ({
-        ...state, messages: [...state.messages
-          .filter(d => d.conversationID !== conversationID), { conversationID, dialog: [...existent.dialog, ...dialog] }]
-      })
-    }
-    else return ({ ...state, messages: [...state.messages, { conversationID, dialog }] })
-  }),
   on(createConversationSuccess, (state, { conversation }) => ({
     ...state,
-    conversations: [...state.conversations, conversation],
-    messages: [...state.messages, {
-      conversationID: conversation.id,
-      dialog: []
-    }]
+    myConvs: [...state.myConvs, conversation]
   })),
   on(deleteConversationSuccess, (state, { conversationID }) => ({
     ...state,
-    conversations: state.conversations.filter(c => c.id !== conversationID),
-    messages: state.messages.filter(m => m.conversationID !== conversationID)
+    myConvs: state.myConvs.filter(c => c.id !== conversationID)
   })),
-  on(sendPrivateMessageSuccess, (state, { conversationID, message }) => {
-    const existent = state.messages.find(m => m.conversationID === conversationID);
+  on(getPrivateMessagesSuccess, (state, { conversationID, messages }) => {
+    const existent = state.history.find(gr => gr.conversationID === conversationID);
+    let newHistory = state.history
     if (existent) {
-      return {
-        ...state,
-        messages: [...state.messages.
-          filter(m => m.conversationID !== conversationID), { conversationID, dialog: [...existent.dialog, message] }]
-      }
+      newHistory = [...state.history.filter(gr => gr.conversationID !== conversationID), { conversationID, messages: [...existent.messages, ...messages] }]
     }
-    else return {
+    else newHistory = [...state.history, { conversationID, messages }];
+    return ({
       ...state,
-      messages: [...state.messages, { conversationID, dialog: [message] }]
-    }
+      history: newHistory
+    })
   }),
-  on(resetPeopleSlice, (state) => peopleInitState)
+  on(sendPrivateMessageSuccess, (state, { conversationID, message }) => {
+    const existent = state.history.find(gr => gr.conversationID === conversationID);
+    let newHistory = state.history
+    if (existent) {
+      newHistory = [...state.history.filter(gr => gr.conversationID !== conversationID), { conversationID, messages: [...existent.messages, message] }]
+    }
+    else newHistory = [...state.history, { conversationID, messages: [message] }];
+    return ({
+      ...state,
+      history: newHistory
+    })
+  }),
+  on(resetPeopleSlice, (state) => peopleInitState),
+  on(setPeopleSuccess, (state, { successType }) => {
+    return successType === 'main' ? { ...state, errors: { ...state.errors, main: { status: RequestStatus.SUCCESS } } } :
+      { ...state, errors: { ...state.errors, private: { status: RequestStatus.SUCCESS } } }
+  }),
+  on(resetPeopleError, (state, { successType }) => {
+    return successType === 'main' ? { ...state, errors: { ...state.errors, main: { status: RequestStatus.WAITING } } } :
+      { ...state, errors: { ...state.errors, private: { status: RequestStatus.WAITING } } }
+  }),
+  on(setPeopleError, (state, { successType, errtype, message }) => {
+    const error: IErrorState = {
+      status: RequestStatus.ERROR,
+      type: errtype,
+      message
+    }
+    return successType === 'main' ? { ...state, errors: { ...state.errors, main: error } } :
+      { ...state, errors: { ...state.errors, private: error } }
+  }),
+  on(setPeopleCounter, (state, { counterType, time }) => {
+    return counterType === 'main' ? { ...state, counters: { ...state.counters, main: time } } :
+      { ...state, counters: { ...state.counters, private: time } }
+  })
+
+
 
 )

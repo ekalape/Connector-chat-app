@@ -5,19 +5,10 @@ export const getPeopleAndConversations = createAction("[people] Get People And C
 export const getPeopleAndConversationsSuccess = createAction("[people] Get People And Conversations Success",
   props<{ users: IUser[], conversations: ISingleUserConversation[] }>());
 
-export const getPeople = createAction("[people] Get People");
-export const getPeopleSuccess = createAction("[people] Get People Success",
-  props<{ users: IUser[] }>());
-
-
-export const getActiveConversations = createAction("[people] Get Active Conversations");
-export const getActiveConversationsSuccess = createAction("[people] Get Active Conversations Success",
-  props<{ conversations: ISingleUserConversation[] }>());
-
 
 export const getPrivateMessages = createAction("[people] Get Private Messages", props<{ conversationID: string }>());
 export const getPrivateMessagesSuccess = createAction("[people] Get Private Messages Success",
-  props<{ conversationID: string, dialog: ISingleMessage[] }>());
+  props<{ conversationID: string, messages: ISingleMessage[] }>());
 
 export const sendPrivateMessage = createAction("[people] Send Private Message", props<{ conversationID: string, message: string }>());
 export const sendPrivateMessageSuccess = createAction("[people] Send Private Message Success",
@@ -33,3 +24,12 @@ export const deleteConversationSuccess = createAction("[people] Delete Conversat
 
 export const resetPeopleSlice = createAction("[people] Reset People Slice");
 
+
+export const setPeopleSuccess = createAction("[people] Set People Success", props<{ successType: 'main' | 'private' }>());
+export const resetPeopleError = createAction("[people] Reset People Error", props<{ successType: 'main' | 'private' }>());
+export const setPeopleError = createAction("[people] Set People Error", props<{ successType: 'main' | 'private', errtype: string, message: string }>());
+
+export const setPeopleCounter = createAction("[people] Set People Counter", props<{ counterType: 'main' | 'private', time: number }>());
+
+
+export const setPeopleLoading = createAction("[people] Set People Loading State", props<{ isLoading: boolean }>())

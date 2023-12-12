@@ -5,7 +5,7 @@ import { TitleControlsComponent } from 'app/components/title-controls/title-cont
 import { titleKinds } from 'app/utils/enums/title-controls';
 import { ISingleGroup, ISingleMessage } from 'app/models/conversations.model';
 import { Store } from '@ngrx/store';
-import { selectFirstLoadedGroups, selectGroupMessages, selectSingleGroup } from 'app/store/selectors/group.selectors';
+import { selectFirstLoadedGroups, selectGroupMessages, selectSingleGroup, selectSingleGroupDialog } from 'app/store/selectors/group.selectors';
 import { Observable, Subscription, first, map } from 'rxjs';
 import { ChatContainerComponent } from 'app/components/chat-container/chat-container.component';
 import { getAllGroups, getGroupMessages, sendGroupMessage } from 'app/store/actions/group.action';
@@ -63,7 +63,7 @@ export class GroupComponent {
       this.updateGroupMessages()
 
       this.groupData = this.store.select(selectSingleGroup(this.groupId));
-      this.groupMessages = this.store.select(selectGroupMessages(this.groupId))
+      this.groupMessages = this.store.select(selectSingleGroupDialog(this.groupId))
         .pipe(
           map(messages => {
             if (messages)
@@ -90,3 +90,7 @@ export class GroupComponent {
   }
 
 }
+function selectGroupDialog(groupId: string): (state: object) => unknown {
+  throw new Error('Function not implemented.');
+}
+

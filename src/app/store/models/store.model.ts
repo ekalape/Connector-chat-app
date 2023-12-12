@@ -21,27 +21,64 @@ export interface IGroupsMessagesState {
   messages: ISingleMessage[]
 }
 
-export interface IPeopleState {
+/* export interface IPeopleState {
   users: IUser[],
   conversations: ISingleUserConversation[],
   messages: {
     conversationID: string,
     dialog: ISingleMessage[]
   }[]
-}
-export interface IErrorHandle {
+} */
+/* export interface IErrorHandle {
   isLoading: boolean;
   errorType: string | null | undefined;
   errorMessage: string | null;
   status: RequestStatus;
   kind?: titleKinds | null
+} */
+
+export interface IGroupsSlice {
+  list: ISingleGroup[],
+  history: IGroupsMessagesState[],
+  errors: {
+    main: IErrorState;
+    private: IErrorState;
+  },
+  counters: {
+    main: number;
+    private: number;
+  },
+  loading: boolean
+}
+
+export interface IPeopleSlice {
+  list: IUser[],
+  myConvs: ISingleUserConversation[],
+  history: {
+    conversationID: string,
+    messages: ISingleMessage[]
+  }[],
+  errors: {
+    main: IErrorState;
+    private: IErrorState;
+  },
+  counters: {
+    main: number;
+    private: number;
+  },
+  loading: boolean
+}
+
+export interface IErrorState {
+  status: RequestStatus;
+  type?: string | null | undefined;
+  message?: string | null | undefined;
 }
 
 export interface IState {
   authorization: IAutorizationSlice,
-  groups: ISingleGroup[],
-  groupsMessages: IGroupsMessagesState[],
-  people: IPeopleState,
-  error: IErrorHandle
-
+  groups: IGroupsSlice,
+  people: IPeopleSlice
 }
+
+

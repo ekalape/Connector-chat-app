@@ -1,18 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { withLatestFrom, mergeMap, map, catchError, EMPTY, switchMap, of, concatMap, tap, throwError } from 'rxjs';
-
-import { addNewGroup, addNewGroupSuccess, deleteGroup, deleteGroupSuccess, getAllGroups, getAllGroupsSuccess, getGroupMessages, getGroupMessagesSuccess, sendGroupMessage, sendGroupMessagesSuccess } from '../actions/group.action';
+import { withLatestFrom, mergeMap, map, catchError, switchMap, of, concatMap, tap } from 'rxjs';
+import { addNewGroup, addNewGroupSuccess, deleteGroup, deleteGroupSuccess, getAllGroups, getAllGroupsSuccess, getGroupMessages, getGroupMessagesSuccess, resetGroupError, sendGroupMessage, sendGroupMessagesSuccess, setGroupError, setGroupLoading, setGroupSuccess } from '../actions/group.action';
 import { ConversationsService } from 'app/services/conversations.service';
 import { IGroupResponce, IGroups, ISingleGroup } from 'app/models/conversations.model';
-import { HttpErrorResponse } from '@angular/common/http';
-import { selectAllGroupMessages, selectGroupMessages, selectGroups } from '../selectors/group.selectors';
-import { selectMyID, selectProfileData } from '../selectors/profile.selectors';
-import { StorageKeys } from 'app/utils/enums/local-storage-keys';
-import { ErrorHandlingService } from 'app/services/error-handling.service';
-import { errorHandleAction, setMainLoadingState, setSuccessAction } from '../actions/error-handle.action';
-import { titleKinds } from 'app/utils/enums/title-controls';
+import { selectMyID } from '../selectors/profile.selectors';
+import { selectSingleGroupDialog } from '../selectors/group.selectors';
 
 
 @Injectable()
@@ -27,20 +21,27 @@ export class GroupsEffects {
   loadGroups$ = createEffect(() => this.actions$
     .pipe(
       ofType(getAllGroups),
-      tap(() => { this.store.dispatch(setMainLoadingState({ isLoading: true })) }),
+      tap(() => {
+        this.store.dispatch(setGroupLoading({ isLoading: true }));
+      }),
       switchMap((action) => {
         return this.service.getGroups()
           .pipe(
             map((res: IGroups) => {
               return res.Items.map((x) => ({ id: x.id.S, name: x.name.S, createdAt: x.createdAt.S, createdBy: x.createdBy.S }))
             }),
-            map((res: ISingleGroup[]) => {
-              this.store.dispatch(setSuccessAction({ kind: titleKinds.GROUPS }))
-              return getAllGroupsSuccess({ groups: res })
-            }
-            ),
+            concatMap((res: ISingleGroup[]) => {
+              return [getAllGroupsSuccess({ groups: res }),
+              setGroupSuccess({ successType: "main" }),
+              setGroupLoading({ isLoading: false })]
+            }),
+
             catchError((err) => {
-              return of(errorHandleAction({ error: err.error }));
+              return of(setGroupError({
+                successType: "main",
+                errtype: err.error.type || err.type || "Unknown",
+                message: err.error.message || err.message || "Something went wrong"
+              }));
             })
           )
       })
@@ -49,32 +50,31 @@ export class GroupsEffects {
   loadNewGroup$ = createEffect(() => this.actions$
     .pipe(
       ofType(addNewGroup),
-      tap(() => { this.store.dispatch(setMainLoadingState({ isLoading: true })) }),
+      tap(() => { this.store.dispatch(setGroupLoading({ isLoading: true })) }),
       withLatestFrom(this.store.select(selectMyID)),
       switchMap(([action, myData]) => {
         return this.service.addNewGroup(action.groupName)
           .pipe(
             map((res: IGroupResponce) => {
-              if (myData.id) {
-                return ({
-                  id: res.groupID,
-                  name: action.groupName,
-                  createdAt: Date.now() + "",
-                  createdBy: myData.id
-                })
-              } else return undefined;
-
+              return ({
+                id: res.groupID,
+                name: action.groupName,
+                createdAt: Date.now() + "",
+                createdBy: myData.id
+              })
             }),
-            map((res: ISingleGroup | undefined) => {
-              if (res) {
-                this.store.dispatch(setSuccessAction({ kind: null }))
-                return addNewGroupSuccess({ group: res })
-              }
-              else throw new HttpErrorResponse({ error: { type: "NoUserIDFund", message: "You have to login" } })
-            }
-            ),
+            concatMap((res: ISingleGroup) => ([
+              addNewGroupSuccess({ group: res }),
+              setGroupSuccess({ successType: "main" }),
+              setGroupLoading({ isLoading: false })
+            ])),
+
             catchError((err) => {
-              return of(errorHandleAction({ error: err.error }));
+              return of(setGroupError({
+                successType: "main",
+                errtype: err.error.type || err.type || "Unknown",
+                message: err.error.message || err.message || "Something went wrong"
+              }));
             })
           )
       })
@@ -83,15 +83,20 @@ export class GroupsEffects {
   loadDeleteGroup$ = createEffect(() => this.actions$
     .pipe(
       ofType(deleteGroup),
-      tap(() => { this.store.dispatch(setMainLoadingState({ isLoading: true })) }),
+      tap(() => { this.store.dispatch(setGroupLoading({ isLoading: true })) }),
       switchMap((action) => {
         return this.service.deleteGroup(action.groupId).pipe(
-          map(res => {
-            this.store.dispatch(setSuccessAction({ kind: null }))
-            return deleteGroupSuccess({ groupId: action.groupId })
-          }),
+          concatMap(res => ([
+            deleteGroupSuccess({ groupId: action.groupId }),
+            setGroupSuccess({ successType: "main" }),
+            setGroupLoading({ isLoading: false })
+          ])),
           catchError((err) => {
-            return of(errorHandleAction({ error: err.error }));
+            return of(setGroupError({
+              successType: "main",
+              errtype: err.error.type || err.type || "Unknown",
+              message: err.error.message || err.message || "Something went wrong"
+            }));
           })
         )
       })
@@ -101,22 +106,29 @@ export class GroupsEffects {
   loadSendGroupMessage$ = createEffect(() => this.actions$
     .pipe(
       ofType(sendGroupMessage),
-      tap(() => { this.store.dispatch(setMainLoadingState({ isLoading: true })) }),
+      tap(() => { this.store.dispatch(setGroupLoading({ isLoading: true })) }),
       withLatestFrom(this.store.select(selectMyID)),
       switchMap(([action, mydata]) => {
         return this.service.sendGroupMessage(action.groupId, action.message).pipe(
-          map(() => {
-            this.store.dispatch(setSuccessAction({ kind: null }))
-            return sendGroupMessagesSuccess({
+          concatMap(() => (
+            [sendGroupMessagesSuccess({
               groupId: action.groupId, message: {
                 authorID: mydata.id,
                 message: action.message,
                 createdAt: Date.now() + ""
               }
-            })
-          }),
+            }),
+            setGroupSuccess({ successType: "private" }),
+            setGroupLoading({ isLoading: false })
+            ]
+          )
+          ),
           catchError((err) => {
-            return of(errorHandleAction({ error: err.error }));
+            return of(setGroupError({
+              successType: "private",
+              errtype: err.error.type || err.type || "Unknown",
+              message: err.error.message || err.message || "Something went wrong"
+            }));
           })
         )
       })
@@ -127,9 +139,9 @@ export class GroupsEffects {
   loadGroupMessages$ = createEffect(() => this.actions$
     .pipe(
       ofType(getGroupMessages),
-      tap(() => { this.store.dispatch(setMainLoadingState({ isLoading: true })) }),
+      tap(() => { this.store.dispatch(setGroupLoading({ isLoading: true })) }),
       concatMap(action => of(action).pipe(
-        withLatestFrom(this.store.select(selectGroupMessages(action.groupId))),
+        withLatestFrom(this.store.select(selectSingleGroupDialog(action.groupId))),
       )),
       mergeMap(([action, storedMessages]) => {
         let lastMessageDate: string | undefined;
@@ -144,12 +156,17 @@ export class GroupsEffects {
             message: x.message.S,
             createdAt: x.createdAt.S
           }))),
-          map(messages => {
-            this.store.dispatch(setSuccessAction({ kind: titleKinds.PRIVATE_GROUP }))
-            return getGroupMessagesSuccess({ groupId: action.groupId, messages })
-          }),
+          concatMap(messages => ([
+            getGroupMessagesSuccess({ groupId: action.groupId, messages }),
+            setGroupSuccess({ successType: "private" }),
+            setGroupLoading({ isLoading: false })
+          ])),
           catchError((err) => {
-            return of(errorHandleAction({ error: err.error }));
+            return of(setGroupError({
+              successType: "private",
+              errtype: err.error.type || err.type || "Unknown",
+              message: err.error.message || err.message || "Something went wrong"
+            }));
           })
         )
       })
