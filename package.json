@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "deploy": "ng deploy --base-href=https://rolling-scopes-school.github.io/ekalape-ANGULAR2023Q4/connector"
+    "deploy": "ng deploy --base-href=https://rolling-scopes-school.github.io/ekalape-ANGULAR2023Q4"
   },
   "private": true,
   "dependencies": {

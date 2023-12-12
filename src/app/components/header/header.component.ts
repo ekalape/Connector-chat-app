@@ -12,6 +12,7 @@ import { selectLoggedIn } from 'app/store/selectors/auth.selectors';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormsModule } from '@angular/forms';
 import { StorageKeys } from 'app/utils/enums/local-storage-keys';
+import { ThemeService } from 'app/services/theme.service';
 
 
 @Component({
@@ -33,7 +34,9 @@ export class HeaderComponent {
   @Output() theme = new EventEmitter<boolean>()
 
 
-  constructor(private router: Router, private store: Store
+  constructor(private router: Router,
+    private store: Store,
+    private themeService: ThemeService
   ) {
     const currentTheme = localStorage.getItem(StorageKeys.THEME_KEY);
     if (currentTheme) this.darkTheme = JSON.parse(currentTheme);
@@ -61,6 +64,7 @@ export class HeaderComponent {
   switchTheme(dark: boolean) {
     this.darkTheme = dark;
     this.theme.emit(dark);
+    this.themeService.switchTheme(dark)
     localStorage.setItem(StorageKeys.THEME_KEY, JSON.stringify(this.darkTheme))
   }
 

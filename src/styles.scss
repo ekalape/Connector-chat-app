@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@import "primeng/resources/themes/saga-green/theme.css";
+/* @import "primeng/resources/themes/saga-green/theme.css"; */
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
 
@@ -26,11 +26,15 @@ body {
 }
 
 .dark {
-  --primary_green: #f8ff94;
-  --light-gray: #2b3029;
-  --lighter-gray: #121411;
-  --medium-gray: #65705f;
-  --darker-gray: #a6b89c;
+  --primary_green: #6abd6e;
+  //--light-gray: #2b3029;
+  --light-gray: #1f2d40;
+  // --lighter-gray: #121411;
+  --lighter-gray: #17212f;
+
+  --medium-gray: #405f81;
+  //--darker-gray: #a6b89c;
+  --darker-gray: #e2e4e6;
   --black: rgb(255, 255, 255);
   --white: rgb(0, 0, 0);
 }

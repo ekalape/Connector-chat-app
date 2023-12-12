@@ -31,7 +31,7 @@ export class AppComponent {
 
 
   switchTheme(dark: boolean) {
-    if (dark) document.body.classList.add('dark')
+    if (dark) { document.body.classList.add('dark') }
     else document.body.classList.remove('dark')
   }
 
