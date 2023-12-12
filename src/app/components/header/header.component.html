@@ -17,5 +17,11 @@
       <span>Log-out</span>
     </a>
   </div>
-  <div class="theme-switcher">theme</div>
+  <div class="theme-switcher"><span [ngClass]="darkTheme?'':'chosen'"
+      (click)="switchTheme(false)">light</span>
+    <p-inputSwitch [(ngModel)]="darkTheme"
+      (ngModelChange)="switchTheme($event)"></p-inputSwitch><span
+      [ngClass]="darkTheme?'chosen':''" (click)="switchTheme(true)">dark</span>
+
+  </div>
 </header>

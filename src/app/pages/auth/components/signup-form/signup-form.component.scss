@@ -11,7 +11,7 @@
 }
 .connecting-info {
   position: absolute;
-  color: green;
+  color: var(--primary-green);
   font-size: 0.8rem;
   font-style: italic;
   top: 0px;
@@ -29,7 +29,7 @@
   & label {
     font-style: italic;
     padding-left: 0.5rem;
-    color: rgb(189, 189, 189);
+    color: var(--medium-gray);
   }
 }
 .input-container {

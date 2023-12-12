@@ -4,13 +4,13 @@
   position: absolute;
   width: fit-content;
   padding: 0.5rem;
-  background-color: $white;
+  background-color: var(--white);
   border-radius: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
   top: -15px;
-  border: 1px solid $medium-gray;
+  border: 1px solid var(--medium-gray);
   z-index: 2;
   font-style: italic;
   @media (max-width: 700px) {
@@ -28,11 +28,11 @@
   align-items: end;
   width: 70%;
   min-width: 40%;
-  background-color: $lighter-gray;
+  background-color: var(--lighter-gray);
   position: relative;
   padding: 2rem 1rem 1rem 1rem;
   z-index: 1;
-  box-shadow: 1px 1px 4px $medium-gray;
+  box-shadow: 1px 1px 4px var(--medium-gray);
   border-radius: 4px;
   margin-left: auto;
 
@@ -63,7 +63,7 @@
 }
 
 .others {
-  background-color: $light-gray;
+  background-color: var(--light-gray);
   margin-left: 0;
   align-items: start;
 }

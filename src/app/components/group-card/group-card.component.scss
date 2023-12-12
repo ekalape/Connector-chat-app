@@ -16,20 +16,20 @@
 
   gap: 2rem;
   width: 100%;
-  background-color: $lighter-gray;
+  background-color: var(--lighter-gray);
   border-radius: 5px;
   padding: 0.3rem 1.5rem;
-  color: $darker-gray;
-  box-shadow: 1px 1px 4px $medium-gray;
+  color: var(--darker-gray);
+  box-shadow: 1px 1px 4px var(--medium-gray);
   transition: 0.3s;
-  color: $primary_green;
+  color: var(--primary_green);
   &:hover {
-    box-shadow: 1px 1px 5px $primary_green;
+    box-shadow: 1px 1px 5px var(--primary_green);
     cursor: pointer;
   }
 }
 
 .mine {
-  background-color: $light-gray;
+  background-color: var(--light-gray);
   font-weight: 500;
 }

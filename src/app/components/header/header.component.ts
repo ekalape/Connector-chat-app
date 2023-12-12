@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
 import { MenubarModule } from 'primeng/menubar';
@@ -9,13 +9,17 @@ import { Store } from '@ngrx/store';
 import { logOutAction } from 'app/store/actions/auth.action';
 import { Subscription } from 'rxjs';
 import { selectLoggedIn } from 'app/store/selectors/auth.selectors';
-
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { FormsModule } from '@angular/forms';
+import { StorageKeys } from 'app/utils/enums/local-storage-keys';
 
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, PanelModule, MenubarModule],
+  imports: [CommonModule, PanelModule,
+    FormsModule,
+    MenubarModule, InputSwitchModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
@@ -24,15 +28,21 @@ export class HeaderComponent {
   menuItems: MenuItem[] = [];
   loggedIn = false;
   sub: Subscription | undefined;
+  darkTheme: boolean;
+
+  @Output() theme = new EventEmitter<boolean>()
 
 
   constructor(private router: Router, private store: Store
   ) {
-
+    const currentTheme = localStorage.getItem(StorageKeys.THEME_KEY);
+    if (currentTheme) this.darkTheme = JSON.parse(currentTheme);
+    else this.darkTheme = false;
   }
 
   ngOnInit() {
     this.sub = this.store.select(selectLoggedIn).subscribe(x => this.loggedIn = x.loggedIn)
+    this.switchTheme(this.darkTheme)
 
   }
 
@@ -47,6 +57,11 @@ export class HeaderComponent {
       this.store.dispatch(logOutAction())
 
     }
+  }
+  switchTheme(dark: boolean) {
+    this.darkTheme = dark;
+    this.theme.emit(dark);
+    localStorage.setItem(StorageKeys.THEME_KEY, JSON.stringify(this.darkTheme))
   }
 
 }

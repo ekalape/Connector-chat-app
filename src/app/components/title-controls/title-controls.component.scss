@@ -7,8 +7,8 @@
   justify-content: space-around;
   gap: 2rem;
   padding: 0 1rem;
-  color: $primary_green;
-  border-bottom: 2px solid $light-gray;
+  color: var(--primary_green);
+  border-bottom: 2px solid var(--light-gray);
   & a {
     display: flex;
     align-items: center;
@@ -18,5 +18,8 @@
     width: 100px;
     display: flex;
     justify-content: center;
+    color: var(--darker-gray);
+
+    box-shadow: 1px 1px 4px var(--light-gray);
   }
 }

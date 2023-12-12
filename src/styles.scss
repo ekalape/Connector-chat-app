@@ -3,7 +3,34 @@
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
 
+:root {
+  --primary_green: #449e48;
+  --light-gray: #e6e6e6;
+  --lighter-gray: #f8f9fa;
+  --medium-gray: rgb(134, 134, 134);
+  --darker-gray: rgb(87, 87, 87);
+  --black: black;
+  --white: white;
+}
+
 body {
   padding-top: 60px;
   overflow: hidden;
+  background-color: var(--lighter-gray);
+  h1,
+  h2,
+  h3 {
+    color: var(--primary_green);
+  }
+  color: var(--darker-gray);
+}
+
+.dark {
+  --primary_green: #f8ff94;
+  --light-gray: #2b3029;
+  --lighter-gray: #121411;
+  --medium-gray: #65705f;
+  --darker-gray: #a6b89c;
+  --black: rgb(255, 255, 255);
+  --white: rgb(0, 0, 0);
 }

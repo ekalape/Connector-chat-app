@@ -18,10 +18,10 @@ import { logInAction } from './store/actions/auth.action';
 export class AppComponent {
   title = 'connector app';
 
-  constructor(private store: Store) { }
+  constructor(private store: Store) {
+  }
 
   ngOnInit() {
-    // window.addEventListener('beforeunload', this.clearLocalStorage);
     const personalData = localStorage.getItem(StorageKeys.LOGIN_KEY);
     if (personalData) {
       const { token, email, uid } = JSON.parse(personalData)
@@ -29,12 +29,10 @@ export class AppComponent {
     }
   }
 
-  ngOnDestroy() {
-    //window.removeEventListener('beforeunload', this.clearLocalStorage);
-  }
 
-  clearLocalStorage() {
-    localStorage.removeItem(StorageKeys.LOGIN_KEY);
+  switchTheme(dark: boolean) {
+    if (dark) document.body.classList.add('dark')
+    else document.body.classList.remove('dark')
   }
 
 }

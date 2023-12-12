@@ -10,7 +10,8 @@ header {
   right: 0;
   justify-content: space-around;
   align-items: center;
-  background-color: $lighter-gray;
+  background-color: var(--light-gray);
+
   z-index: 2;
 
   .header__menu-item {
@@ -18,22 +19,37 @@ header {
     align-items: center;
     width: 100px;
     gap: 0.4rem;
-    color: $darker-gray;
+    color: var(--darker-gray);
     text-decoration: none;
     transition: 0.1s;
     font-weight: 500;
 
     &:hover {
       cursor: pointer;
-      color: $black;
+      color: var(--black);
 
       // text-decoration: underline;
     }
 
     &.active {
-      color: $primary_green;
+      color: var(--primary_green);
       text-decoration: underline;
     }
+  }
+}
+.theme-switcher {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--medium-gray);
+  font-size: 0.8rem;
+  font-style: italic;
+  & span {
+    cursor: pointer;
+  }
+  & .chosen {
+    color: var(--darker-gray);
+    text-shadow: 0 0 2px var(--primary_green);
   }
 }
 

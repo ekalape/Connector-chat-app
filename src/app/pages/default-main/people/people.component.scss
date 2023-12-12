@@ -21,35 +21,38 @@
     display: flex;
     align-items: center;
     padding: 0.4rem 1.5rem;
-    background-color: $lighter-gray;
+    background-color: var(--lighter-gray);
     text-decoration: none;
-    color: $darker-gray;
-    box-shadow: 1px 1px 4px $medium-gray;
+    color: var(--darker-gray);
+    box-shadow: 1px 1px 4px var(--medium-gray);
     border-radius: 5px;
     &:hover {
-      box-shadow: 1px 1px 5px $primary_green;
+      box-shadow: 1px 1px 5px var(--primary_green);
+
       cursor: pointer;
     }
   }
   .mine {
-    background-color: $light-gray;
+    background-color: var(--light-gray);
+    color: var(--primary_green);
     font-weight: 500;
   }
 }
 .filter-menu {
   display: flex;
   width: 100%;
+  padding: 1rem;
   align-items: center;
   justify-content: end;
   gap: 1rem;
-  color: $medium-gray;
+  color: var(--medium-gray);
   font-size: 0.8rem;
   font-style: italic;
   & a {
     cursor: pointer;
   }
   & a.chosen {
-    color: $primary_green;
+    color: var(--primary_green);
     cursor: default;
   }
 }

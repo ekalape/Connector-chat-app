@@ -13,7 +13,7 @@
   padding: 0.5rem 2rem;
   width: 80%;
   height: 90vh;
-  box-shadow: 1px 1px 8px grey;
+  box-shadow: 1px 1px 8px var(--medium-gray);
 
   display: flex;
   flex-direction: column;
@@ -54,14 +54,14 @@
   align-items: center;
   justify-content: end;
   gap: 1rem;
-  color: $medium-gray;
+  color: var(--medium-gray);
   font-size: 0.8rem;
   font-style: italic;
   & a {
     cursor: pointer;
   }
   & a.chosen {
-    color: $primary_green;
+    color: var(--primary_green);
     cursor: default;
   }
 }
