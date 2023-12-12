@@ -1,7 +1,6 @@
 <div class="list-container groups">
   <app-title-controls [kind]="titleKinds.GROUPS" (updateContent)="updateContent()"
-    (addGroup)="addGroup()"
-    [blockBtn]="errorState?.status===RequestStatus.SUCCESS">Groups</app-title-controls>
+    (addGroup)="addGroup()" [blockBtn]="blockBtn">Groups</app-title-controls>
   <div class="filter-menu">
     <a [ngClass]="filtered?'':'chosen'" (click)="chooseFilter(0)">Show all</a>
     <a [ngClass]="filtered?'chosen':''" (click)="chooseFilter(1)">My groups</a>

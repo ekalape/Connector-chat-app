@@ -1,17 +1,23 @@
-import { initErrorState } from '..';
+
 import { createConversationSuccess, deleteConversationSuccess, getPeopleAndConversationsSuccess, getPrivateMessagesSuccess, resetPeopleError, resetPeopleSlice, sendPrivateMessageSuccess, setPeopleCounter, setPeopleError, setPeopleSuccess } from '../actions/people.action';
 
 import { createReducer, on } from '@ngrx/store';
 import { IErrorState, IPeopleSlice } from '../models/store.model';
 import { RequestStatus } from 'app/utils/enums/request-status';
 
+
+
 export const peopleInitState: IPeopleSlice = {
   list: [],
   myConvs: [],
   history: [],
   errors: {
-    main: initErrorState,
-    private: initErrorState,
+    main: {
+      status: RequestStatus.WAITING
+    },
+    private: {
+      status: RequestStatus.WAITING
+    },
   },
   counters: {
     main: 0,
@@ -61,9 +67,9 @@ export const peopleReducer = createReducer(
     })
   }),
   on(resetPeopleSlice, (state) => peopleInitState),
-  on(setPeopleSuccess, (state, { successType }) => {
-    return successType === 'main' ? { ...state, errors: { ...state.errors, main: { status: RequestStatus.SUCCESS } } } :
-      { ...state, errors: { ...state.errors, private: { status: RequestStatus.SUCCESS } } }
+  on(setPeopleSuccess, (state, { successType, comm }) => {
+    return successType === 'main' ? { ...state, errors: { ...state.errors, main: { status: RequestStatus.SUCCESS, type: comm } } } :
+      { ...state, errors: { ...state.errors, private: { status: RequestStatus.SUCCESS, type: comm } } }
   }),
   on(resetPeopleError, (state, { successType }) => {
     return successType === 'main' ? { ...state, errors: { ...state.errors, main: { status: RequestStatus.WAITING } } } :

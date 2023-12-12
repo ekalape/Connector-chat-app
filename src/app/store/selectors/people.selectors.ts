@@ -7,8 +7,9 @@ export const selectPeopleData = createFeatureSelector<IPeopleSlice>('people');
 export const selectUsers = createSelector(selectPeopleData, selectMyID, (data, myData) => data.list.filter(us => us.uid !== myData.id));
 export const selectMyConversations = createSelector(selectPeopleData, (data) => data.myConvs);
 
-export const selectUserByConversationID = (convID: string) => createSelector(selectPeopleData, (data) => {
-  return data.myConvs.find(c => c.id === convID)?.companionID
+export const selectUserByConversationID = (convID: string) => createSelector(selectPeopleData, selectUsers, (data, users) => {
+  const oppID = data.myConvs.find(c => c.id === convID)?.companionID
+  return users.find(us => us.uid === oppID)
 })
 
 export const selectMessagesByConversationId = (convID: string) => createSelector(selectPeopleData, (data) => {

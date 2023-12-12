@@ -7,7 +7,7 @@ import { peopleReducer } from './reducers/people.reducer';
 import { RequestStatus } from 'app/utils/enums/request-status';
 
 
-export const initErrorState: IErrorState = {
+const initErrorState: IErrorState = {
   status: RequestStatus.WAITING
 }
 

@@ -25,7 +25,7 @@ export const deleteConversationSuccess = createAction("[people] Delete Conversat
 export const resetPeopleSlice = createAction("[people] Reset People Slice");
 
 
-export const setPeopleSuccess = createAction("[people] Set People Success", props<{ successType: 'main' | 'private' }>());
+export const setPeopleSuccess = createAction("[people] Set People Success", props<{ successType: 'main' | 'private', comm: string }>());
 export const resetPeopleError = createAction("[people] Reset People Error", props<{ successType: 'main' | 'private' }>());
 export const setPeopleError = createAction("[people] Set People Error", props<{ successType: 'main' | 'private', errtype: string, message: string }>());
 

@@ -69,6 +69,8 @@ export interface IPeopleSlice {
   loading: boolean
 }
 
+
+
 export interface IErrorState {
   status: RequestStatus;
   type?: string | null | undefined;

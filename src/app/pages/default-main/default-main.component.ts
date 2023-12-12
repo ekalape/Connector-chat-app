@@ -46,6 +46,7 @@ import { IErrorState } from 'app/store/models/store.model';
 export class DefaultMainComponent {
   titleKinds = titleKinds;
   RequestStatus = RequestStatus;
+  blockBtn = false;
 
   allGroups = this.store.select(selectGroupsList);
   myGroups = this.store.select(selectMyGroups);
@@ -55,7 +56,7 @@ export class DefaultMainComponent {
 
   groupName = new FormControl('', [Validators.required, Validators.maxLength(30)]);
 
-  errorSub: Subscription | undefined;
+  errorSUB: Subscription | undefined;
   openDialog = false;
   filtered = false;
 
@@ -72,9 +73,13 @@ export class DefaultMainComponent {
         }
       })
 
-    this.errorSub = this.store.select(selectMainGroupErrorState).subscribe((data) => {
+    this.errorSUB = this.store.select(selectMainGroupErrorState).subscribe((data) => {
       this.errorState = data;
-      if (data.status === RequestStatus.ERROR) this.showError(data.message || "Something went wrong")
+      if (data.status === RequestStatus.ERROR) this.showError(data.message || "Something went wrong");
+      if (data.status === RequestStatus.SUCCESS) {
+        if (data.type === "update")
+          this.blockBtn = true
+      }
     })
 
   }
@@ -118,5 +123,9 @@ export class DefaultMainComponent {
   showError(errorMessage: string | undefined) {
     this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: errorMessage || "Something went wrong, try again" });
 
+  }
+
+  ngOnDestroy() {
+    this.errorSUB?.unsubscribe()
   }
 }

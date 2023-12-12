@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 
@@ -13,7 +13,7 @@ import { InputTextModule } from 'primeng/inputtext';
 })
 export class ChatContainerComponent {
 
-  messageInput = new FormControl("");
+  messageInput = new FormControl("", [Validators.required]);
   @Output() sendEvent = new EventEmitter<string>()
 
   ngOnInit() {
@@ -22,6 +22,7 @@ export class ChatContainerComponent {
 
   sendMessage() {
     if (this.messageInput.value?.trim()) {
+
       this.sendEvent.emit(this.messageInput.value)
       this.messageInput.reset()
     }

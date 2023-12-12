@@ -32,7 +32,7 @@ export class GroupsEffects {
             }),
             concatMap((res: ISingleGroup[]) => {
               return [getAllGroupsSuccess({ groups: res }),
-              setGroupSuccess({ successType: "main" }),
+              setGroupSuccess({ successType: "main", comm: "update" }),
               setGroupLoading({ isLoading: false })]
             }),
 
@@ -65,7 +65,7 @@ export class GroupsEffects {
             }),
             concatMap((res: ISingleGroup) => ([
               addNewGroupSuccess({ group: res }),
-              setGroupSuccess({ successType: "main" }),
+              setGroupSuccess({ successType: "main", comm: "create" }),
               setGroupLoading({ isLoading: false })
             ])),
 
@@ -88,7 +88,7 @@ export class GroupsEffects {
         return this.service.deleteGroup(action.groupId).pipe(
           concatMap(res => ([
             deleteGroupSuccess({ groupId: action.groupId }),
-            setGroupSuccess({ successType: "main" }),
+            setGroupSuccess({ successType: "main", comm: "delete" }),
             setGroupLoading({ isLoading: false })
           ])),
           catchError((err) => {
@@ -118,7 +118,7 @@ export class GroupsEffects {
                 createdAt: Date.now() + ""
               }
             }),
-            setGroupSuccess({ successType: "private" }),
+            setGroupSuccess({ successType: "private", comm: "send" }),
             setGroupLoading({ isLoading: false })
             ]
           )
@@ -158,7 +158,7 @@ export class GroupsEffects {
           }))),
           concatMap(messages => ([
             getGroupMessagesSuccess({ groupId: action.groupId, messages }),
-            setGroupSuccess({ successType: "private" }),
+            setGroupSuccess({ successType: "private", comm: "update" }),
             setGroupLoading({ isLoading: false })
           ])),
           catchError((err) => {

@@ -38,7 +38,7 @@ export class PeopleEffects {
               map((res: IUserConversations) => res.Items.map(p => ({ id: p.id.S, companionID: p.companionID.S }))),
               concatMap((res: ISingleUserConversation[]) => ([
                 getPeopleAndConversationsSuccess({ users, conversations: res }),
-                setPeopleSuccess({ successType: "main" }),
+                setPeopleSuccess({ successType: "main", comm: "update" }),
                 setPeopleLoading({ isLoading: false })
               ])),
               catchError((err) => {
@@ -79,7 +79,7 @@ export class PeopleEffects {
           }))),
           concatMap(res => ([
             getPrivateMessagesSuccess({ conversationID: action.conversationID, messages: res }),
-            setPeopleSuccess({ successType: "private" }),
+            setPeopleSuccess({ successType: "private", comm: "update" }),
             setPeopleLoading({ isLoading: false })
           ])),
           catchError((err) => {
@@ -101,7 +101,7 @@ export class PeopleEffects {
       switchMap((action) => this.service.createConversations(action.companion).pipe(
         concatMap(({ conversationID }) => ([
           createConversationSuccess({ conversation: { id: conversationID, companionID: action.companion } }),
-          setPeopleSuccess({ successType: "main" }),
+          setPeopleSuccess({ successType: "main", comm: "create" }),
           setPeopleLoading({ isLoading: false })
         ])),
         catchError((err) => {
@@ -121,7 +121,7 @@ export class PeopleEffects {
       switchMap((action) => this.service.deleteConversations(action.conversationID).pipe(
         concatMap(() => ([
           deleteConversationSuccess({ conversationID: action.conversationID }),
-          setPeopleSuccess({ successType: "main" }),
+          setPeopleSuccess({ successType: "private", comm: "delete" }),
           setPeopleLoading({ isLoading: false })
         ])),
         catchError((err) => {
@@ -143,7 +143,7 @@ export class PeopleEffects {
         concatMap(() => {
           const newMessage: ISingleMessage = { authorID: myData.id, message: action.message, createdAt: Date.now() + "" }
           return [sendPrivateMessageSuccess({ conversationID: action.conversationID, message: newMessage }),
-          setPeopleSuccess({ successType: "private" }),
+          setPeopleSuccess({ successType: "private", comm: "send" }),
           setPeopleLoading({ isLoading: false })
           ]
         }),

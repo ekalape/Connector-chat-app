@@ -1,13 +1,12 @@
 <app-title-controls [kind]="titleKinds.PRIVATE_CONVERSATION"
   (updateContent)="updatePrivateMessages()"
-  (deleteConversation)="deleteConversation($event)"
-  [blockBtn]="(errorState|async)?.status===RequestStatus.SUCCESS && (errorState|async)?.kind===titleKinds.PRIVATE_CONVERSATION"><span
+  (deleteConversation)="deleteConversation($event)" [blockBtn]="blockUpdateBtn"><span
     *ngIf="(opponent|async) as opponent">Conversation with {{opponent?.name}}</span>
 </app-title-controls>
 <app-chat-container (sendEvent)="sendMessage($event)">
-  <app-message *ngFor="let message of (privateMessages|async)"
-    [messageData]="message"></app-message>
+  <app-message *ngFor="let message of (privateMessages|async)" [messageData]="message"
+    [userName]="(opponent|async)?.name"></app-message>
 </app-chat-container>
 <p-toast position="top-center" key="tc"></p-toast>
 
-<app-loading-overlay [show]="(errorState|async)?.isLoading"></app-loading-overlay>
+<app-loading-overlay [show]="(isLoading|async)||false"></app-loading-overlay>

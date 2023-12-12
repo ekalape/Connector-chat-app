@@ -10,8 +10,8 @@ import {
   selectMyConversations, selectPeopleLoadingState,
   selectUsers
 } from 'app/store/selectors/people.selectors';
-import { IUser } from 'app/models/conversations.model';
-import { first, tap } from 'rxjs';
+import { ISingleUserConversation, IUser } from 'app/models/conversations.model';
+import { Subscription, first, tap } from 'rxjs';
 import { RequestStatus } from 'app/utils/enums/request-status';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
@@ -40,13 +40,19 @@ export class PeopleComponent {
 
   RequestStatus = RequestStatus;
   titleKinds = titleKinds
+  blockBtn = false;
 
   people = this.store.select(selectUsers);
   errorState = this.store.select(selectMainPeopleErrorState);
   myConvs = this.store.select(selectMyConversations);
 
+  myConvsSUB: Subscription | undefined;
+  errorsSUB: Subscription | undefined;
+
+  myconvsIDs: ISingleUserConversation[] | undefined;
   myOpps: string[] = [];
-  convID: string | undefined;
+
+  userToChatID: string | undefined;
 
   errorData: IErrorState | undefined;
 
@@ -59,16 +65,29 @@ export class PeopleComponent {
 
   }
   ngOnInit() {
-    this.myConvs.pipe(
-      tap(data => { this.myOpps = data.map(x => x.companionID) })
-    )
-    this.errorState.pipe(
-      first()
-    ).subscribe((data: IErrorState) => {
-      if (data.status === RequestStatus.ERROR) {
-        this.showError(data.message || "Something went wrong")
-      }
+    this.myConvsSUB = this.myConvs.subscribe(data => {
+      this.myOpps = data.map(x => x.companionID);
+      this.myconvsIDs = data
     })
+
+    this.errorsSUB = this.errorState
+      .subscribe((data: IErrorState) => {
+        if (data.status === RequestStatus.ERROR) {
+          this.showError(data.message || "Something went wrong");
+          this.userToChatID = undefined;
+
+        }
+        else if (data.status === RequestStatus.SUCCESS) {
+          if (data.type === "create") {
+            const id = this.myconvsIDs?.find(c => c.companionID === this.userToChatID)?.id;
+            console.log('type :>> ', data.type, "id to go :>>", id);
+            if (id) this.router.navigate([`/conversation/${id}`])
+          }
+          else if (data.type === "update") {
+            this.blockBtn = true
+          }
+        }
+      })
 
 
     this.store.select(selectFirstLoadedPeople).pipe(
@@ -85,24 +104,16 @@ export class PeopleComponent {
   }
 
   openConversation(user: IUser) {
+    this.userToChatID = user.uid;
+
     if (this.myOpps.includes(user.uid)) {
-      this.myConvs.pipe(tap(
-        data => {
-          this.convID = data.find(x => x.companionID === user.uid)?.id;
-          this.router.navigate([`/conversation/${this.convID}`])
-        }
-      ))
+      console.log("includes");
+      const convID = this.myconvsIDs?.find(x => x.companionID === user.uid)?.id;
+      this.router.navigate([`/conversation/${convID}`])
+
     } else {
       this.store.dispatch(createConversation({ companion: user.uid }))
-      if (this.errorData?.status === RequestStatus.SUCCESS) {
-        this.store.select(selectConversationByCompanion(user.uid))
-          .subscribe(data => {
-            if (data) this.router.navigate([`/conversation/${data}`]);
-          }
 
-          )
-
-      }
     }
 
   }
@@ -123,5 +134,10 @@ export class PeopleComponent {
       default: return;
     }
 
+  }
+
+  ngOnDestroy() {
+    this.myConvsSUB?.unsubscribe();
+    this.errorsSUB?.unsubscribe()
   }
 }

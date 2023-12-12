@@ -3,18 +3,17 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { TitleControlsComponent } from 'app/components/title-controls/title-controls.component';
 import { titleKinds } from 'app/utils/enums/title-controls';
-import { ISingleGroup, ISingleMessage } from 'app/models/conversations.model';
+import { ISingleGroup, ISingleMessage, IUser } from 'app/models/conversations.model';
 import { Store } from '@ngrx/store';
-import { selectFirstLoadedGroups, selectGroupMessages, selectSingleGroup, selectSingleGroupDialog } from 'app/store/selectors/group.selectors';
+import { selectFirstLoadedGroups, selectPrivateGroupErrorState, selectSingleGroup, selectSingleGroupDialog } from 'app/store/selectors/group.selectors';
 import { Observable, Subscription, first, map } from 'rxjs';
 import { ChatContainerComponent } from 'app/components/chat-container/chat-container.component';
 import { getAllGroups, getGroupMessages, sendGroupMessage } from 'app/store/actions/group.action';
 import { MessageComponent } from 'app/components/message/message.component';
 import { RequestStatus } from 'app/utils/enums/request-status';
-import { selectErrorState } from 'app/store/selectors/error.selectors';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { IErrorHandle } from 'app/store/models/store.model';
+import { selectUsers } from 'app/store/selectors/people.selectors';
 
 
 @Component({
@@ -33,10 +32,18 @@ export class GroupComponent {
   groupId: string | null;
   titleKinds = titleKinds;
   RequestStatus = RequestStatus
-  errorState = this.store.select(selectErrorState);
+
   groupData: Observable<ISingleGroup | undefined> | undefined;
   groupMessages: Observable<ISingleMessage[]> | undefined;
-  errorSub: Subscription | undefined;
+
+  allgroupUsers: IUser[] | undefined
+
+  errorSUB: Subscription | undefined;
+
+  errorData = this.store.select(selectPrivateGroupErrorState);
+  allUsersSUB: Subscription | undefined;
+
+  blockBtn = false;
 
   constructor(private route: ActivatedRoute, private store: Store,
     private messageService: MessageService) {
@@ -53,11 +60,21 @@ export class GroupComponent {
 
         }
       })
-    this.errorSub = this.errorState.subscribe((data: IErrorHandle) => {
+    this.errorSUB = this.errorData.subscribe(data => {
       if (data.status === RequestStatus.ERROR) {
-        this.showError(data.errorMessage || "Something went wrong")
+        this.showError(data.message || "Something went wrong")
+      }
+      if (data.status === RequestStatus.SUCCESS) {
+        if (data.type === "update")
+          this.blockBtn = true
       }
     })
+
+    this.allUsersSUB == this.store.select(selectUsers).subscribe(
+      data => {
+        this.allgroupUsers = data
+      }
+    )
 
     if (this.groupId) {
       this.updateGroupMessages()
@@ -84,13 +101,19 @@ export class GroupComponent {
       this.store.dispatch(sendGroupMessage({ groupId: this.groupId, message }))
     }
   }
+
+  getAuthorOfMessage(message: ISingleMessage): string {
+    const user = this.allgroupUsers?.find(us => us.uid === message.authorID);
+    return user ? user.name : 'Unknown user';
+  }
   showError(errorMessage: string | undefined) {
     this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: errorMessage || "Something went wrong, try again" });
 
   }
+  ngOnDestroy() {
+    this.errorSUB?.unsubscribe()
+  }
 
 }
-function selectGroupDialog(groupId: string): (state: object) => unknown {
-  throw new Error('Function not implemented.');
-}
+
 

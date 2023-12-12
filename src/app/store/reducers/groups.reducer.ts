@@ -3,7 +3,7 @@ import { createReducer, on } from '@ngrx/store';
 import { addNewGroupSuccess, deleteGroupSuccess, getAllGroups, getAllGroupsSuccess, getGroupMessagesSuccess, resetGroupError, resetGroupSlice, sendGroupMessage, sendGroupMessagesSuccess, setGroupCounter, setGroupError, setGroupSuccess } from '../actions/group.action';
 import { ISingleGroup } from 'app/models/conversations.model';
 import { IErrorState, IGroupsMessagesState, IGroupsSlice } from '../models/store.model';
-import { initErrorState } from '..';
+
 import { RequestStatus } from 'app/utils/enums/request-status';
 /* import { GroupsActions } from './groups.actions'; */
 
@@ -15,8 +15,12 @@ export const initialState: IGroupsSlice = {
   list: [],
   history: [],
   errors: {
-    main: initErrorState,
-    private: initErrorState,
+    main: {
+      status: RequestStatus.WAITING
+    },
+    private: {
+      status: RequestStatus.WAITING
+    },
   },
   counters: {
     main: 0,
@@ -68,10 +72,10 @@ export const groupsReducer = createReducer(
     })
   }),
   on(resetGroupSlice, (state) => initialState),
-  on(setGroupSuccess, (state, { successType }) => {
+  on(setGroupSuccess, (state, { successType, comm }) => {
     return successType === 'main' ?
-      { ...state, errors: { ...state.errors, main: { status: RequestStatus.SUCCESS } } } :
-      { ...state, errors: { ...state.errors, private: { status: RequestStatus.SUCCESS } } }
+      { ...state, errors: { ...state.errors, main: { status: RequestStatus.SUCCESS, type: comm } } } :
+      { ...state, errors: { ...state.errors, private: { status: RequestStatus.SUCCESS, type: comm } } }
   }),
   on(resetGroupError, (state, { successType }) => {
     return successType === 'main' ?

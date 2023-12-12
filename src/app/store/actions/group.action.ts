@@ -34,7 +34,7 @@ export const sendGroupMessagesSuccess = createAction("[group] Send Group Message
 export const resetGroupSlice = createAction("[group] Reset Group Slice");
 
 
-export const setGroupSuccess = createAction("[group] Set Group Success", props<{ successType: 'main' | 'private' }>());
+export const setGroupSuccess = createAction("[group] Set Group Success", props<{ successType: 'main' | 'private', comm: string }>());
 export const resetGroupError = createAction("[group] Reset Group Error", props<{ successType: 'main' | 'private' }>());
 export const setGroupError = createAction("[group] Set Group Error", props<{ successType: 'main' | 'private', errtype: string, message: string }>());
 

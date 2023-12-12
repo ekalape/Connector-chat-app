@@ -5,9 +5,12 @@ import { Location } from '@angular/common';
 import { titleKinds } from 'app/utils/enums/title-controls';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { selectErrorState } from 'app/store/selectors/error.selectors';
 import { Subscription, first, tap } from 'rxjs';
 import { RequestStatus } from 'app/utils/enums/request-status';
+import { setGroupCounter } from 'app/store/actions/group.action';
+import { setPeopleCounter } from 'app/store/actions/people.action';
+import { selectGroupMainCounterState, selectGroupPrivateCounterState } from 'app/store/selectors/group.selectors';
+import { selectPeopleMainCounterState, selectPeoplePrivateCounterState } from 'app/store/selectors/people.selectors';
 
 
 @Component({
@@ -25,11 +28,8 @@ export class TitleControlsComponent {
   @Input() blockBtn = false
 
 
-  errorSub: Subscription | undefined;
-  status: RequestStatus | undefined
-
   counterIsActive = false;
-  count = 10;
+  count = 20;  //TODO don't forget to change!!
 
   constructor(private location: Location,
     private route: ActivatedRoute,
@@ -38,11 +38,59 @@ export class TitleControlsComponent {
   }
 
   ngOnInit() {
+    let counter;
+    switch (this.kind) {
+      case titleKinds.GROUPS:
+        this.store.select(selectGroupMainCounterState)
+          .pipe(first())
+          .subscribe(time => {
+            if (time > 0) {
+              this.counterIsActive = true;
+              this.count = time;
+              this.startCounter()
+            }
+          })
+        break;
+      case titleKinds.PEOPLE:
+        this.store.select(selectPeopleMainCounterState)
+          .pipe(first())
+          .subscribe(time => {
+            if (time > 0) {
+              this.counterIsActive = true;
+              this.count = time;
+              this.startCounter()
+            }
+          })
+        break;
+      case titleKinds.PRIVATE_GROUP:
+        this.store.select(selectGroupPrivateCounterState)
+          .pipe(first())
+          .subscribe(time => {
+            if (time > 0) {
+              this.counterIsActive = true;
+              this.count = time;
+              this.startCounter()
+            }
+          })
+        break;
+      case titleKinds.PRIVATE_CONVERSATION:
+        this.store.select(selectPeoplePrivateCounterState)
+          .pipe(first())
+          .subscribe(time => {
+            if (time > 0) {
+              this.counterIsActive = true;
+              this.count = time;
+              this.startCounter()
+            }
+          })
+        break;
+    }
+
+
   }
 
   goBack() {
     this.location.back()
-
   }
 
   update() {
@@ -52,13 +100,6 @@ export class TitleControlsComponent {
     if (this.blockBtn)
       this.startCounter()
   }
-
-  /*   ngOnChanges() {
-      if (this.blockBtn)
-        this.startCounter()
-    } */
-
-
 
   add() {
     this.addGroup.emit()
@@ -71,7 +112,7 @@ export class TitleControlsComponent {
       if (this.count === 0 && interval) {
         clearInterval(interval)
         this.counterIsActive = false;
-        this.count = 10;
+        this.count = 20;
       };
     }, 1000)
 
@@ -82,7 +123,25 @@ export class TitleControlsComponent {
   }
 
   ngOnDestroy() {
-    this.errorSub?.unsubscribe()
+    if (this.counterIsActive) {
+      switch (this.kind) {
+        case titleKinds.GROUPS:
+          this.store.dispatch(setGroupCounter({ counterType: 'main', time: this.count }));
+          break;
+        case titleKinds.PEOPLE:
+          this.store.dispatch(setPeopleCounter({ counterType: 'private', time: this.count }));
+          break;
+        case titleKinds.PRIVATE_GROUP:
+          this.store.dispatch(setGroupCounter({ counterType: 'main', time: this.count }));
+          break;
+        case titleKinds.PRIVATE_CONVERSATION:
+          this.store.dispatch(setPeopleCounter({ counterType: 'private', time: this.count }));
+          break;
+      }
+    }
+
+
+
   }
 
 }

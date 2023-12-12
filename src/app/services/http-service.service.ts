@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { IProfileResponse } from 'app/models/http-responses.model';
 import { BASE_URL } from 'app/utils/enums/pathes';
 import { Observable } from 'rxjs';

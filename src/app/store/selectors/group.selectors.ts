@@ -1,6 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { IGroupsMessagesState, IGroupsSlice } from '../models/store.model';
-import { ISingleGroup } from 'app/models/conversations.model';
+import { IGroupsSlice } from '../models/store.model';
 import { selectMyID } from './profile.selectors';
 
 

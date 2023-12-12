@@ -5,5 +5,6 @@
 </div>
 <form class="input-block" (ngSubmit)="sendMessage()">
   <input type="text" pInputText [formControl]="messageInput" />
-  <p-button icon="pi pi-comment" type="submit"></p-button>
+  <p-button icon="pi pi-comment" type="submit"
+    [disabled]="!messageInput.valid"></p-button>
 </form>
