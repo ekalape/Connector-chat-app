@@ -5,7 +5,7 @@ import { TitleControlsComponent } from 'app/components/title-controls/title-cont
 import { titleKinds } from 'app/utils/enums/title-controls';
 import { ISingleGroup, ISingleMessage, IUser } from 'app/models/conversations.model';
 import { Store } from '@ngrx/store';
-import { selectFirstLoadedGroups, selectPrivateGroupErrorState, selectSingleGroup, selectSingleGroupDialog } from 'app/store/selectors/group.selectors';
+import { selectFirstLoadedGroups, selectGroupLoadingState, selectPrivateGroupErrorState, selectSingleGroup, selectSingleGroupDialog } from 'app/store/selectors/group.selectors';
 import { Observable, Subscription, first, map } from 'rxjs';
 import { ChatContainerComponent } from 'app/components/chat-container/chat-container.component';
 import { getAllGroups, getGroupMessages, sendGroupMessage } from 'app/store/actions/group.action';
@@ -14,6 +14,7 @@ import { RequestStatus } from 'app/utils/enums/request-status';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { selectUsers } from 'app/store/selectors/people.selectors';
+import { LoadingOverlayComponent } from 'app/components/loading-overlay/loading-overlay.component';
 
 
 @Component({
@@ -22,7 +23,8 @@ import { selectUsers } from 'app/store/selectors/people.selectors';
   imports: [CommonModule, TitleControlsComponent,
     ChatContainerComponent,
     ToastModule,
-    MessageComponent],
+    MessageComponent,
+    LoadingOverlayComponent],
   providers: [MessageService],
   templateUrl: './group.component.html',
   styleUrl: './group.component.scss'
@@ -44,6 +46,8 @@ export class GroupComponent {
   allUsersSUB: Subscription | undefined;
 
   blockBtn = false;
+
+  isLoading = this.store.select(selectGroupLoadingState)
 
   constructor(private route: ActivatedRoute, private store: Store,
     private messageService: MessageService) {

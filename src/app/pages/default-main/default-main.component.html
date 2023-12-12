@@ -9,7 +9,7 @@
     <app-group-card *ngFor="let gr of (groups|ownGroups:filtered:(myGroups|async))"
       [groupData]="gr" (deleteGroup)="deleteGroup($event)"></app-group-card>
   </div>
-
+  <app-loading-overlay [show]="(isLoading|async)||false"></app-loading-overlay>
 </div>
 <div class="list-container people">
   <app-people></app-people>
@@ -34,5 +34,3 @@
 </p-dialog>
 
 <p-toast position="top-center" key="tc"></p-toast>
-
-<app-loading-overlay [show]="(isLoading|async)||false"></app-loading-overlay>

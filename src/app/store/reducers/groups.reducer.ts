@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 
-import { addNewGroupSuccess, deleteGroupSuccess, getAllGroups, getAllGroupsSuccess, getGroupMessagesSuccess, resetGroupError, resetGroupSlice, sendGroupMessage, sendGroupMessagesSuccess, setGroupCounter, setGroupError, setGroupSuccess } from '../actions/group.action';
+import { addNewGroupSuccess, deleteGroupSuccess, getAllGroups, getAllGroupsSuccess, getGroupMessagesSuccess, resetGroupError, resetGroupSlice, sendGroupMessage, sendGroupMessagesSuccess, setGroupCounter, setGroupError, setGroupLoading, setGroupSuccess } from '../actions/group.action';
 import { ISingleGroup } from 'app/models/conversations.model';
 import { IErrorState, IGroupsMessagesState, IGroupsSlice } from '../models/store.model';
 
@@ -43,7 +43,7 @@ export const groupsReducer = createReducer(
   })),
   on(deleteGroupSuccess, (state, { groupId }) => ({
     ...state,
-    list: state.list.filter(gr => gr.id === groupId)
+    list: state.list.filter(gr => gr.id !== groupId)
   })),
   on(getGroupMessagesSuccess, (state, { groupId, messages }) => {
     const existent = state.history.find(gr => gr.groupId === groupId);
@@ -96,7 +96,11 @@ export const groupsReducer = createReducer(
     return counterType === 'main' ?
       { ...state, counters: { ...state.counters, main: time } } :
       { ...state, counters: { ...state.counters, private: time } }
-  })
+  }),
+  on(setGroupLoading, (state, { isLoading }) => ({
+    ...state,
+    loading: isLoading
+  }))
 );
 
 

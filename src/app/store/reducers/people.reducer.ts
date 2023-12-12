@@ -1,5 +1,5 @@
 
-import { createConversationSuccess, deleteConversationSuccess, getPeopleAndConversationsSuccess, getPrivateMessagesSuccess, resetPeopleError, resetPeopleSlice, sendPrivateMessageSuccess, setPeopleCounter, setPeopleError, setPeopleSuccess } from '../actions/people.action';
+import { createConversationSuccess, deleteConversationSuccess, getPeopleAndConversationsSuccess, getPrivateMessagesSuccess, resetPeopleError, resetPeopleSlice, sendPrivateMessageSuccess, setPeopleCounter, setPeopleError, setPeopleLoading, setPeopleSuccess } from '../actions/people.action';
 
 import { createReducer, on } from '@ngrx/store';
 import { IErrorState, IPeopleSlice } from '../models/store.model';
@@ -87,7 +87,11 @@ export const peopleReducer = createReducer(
   on(setPeopleCounter, (state, { counterType, time }) => {
     return counterType === 'main' ? { ...state, counters: { ...state.counters, main: time } } :
       { ...state, counters: { ...state.counters, private: time } }
-  })
+  }),
+  on(setPeopleLoading, (state, { isLoading }) => ({
+    ...state,
+    loading: isLoading
+  }))
 
 
 

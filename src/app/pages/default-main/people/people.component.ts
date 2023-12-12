@@ -48,6 +48,7 @@ export class PeopleComponent {
 
   myConvsSUB: Subscription | undefined;
   errorsSUB: Subscription | undefined;
+  loadingSUB: Subscription | undefined;
 
   myconvsIDs: ISingleUserConversation[] | undefined;
   myOpps: string[] = [];
@@ -56,7 +57,7 @@ export class PeopleComponent {
 
   errorData: IErrorState | undefined;
 
-  isLoading = this.store.select(selectPeopleLoadingState);
+  isLoading = false;
   filtered = false;
 
   constructor(private store: Store,
@@ -65,6 +66,12 @@ export class PeopleComponent {
 
   }
   ngOnInit() {
+    this.loadingSUB = this.store.select(selectPeopleLoadingState).pipe(
+      tap(console.log)
+    ).subscribe(data => {
+      this.isLoading = data
+    })
+
     this.myConvsSUB = this.myConvs.subscribe(data => {
       this.myOpps = data.map(x => x.companionID);
       this.myconvsIDs = data
@@ -138,6 +145,7 @@ export class PeopleComponent {
 
   ngOnDestroy() {
     this.myConvsSUB?.unsubscribe();
-    this.errorsSUB?.unsubscribe()
+    this.errorsSUB?.unsubscribe();
+    this.loadingSUB?.unsubscribe()
   }
 }

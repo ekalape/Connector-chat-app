@@ -10,4 +10,8 @@ import { CommonModule } from '@angular/common';
 })
 export class LoadingOverlayComponent {
   @Input() show: boolean | undefined = false;
+
+  ngOnChanges() {
+    console.log('show :>> ', this.show);
+  }
 }
