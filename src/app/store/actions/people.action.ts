@@ -8,7 +8,7 @@ export const getPeopleAndConversationsSuccess = createAction("[people] Get Peopl
 
 export const getPrivateMessages = createAction("[people] Get Private Messages", props<{ conversationID: string }>());
 export const getPrivateMessagesSuccess = createAction("[people] Get Private Messages Success",
-  props<{ conversationID: string, messages: ISingleMessage[] }>());
+  props<{ conversationID: string, messages: ISingleMessage[], since?: string | undefined }>());
 
 export const sendPrivateMessage = createAction("[people] Send Private Message", props<{ conversationID: string, message: string }>());
 export const sendPrivateMessageSuccess = createAction("[people] Send Private Message Success",

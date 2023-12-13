@@ -141,23 +141,33 @@ export class GroupsEffects {
       ofType(getGroupMessages),
       tap(() => { this.store.dispatch(setGroupLoading({ isLoading: true })) }),
       concatMap(action => of(action).pipe(
-        withLatestFrom(this.store.select(selectSingleGroupDialog(action.groupId))),
+        withLatestFrom(this.store.select(selectSingleGroupDialog(action.groupId, true))),
       )),
       mergeMap(([action, storedMessages]) => {
         let lastMessageDate: string | undefined;
-        if (storedMessages) {
-          const sortedMessages = [...storedMessages].sort((a, b) => Number(a.createdAt) - Number(b.createdAt));
-          lastMessageDate = sortedMessages[sortedMessages.length - 1]?.createdAt;
+        let lastMessageDateNum: number | undefined;
+        let sinceParam: string | undefined;
+        if (storedMessages && 'groupId' in storedMessages) {
+          if (storedMessages.messages.length) {
+            const sortedMessages = [...storedMessages.messages].sort((a, b) => Number(a.createdAt) - Number(b.createdAt));
+            lastMessageDate = sortedMessages[sortedMessages.length - 1]?.createdAt;
+          } else {
+            if (storedMessages.since) {
+              lastMessageDate = storedMessages.since;
+            }
+          }
         }
+        sinceParam = Date.now() + ""
+        if (lastMessageDate) lastMessageDateNum = Number(lastMessageDate) + 1;
 
-        return this.service.getMessages(action.groupId, Number(lastMessageDate) + 1).pipe(
+        return this.service.getMessages(action.groupId, lastMessageDateNum).pipe(
           map(res => res.Items.map(x => ({
             authorID: x.authorID.S,
             message: x.message.S,
             createdAt: x.createdAt.S
           }))),
-          concatMap(messages => ([
-            getGroupMessagesSuccess({ groupId: action.groupId, messages }),
+          concatMap((messages) => ([
+            getGroupMessagesSuccess({ groupId: action.groupId, messages, since: sinceParam }),
             setGroupSuccess({ successType: "private", comm: "update" }),
             setGroupLoading({ isLoading: false })
           ])),

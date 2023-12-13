@@ -86,8 +86,8 @@ export class GroupComponent {
       this.groupData = this.store.select(selectSingleGroup(this.groupId));
       this.groupMessages = this.store.select(selectSingleGroupDialog(this.groupId))
         .pipe(
-          map(messages => {
-            if (messages)
+          map((messages) => {
+            if (messages && Array.isArray(messages))
               return [...messages]?.sort((a, b) => Number(b.createdAt) - Number(a.createdAt));
             return []
           }))

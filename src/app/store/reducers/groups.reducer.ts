@@ -1,6 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
 
-import { addNewGroupSuccess, deleteGroupSuccess, getAllGroups, getAllGroupsSuccess, getGroupMessagesSuccess, resetGroupError, resetGroupSlice, sendGroupMessage, sendGroupMessagesSuccess, setGroupCounter, setGroupError, setGroupLoading, setGroupSuccess } from '../actions/group.action';
+import {
+  addNewGroupSuccess, deleteGroupSuccess,
+  getAllGroupsSuccess, getGroupMessagesSuccess,
+  resetGroupError, resetGroupSlice,
+  sendGroupMessagesSuccess, setGroupCounter, setGroupError, setGroupLoading,
+  setGroupSuccess
+} from '../actions/group.action';
 import { ISingleGroup } from 'app/models/conversations.model';
 import { IErrorState, IGroupsMessagesState, IGroupsSlice } from '../models/store.model';
 
@@ -45,14 +51,14 @@ export const groupsReducer = createReducer(
     ...state,
     list: state.list.filter(gr => gr.id !== groupId)
   })),
-  on(getGroupMessagesSuccess, (state, { groupId, messages }) => {
+  on(getGroupMessagesSuccess, (state, { groupId, messages, since }) => {
     const existent = state.history.find(gr => gr.groupId === groupId);
     let newHistory = state.history
     if (existent) {
       newHistory = [...state.history.filter(gr => gr.groupId !== groupId),
-      { groupId, messages: [...existent.messages, ...messages] }]
+      { groupId, messages: [...existent.messages, ...messages], since }]
     }
-    else newHistory = [...state.history, { groupId, messages }];
+    else newHistory = [...state.history, { groupId, messages, since }];
     return ({
       ...state,
       history: newHistory

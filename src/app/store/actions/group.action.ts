@@ -22,7 +22,7 @@ export const deleteGroupSuccess = createAction("[group] Delete Group Success",
 export const getGroupMessages = createAction("[group] Get Group Messages",
   props<{ groupId: string }>());
 export const getGroupMessagesSuccess = createAction("[group] Get Group Messages Success",
-  props<{ groupId: string, messages: ISingleMessage[] }>());
+  props<{ groupId: string, messages: ISingleMessage[], since?: string | undefined }>());
 
 
 export const sendGroupMessage = createAction("[group] Send Group Messages",
@@ -42,3 +42,6 @@ export const setGroupCounter = createAction("[group] Set Group Counter", props<{
 
 
 export const setGroupLoading = createAction("[group] Set Group Loading State", props<{ isLoading: boolean }>())
+
+
+

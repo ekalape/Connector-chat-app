@@ -42,14 +42,15 @@ export const peopleReducer = createReducer(
     ...state,
     myConvs: state.myConvs.filter(c => c.id !== conversationID)
   })),
-  on(getPrivateMessagesSuccess, (state, { conversationID, messages }) => {
+
+  on(getPrivateMessagesSuccess, (state, { conversationID, messages, since }) => {
     const existent = state.history.find(gr => gr.conversationID === conversationID);
     let newHistory = state.history
     if (existent) {
       newHistory = [...state.history.
-        filter(gr => gr.conversationID !== conversationID), { conversationID, messages: [...existent.messages, ...messages] }]
+        filter(gr => gr.conversationID !== conversationID), { conversationID, messages: [...existent.messages, ...messages], since }]
     }
-    else newHistory = [...state.history, { conversationID, messages }];
+    else newHistory = [...state.history, { conversationID, messages, since }];
     return ({
       ...state,
       history: newHistory

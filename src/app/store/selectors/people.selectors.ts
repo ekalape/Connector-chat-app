@@ -15,6 +15,9 @@ export const selectUserByConversationID = (convID: string) => createSelector(sel
 export const selectMessagesByConversationId = (convID: string) => createSelector(selectPeopleData, (data) => {
   return data.history.find(c => c.conversationID === convID)?.messages
 })
+export const selectSingleConversationByConversationId = (convID: string) => createSelector(selectPeopleData, (data) => {
+  return data.history.find(c => c.conversationID === convID)
+})
 
 export const selectConversationByCompanion = (opponentID: string) => createSelector(selectMyConversations,
   data => data.find(c => c.companionID === opponentID)?.id)

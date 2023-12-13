@@ -16,8 +16,13 @@ export const selectFirstLoadedGroups = createSelector(selectGroupsList, (groups)
   return false;
 })
 
-export const selectSingleGroupDialog = (groupId: string) => createSelector(selectGroups,
-  (data) => data.history.find(gr => gr.groupId === groupId)?.messages || []);
+export const selectSingleGroupDialog = (groupId: string, full?: boolean | undefined) => createSelector(selectGroups,
+  (data) => {
+    const history = data.history.find(gr => gr.groupId === groupId)
+    if (full) {
+      return history || []
+    } else return history?.messages || []
+  });
 
 export const selectSingleGroup = (groupId: string) =>
   createSelector(selectGroupsList, (data) => data.find(gr => gr.id === groupId))

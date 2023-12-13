@@ -11,7 +11,7 @@ import {
 import { map, switchMap, catchError, of, EMPTY, mergeMap, concatMap, withLatestFrom, tap } from 'rxjs';
 import { IPeople, ISingleMessage, ISingleUserConversation, IUser, IUserConversations } from 'app/models/conversations.model';
 import { selectMyID } from '../selectors/profile.selectors';
-import { selectMessagesByConversationId } from '../selectors/people.selectors';
+import { selectMessagesByConversationId, selectSingleConversationByConversationId } from '../selectors/people.selectors';
 
 
 @Injectable()
@@ -62,23 +62,33 @@ export class PeopleEffects {
         tap(() => {
           this.store.dispatch(setPeopleLoading({ isLoading: true }))
         }),
-        withLatestFrom(this.store.select(selectMessagesByConversationId(action.conversationID)))
+        withLatestFrom(this.store.select(selectSingleConversationByConversationId(action.conversationID)))
       )),
-      concatMap(([action, storedMessages]) => {
-        let lastMessageDate: number | undefined;
-        if (storedMessages && storedMessages.length) {
-          const sortedMessages = [...storedMessages].sort((a, b) => Number(a.createdAt) - Number(b.createdAt));
-          lastMessageDate = Number(sortedMessages[sortedMessages.length - 1]?.createdAt) + 1;
+      concatMap(([action, conversation]) => {
+        let lastMessageDate: string | undefined;
+        let lastMessageDateNum: number | undefined;
+        let sinceParam: string | undefined;
+        if (conversation) {
+          if (conversation.messages && conversation.messages.length) {
+            const sortedMessages = [...conversation.messages].sort((a, b) => Number(a.createdAt) - Number(b.createdAt));
+            lastMessageDate = sortedMessages[sortedMessages.length - 1]?.createdAt;
+          }
+          else {
+            if (conversation.since) {
+              lastMessageDate = conversation.since;
+            }
+          }
         }
-
-        return this.service.getPrivateMessages(action.conversationID, lastMessageDate).pipe(
+        sinceParam = Date.now() + ""
+        if (lastMessageDate) lastMessageDateNum = Number(lastMessageDate) + 1;
+        return this.service.getPrivateMessages(action.conversationID, lastMessageDateNum).pipe(
           map(res => res.Items.map(m => ({
             authorID: m.authorID.S,
             message: m.message.S,
             createdAt: m.createdAt.S
           }))),
           concatMap(res => ([
-            getPrivateMessagesSuccess({ conversationID: action.conversationID, messages: res }),
+            getPrivateMessagesSuccess({ conversationID: action.conversationID, messages: res, since: sinceParam }),
             setPeopleSuccess({ successType: "private", comm: "update" }),
             setPeopleLoading({ isLoading: false })
           ])),

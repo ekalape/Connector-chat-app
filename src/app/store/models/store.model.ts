@@ -18,24 +18,9 @@ export interface IAutorizationSlice {
 
 export interface IGroupsMessagesState {
   groupId: string,
-  messages: ISingleMessage[]
+  messages: ISingleMessage[],
+  since?: string | undefined
 }
-
-/* export interface IPeopleState {
-  users: IUser[],
-  conversations: ISingleUserConversation[],
-  messages: {
-    conversationID: string,
-    dialog: ISingleMessage[]
-  }[]
-} */
-/* export interface IErrorHandle {
-  isLoading: boolean;
-  errorType: string | null | undefined;
-  errorMessage: string | null;
-  status: RequestStatus;
-  kind?: titleKinds | null
-} */
 
 export interface IGroupsSlice {
   list: ISingleGroup[],
@@ -56,7 +41,8 @@ export interface IPeopleSlice {
   myConvs: ISingleUserConversation[],
   history: {
     conversationID: string,
-    messages: ISingleMessage[]
+    messages: ISingleMessage[],
+    since?: string | undefined
   }[],
   errors: {
     main: IErrorState;
