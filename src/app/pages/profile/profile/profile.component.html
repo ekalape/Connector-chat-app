@@ -1,11 +1,70 @@
 <form class="profile-form">
-  <div class="page-title">
-    <p-button icon="pi pi-arrow-left" [rounded]="true" [text]="true"
-      (click)="goBack()"></p-button>
-    <h2>Profile</h2>
-  </div>
 
-  <div class="page-content">
+  <p-fieldset>
+    <ng-template pTemplate="header" class="flex align-items-center text-primary">
+      <div class="page-title">
+        <p-button icon="pi pi-arrow-left" [rounded]="true" [text]="true"
+          (click)="goBack()"></p-button>
+        <h2>Profile</h2>
+      </div>
+    </ng-template>
+    <div class="page-content">
+
+      <div class="profile-field">
+        <span>User ID: </span>
+        <span>{{userIDField}}</span>
+      </div>
+      <div class="profile-field" *ngIf="!editEnabled">
+        <span>Username: </span>
+        <span>{{(profileData$|async)?.name}} </span>
+      </div>
+      <div class="profile-field" *ngIf="editEnabled">
+        <label>Username: </label>
+        <input type="text" pInputText [formControl]="nameField">
+        <div class="errors-container"
+          *ngIf="nameField.invalid&&(nameField.dirty||nameField.touched)">
+          <p class="errors-message" *ngIf="nameField.errors?.['required']">
+            Please enter a name.
+          </p>
+          <p class="errors-message" *ngIf="nameField.errors?.['minlength']">
+            The name is too short.
+          </p>
+          <p class="errors-message" *ngIf="nameField.errors?.['pattern']">
+            Only letters and spaces are allowed.
+          </p>
+          <p class="errors-message" *ngIf="nameField.errors?.['maxlength']">
+            The name is too long.
+          </p>
+        </div>
+      </div>
+
+      <div class="profile-field">
+        <span>E-mail: </span>
+        <span>{{emailField}} </span>
+      </div>
+      <div class="profile-field">
+        <span>Created at: </span>
+        <span>{{((profileData$|async)?.createdAt)|date:'medium'}} </span>
+      </div>
+
+
+    </div>
+
+    <div class="btns-container" *ngIf="!editEnabled">
+      <p-button icon="pi pi-file-edit" label="Edit" [raised]="true" type="button"
+        class="btn-edit" (click)="editField()"></p-button>
+    </div>
+
+    <div class="btns-container" *ngIf="editEnabled">
+      <span *ngIf="(loading$|async)?.loading" class="connecting-info">Connecting...</span>
+      <p-button label="Save" [raised]="true" type="submit" class="btn"
+        [disabled]="!nameField.valid" (click)="onSave()"></p-button>
+      <p-button label="Cancel" [text]="true" [raised]="true" type="button" class="btn"
+        (click)="onCancel()"></p-button>
+    </div>
+  </p-fieldset>
+
+  <!--   <div class="page-content">
     <div class="profile-field">
       <label>User ID: </label>
       <input type="text" pInputText [formControl]="idField">
@@ -27,14 +86,8 @@
       <span class="not-editable-input-text">{{dateSeconds|date}}</span>
       <input type="text" pInputText [formControl]="creationField">
     </div>
-  </div>
+  </div> -->
 
-  <div class="btns-container">
-    <span *ngIf="(loading$|async)?.loading" class="connecting-info">Connecting...</span>
-    <p-button label="Save" [raised]="true" type="submit" class="btn"
-      [disabled]="!savenabled" (click)="onSave()"></p-button>
-    <p-button label="Cancel" [text]="true" [raised]="true" type="button" class="btn"
-      (click)="onCancel()"></p-button>
-  </div>
+
 </form>
 <p-toast position="top-center" key="tc"></p-toast>

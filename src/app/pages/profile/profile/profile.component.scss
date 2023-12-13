@@ -1,5 +1,23 @@
+:host {
+  width: 100%;
+  & ::ng-deep {
+    & p-fieldset,
+    .p-toggleable-content,
+    .p-fieldset-content {
+      width: 100%;
+    }
+    & .p-fieldset {
+      width: 100%;
+      display: flex;
+    }
+    & .p-fieldset-legend {
+      padding: 0px 1rem;
+    }
+  }
+}
+
 .profile-form {
-  width: 400px;
+  width: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -7,6 +25,12 @@
   padding: 1rem;
   gap: 1rem;
   position: relative;
+  @media (max-width: 1000px) {
+    width: 60%;
+  }
+  @media (max-width: 700px) {
+    width: 80%;
+  }
 }
 
 .page-title {
@@ -15,7 +39,8 @@
   align-items: center;
   gap: 1rem;
   justify-content: flex-start;
-  padding-left: 2rem;
+  padding-left: 0.5rem;
+  padding-right: 1rem;
 }
 .connecting-info {
   position: absolute;
@@ -33,41 +58,76 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  align-items: center;
   gap: 1.5rem;
 }
 
 .btns-container {
   width: 100%;
   display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 1rem;
   padding: 1rem 0;
   position: relative;
-  & ::ng-deep .p-ripple {
-    width: 100%;
+  & ::ng-deep {
+    & .p-ripple {
+      width: 100%;
+    }
+    & .btn-edit {
+      width: 10vw;
+      padding: 1rem;
+      @media (max-width: 1000px) {
+        width: 25%;
+      }
+      @media (max-width: 800px) {
+        width: 40%;
+      }
+    }
+    & .btn {
+      width: 80%;
+    }
   }
 }
 .btn {
-  width: 100%;
+  width: 80%;
 }
 
 .profile-field {
   width: 100%;
   display: flex;
+  justify-content: center;
+  position: relative;
   align-items: center;
-  &__editable {
-    display: block;
-    width: 320px;
-    & input {
-      width: 87%;
-    }
+  gap: 0.5rem;
+  & span:first-child {
+    font-weight: bold;
   }
-}
-input:not(:first-child) {
-  width: 320px;
 }
 
 label {
   display: block;
   width: 80px;
+  font-weight: bold;
+}
+.errors {
+  &-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 100%;
+    position: absolute;
+    top: 30px;
+    color: red;
+    font-size: 0.7rem;
+    font-style: italic;
+    right: 60px;
+  }
+  &-message {
+    padding: 0;
+    margin-bottom: 0;
+  }
+}
+:host-context(.dark) .errors-container {
+  color: rgb(255, 150, 90);
 }

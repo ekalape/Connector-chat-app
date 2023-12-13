@@ -5,14 +5,15 @@ import { selectError, selectProfileData } from 'app/store/selectors/profile.sele
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { Location } from '@angular/common';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription, map, tap } from 'rxjs';
 import { getProfileAction, setErrorAction, updateProfileAction } from 'app/store/actions/profile.action';
 import { selectLoadingState } from 'app/store/selectors/auth.selectors';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { StorageKeys } from 'app/utils/enums/local-storage-keys';
-import { IStorageInfo } from 'app/models/auth.model';
+import { IHttpError, IStorageInfo } from 'app/models/auth.model';
+import { FieldsetModule } from 'primeng/fieldset';
 
 
 
@@ -24,6 +25,7 @@ import { IStorageInfo } from 'app/models/auth.model';
     ToastModule,
     ButtonModule,
     ReactiveFormsModule,
+    FieldsetModule,
     FormsModule],
   providers: [MessageService],
   templateUrl: './profile.component.html',
@@ -34,16 +36,20 @@ export class ProfileComponent {
   loading$ = this.store.select(selectLoadingState);
   error$ = this.store.select(selectError);
 
+  errors: IHttpError | null = null
 
+  nameField = new FormControl('',
+    [Validators.required, Validators.minLength(3), Validators.pattern(/^[A-Za-zА-Яа-я\s]*$/), Validators.maxLength(40)]);
 
-  idField = new FormControl({ value: '', disabled: true });
-  nameField = new FormControl({ value: '', disabled: true });
-  emailField = new FormControl({ value: '', disabled: true });
-  creationField = new FormControl({ value: '', disabled: true });
+  emailField = "";
+  userIDField = "";
+
 
   savenabled = false;
+  editEnabled = false;
+
   oldName = "";
-  dateSeconds = "";
+
 
   sub: Subscription | undefined;
   errorsub: Subscription | undefined;
@@ -58,8 +64,8 @@ export class ProfileComponent {
     const storagedData = localStorage.getItem(StorageKeys.LOGIN_KEY);
     if (storagedData) {
       profile = JSON.parse(storagedData) as IStorageInfo;
-      this.idField.setValue(profile.uid);
-      this.emailField.setValue(profile.email);
+      this.userIDField = profile.uid;
+      this.emailField = profile.email
     }
 
 
@@ -67,7 +73,6 @@ export class ProfileComponent {
       .subscribe(data => {
         this.oldName = data.name;
         this.nameField.setValue(data.name);
-        this.dateSeconds = data.createdAt;
 
       })
 
@@ -78,16 +83,19 @@ export class ProfileComponent {
 
     this.errorsub = this.error$
       .subscribe(x => {
-        if (x)
+        if (x) {
           this.showError(x?.message)
+
+          this.errors = x
+        }
       })
   }
 
   editField() {
-    this.savenabled = true;
-    if (this.nameField.disabled)
-      this.nameField.enable()
-    else this.nameField.disable()
+    this.editEnabled = true;
+    const newValidator = Validators.pattern(`^(?!${this.oldName}$).*$`);
+    this.nameField.addValidators(newValidator);
+    this.nameField.updateValueAndValidity({ emitEvent: false });
   }
 
   goBack() {
@@ -101,20 +109,24 @@ export class ProfileComponent {
 
   onSave() {
     if (this.nameField.value?.trim()) {
-      this.savenabled = false;
-      this.nameField.disable();
       this.store.dispatch(updateProfileAction({ name: this.nameField.value }))
+      this.editEnabled = false;
+      if (!this.errors) this.showSuccess("You changed your name!")
 
     }
   }
   onCancel() {
+    this.editEnabled = false;
     this.nameField.setValue(this.oldName);
-    this.nameField.disable();
-    this.savenabled = false;
+    this.nameField.removeValidators(Validators.pattern(`^(?!${this.oldName}$).*$`));
+    this.nameField.updateValueAndValidity({ emitEvent: false });
+
   }
 
   showError(errorMessage: string | undefined) {
     this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: errorMessage || "Something went wrong, try again" });
   }
-
+  showSuccess(message: string | undefined) {
+    this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: message || 'Thank you!' });
+  }
 }
