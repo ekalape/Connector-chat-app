@@ -2,9 +2,9 @@
   <a *ngIf="kind.includes('private')" routerLink="">
     <i class="pi pi-arrow-left"></i></a>
   <h2><ng-content></ng-content></h2>
-  <p-button [raised]="true" [text]="true" (click)="update()" styleClass="update-btn"
+  <p-button [outlined]="true" (click)="update()" styleClass="update-btn"
     [disabled]="counterIsActive">{{counterIsActive?count:'Update'}}</p-button>
-  <p-button icon="pi pi-plus" [rounded]="true" [text]="true" (click)="add()"
+  <p-button icon="pi pi-plus" [rounded]="true" (click)="add()"
     *ngIf="kind==='groups'"></p-button>
   <p-button icon="pi pi-times" [rounded]="true" [text]="true" (click)="delete()"
     *ngIf="kind==='private-conversation'"></p-button>

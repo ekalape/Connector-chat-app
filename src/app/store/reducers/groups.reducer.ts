@@ -74,13 +74,13 @@ export const groupsReducer = createReducer(
   on(resetGroupSlice, (state) => initialState),
   on(setGroupSuccess, (state, { successType, comm }) => {
     return successType === 'main' ?
-      { ...state, errors: { ...state.errors, main: { status: RequestStatus.SUCCESS, type: comm } } } :
-      { ...state, errors: { ...state.errors, private: { status: RequestStatus.SUCCESS, type: comm } } }
+      { ...state, errors: { ...state.errors, main: { status: RequestStatus.SUCCESS, type: comm } }, loading: false } :
+      { ...state, errors: { ...state.errors, private: { status: RequestStatus.SUCCESS, type: comm } }, loading: false }
   }),
   on(resetGroupError, (state, { successType }) => {
     return successType === 'main' ?
-      { ...state, errors: { ...state.errors, main: { status: RequestStatus.WAITING } } } :
-      { ...state, errors: { ...state.errors, private: { status: RequestStatus.WAITING } } }
+      { ...state, errors: { ...state.errors, main: { status: RequestStatus.WAITING } }, loading: false } :
+      { ...state, errors: { ...state.errors, private: { status: RequestStatus.WAITING } }, loading: false }
   }),
   on(setGroupError, (state, { successType, errtype, message }) => {
     const error: IErrorState = {
@@ -89,8 +89,8 @@ export const groupsReducer = createReducer(
       message
     }
     return successType === 'main' ?
-      { ...state, errors: { ...state.errors, main: error } } :
-      { ...state, errors: { ...state.errors, private: error } }
+      { ...state, errors: { ...state.errors, main: error }, loading: false } :
+      { ...state, errors: { ...state.errors, private: error }, loading: false }
   }),
   on(setGroupCounter, (state, { counterType, time }) => {
     return counterType === 'main' ?

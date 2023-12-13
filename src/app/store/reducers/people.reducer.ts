@@ -46,7 +46,8 @@ export const peopleReducer = createReducer(
     const existent = state.history.find(gr => gr.conversationID === conversationID);
     let newHistory = state.history
     if (existent) {
-      newHistory = [...state.history.filter(gr => gr.conversationID !== conversationID), { conversationID, messages: [...existent.messages, ...messages] }]
+      newHistory = [...state.history.
+        filter(gr => gr.conversationID !== conversationID), { conversationID, messages: [...existent.messages, ...messages] }]
     }
     else newHistory = [...state.history, { conversationID, messages }];
     return ({
@@ -68,12 +69,12 @@ export const peopleReducer = createReducer(
   }),
   on(resetPeopleSlice, (state) => peopleInitState),
   on(setPeopleSuccess, (state, { successType, comm }) => {
-    return successType === 'main' ? { ...state, errors: { ...state.errors, main: { status: RequestStatus.SUCCESS, type: comm } } } :
-      { ...state, errors: { ...state.errors, private: { status: RequestStatus.SUCCESS, type: comm } } }
+    return successType === 'main' ? { ...state, errors: { ...state.errors, main: { status: RequestStatus.SUCCESS, type: comm } }, loading: false } :
+      { ...state, errors: { ...state.errors, private: { status: RequestStatus.SUCCESS, type: comm } }, loading: false }
   }),
   on(resetPeopleError, (state, { successType }) => {
-    return successType === 'main' ? { ...state, errors: { ...state.errors, main: { status: RequestStatus.WAITING } } } :
-      { ...state, errors: { ...state.errors, private: { status: RequestStatus.WAITING } } }
+    return successType === 'main' ? { ...state, errors: { ...state.errors, main: { status: RequestStatus.WAITING } }, loading: false } :
+      { ...state, errors: { ...state.errors, private: { status: RequestStatus.WAITING } }, loading: false }
   }),
   on(setPeopleError, (state, { successType, errtype, message }) => {
     const error: IErrorState = {
@@ -81,8 +82,8 @@ export const peopleReducer = createReducer(
       type: errtype,
       message
     }
-    return successType === 'main' ? { ...state, errors: { ...state.errors, main: error } } :
-      { ...state, errors: { ...state.errors, private: error } }
+    return successType === 'main' ? { ...state, errors: { ...state.errors, main: error }, loading: false } :
+      { ...state, errors: { ...state.errors, private: error }, loading: false }
   }),
   on(setPeopleCounter, (state, { counterType, time }) => {
     return counterType === 'main' ? { ...state, counters: { ...state.counters, main: time } } :

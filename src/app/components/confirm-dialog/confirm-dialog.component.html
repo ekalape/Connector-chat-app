@@ -1,0 +1,10 @@
+<div class="modal-overlay" *ngIf="show">
+  <div class="modal-dialog">
+    <h2>Please, confirm</h2>
+    <p><ng-content></ng-content></p>
+    <div class="btns-control">
+      <p-button label="Confirm" (click)="confirm()"></p-button>
+      <p-button label="Cancel" [outlined]=" true" (click)="cancel()"></p-button>
+    </div>
+  </div>
+</div>

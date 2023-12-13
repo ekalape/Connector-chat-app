@@ -20,6 +20,7 @@ import { RequestStatus } from 'app/utils/enums/request-status';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { LoadingOverlayComponent } from 'app/components/loading-overlay/loading-overlay.component';
+import { ConfirmDialogComponent } from 'app/components/confirm-dialog/confirm-dialog.component';
 
 
 @Component({
@@ -30,6 +31,7 @@ import { LoadingOverlayComponent } from 'app/components/loading-overlay/loading-
     ChatContainerComponent,
     MessageComponent,
     ToastModule,
+    ConfirmDialogComponent,
     LoadingOverlayComponent],
   templateUrl: './conversation.component.html',
   providers: [MessageService],
@@ -39,6 +41,8 @@ export class ConversationComponent {
 
   titleKinds = titleKinds
   RequestStatus = RequestStatus
+
+  showConfirm = false;
 
   errorSUB: Subscription | undefined;
 
@@ -109,11 +113,16 @@ export class ConversationComponent {
     }
 
   }
-  deleteConversation(conversationID: string) {
-    //TODO confirm modal
-    this.store.dispatch(deleteConversation({ conversationID }));
+  deleteConversation() {
+    this.showConfirm = true;
 
 
+  }
+  deleteConfirmed() {
+    if (this.convID) {
+      this.store.dispatch(deleteConversation({ conversationID: this.convID }));
+      this.showConfirm = false
+    }
   }
 
 

@@ -34,3 +34,8 @@
 </p-dialog>
 
 <p-toast position="top-center" key="tc"></p-toast>
+
+<app-confirm-dialog [show]="showConfirm" (confirmEvent)="deleteGroupConfirmed()"
+  (cancelEvent)="showConfirm=false">
+  Do you really want delete this group?
+</app-confirm-dialog>

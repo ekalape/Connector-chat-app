@@ -13,6 +13,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormsModule } from '@angular/forms';
 import { StorageKeys } from 'app/utils/enums/local-storage-keys';
 import { ThemeService } from 'app/services/theme.service';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 
 @Component({
@@ -20,6 +21,7 @@ import { ThemeService } from 'app/services/theme.service';
   standalone: true,
   imports: [CommonModule, PanelModule,
     FormsModule,
+    ConfirmDialogComponent,
     MenubarModule, InputSwitchModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
@@ -30,6 +32,8 @@ export class HeaderComponent {
   loggedIn = false;
   sub: Subscription | undefined;
   darkTheme: boolean;
+
+  showConfirm = false;
 
   @Output() theme = new EventEmitter<boolean>()
 
@@ -56,11 +60,14 @@ export class HeaderComponent {
   }
 
   logout() {
+    this.showConfirm = true;
+  }
+  logoutConfirmed() {
     if (this.loggedIn) {
       this.store.dispatch(logOutAction())
-
     }
   }
+
   switchTheme(dark: boolean) {
     this.darkTheme = dark;
     this.theme.emit(dark);

@@ -20,6 +20,7 @@ import { LoadingOverlayComponent } from 'app/components/loading-overlay/loading-
 
 import { RequestStatus } from 'app/utils/enums/request-status';
 import { IErrorState } from 'app/store/models/store.model';
+import { ConfirmDialogComponent } from 'app/components/confirm-dialog/confirm-dialog.component';
 
 
 
@@ -37,6 +38,7 @@ import { IErrorState } from 'app/store/models/store.model';
     TitleControlsComponent,
     PeopleComponent,
     ToastModule,
+    ConfirmDialogComponent,
     LoadingOverlayComponent,
     OwnGroupsPipe],
   providers: [MessageService],
@@ -47,6 +49,8 @@ export class DefaultMainComponent {
   titleKinds = titleKinds;
   RequestStatus = RequestStatus;
   blockBtn = false;
+  showConfirm = false;
+  groupToDelete: string | undefined
 
   allGroups = this.store.select(selectGroupsList);
   myGroups = this.store.select(selectMyGroups);
@@ -103,9 +107,18 @@ export class DefaultMainComponent {
     this.groupName.reset()
   }
 
+  deleteGroupConfirmed() {
+    if (this.groupToDelete) {
+      this.store.dispatch(deleteGroup({ groupId: this.groupToDelete }));
+      this.groupToDelete = undefined;
+    }
+    this.showConfirm = false;
+  }
+
   deleteGroup(groupId: string) {
-    //TODO modal with confirmation
-    this.store.dispatch(deleteGroup({ groupId }))
+    this.showConfirm = true;
+    this.groupToDelete = groupId;
+
   }
 
   chooseFilter(opt: number) {

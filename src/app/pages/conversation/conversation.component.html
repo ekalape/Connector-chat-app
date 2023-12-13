@@ -1,7 +1,7 @@
 <app-title-controls [kind]="titleKinds.PRIVATE_CONVERSATION"
-  (updateContent)="updatePrivateMessages()"
-  (deleteConversation)="deleteConversation($event)" [blockBtn]="blockUpdateBtn"><span
-    *ngIf="(opponent|async) as opponent">Conversation with {{opponent?.name}}</span>
+  (updateContent)="updatePrivateMessages()" (deleteConversation)="deleteConversation()"
+  [blockBtn]="blockUpdateBtn"><span *ngIf="(opponent|async) as opponent">Conversation with
+    {{opponent?.name}}</span>
 </app-title-controls>
 <app-chat-container (sendEvent)="sendMessage($event)">
   <app-message *ngFor="let message of (privateMessages|async)" [messageData]="message"
@@ -10,3 +10,7 @@
 <p-toast position="top-center" key="tc"></p-toast>
 
 <app-loading-overlay [show]="(isLoading|async)||false"></app-loading-overlay>
+<app-confirm-dialog [show]="showConfirm" (confirmEvent)="deleteConfirmed()"
+  (cancelEvent)="showConfirm=false">
+  Do you really want delete this conversation?
+</app-confirm-dialog>

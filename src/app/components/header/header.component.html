@@ -25,3 +25,8 @@
 
   </div>
 </header>
+
+<app-confirm-dialog [show]="showConfirm" (confirmEvent)="logoutConfirmed()"
+  (cancelEvent)="showConfirm=false">
+  Do you really want to log out?
+</app-confirm-dialog>

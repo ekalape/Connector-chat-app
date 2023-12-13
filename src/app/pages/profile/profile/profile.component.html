@@ -51,15 +51,15 @@
     </div>
 
     <div class="btns-container" *ngIf="!editEnabled">
-      <p-button icon="pi pi-file-edit" label="Edit" [raised]="true" type="button"
+      <p-button icon="pi pi-file-edit" label="Edit" [outlined]="true" type="button"
         class="btn-edit" (click)="editField()"></p-button>
     </div>
 
     <div class="btns-container" *ngIf="editEnabled">
       <span *ngIf="(loading$|async)?.loading" class="connecting-info">Connecting...</span>
-      <p-button label="Save" [raised]="true" type="submit" class="btn"
+      <p-button label="Save" [outlined]="true" type="submit" class="btn"
         [disabled]="!nameField.valid" (click)="onSave()"></p-button>
-      <p-button label="Cancel" [text]="true" [raised]="true" type="button" class="btn"
+      <p-button label="Cancel" [text]="true" [outlined]="true" type="button" class="btn"
         (click)="onCancel()"></p-button>
     </div>
   </p-fieldset>
