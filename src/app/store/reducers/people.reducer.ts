@@ -20,8 +20,8 @@ export const peopleInitState: IPeopleSlice = {
     },
   },
   counters: {
-    main: 0,
-    private: 0,
+    main: { active: false, time: 0, current: 60 },
+    private: [],
   },
   loading: false
 }
@@ -86,9 +86,9 @@ export const peopleReducer = createReducer(
     return successType === 'main' ? { ...state, errors: { ...state.errors, main: error }, loading: false } :
       { ...state, errors: { ...state.errors, private: error }, loading: false }
   }),
-  on(setPeopleCounter, (state, { counterType, time }) => {
-    return counterType === 'main' ? { ...state, counters: { ...state.counters, main: time } } :
-      { ...state, counters: { ...state.counters, private: time } }
+  on(setPeopleCounter, (state, { counterType, active, time, current, id }) => {
+    return counterType === 'main' ? { ...state, counters: { ...state.counters, main: { active, time, current } } } :
+      { ...state, counters: { ...state.counters, private: [...state.counters.private.filter(x => x.id !== id), { id, active, time, current }] } }
   }),
   on(setPeopleLoading, (state, { isLoading }) => ({
     ...state,

@@ -33,5 +33,6 @@ export const selectPrivateGroupErrorState = createSelector(selectGroups, (data) 
 
 export const selectGroupMainCounterState = createSelector(selectGroups, (data) => data.counters.main);
 export const selectGroupPrivateCounterState = createSelector(selectGroups, (data) => data.counters.private);
+export const selectGroupPrivateCounterStateByID = (ID: string) => createSelector(selectGroups, (data) => data.counters.private.find(x => x.id === ID));
 
 export const selectGroupLoadingState = createSelector(selectGroups, (data) => data.loading);

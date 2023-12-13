@@ -30,8 +30,9 @@ export interface IGroupsSlice {
     private: IErrorState;
   },
   counters: {
-    main: number;
-    private: number;
+    main: { active: boolean, time: number, current: number },
+    private:
+    { id: string | undefined, active: boolean, time: number, current: number }[],
   },
   loading: boolean
 }
@@ -49,8 +50,9 @@ export interface IPeopleSlice {
     private: IErrorState;
   },
   counters: {
-    main: number;
-    private: number;
+    main: { active: boolean, time: number, current: number },
+    private:
+    { id: string | undefined, active: boolean, time: number, current: number }[],
   },
   loading: boolean
 }

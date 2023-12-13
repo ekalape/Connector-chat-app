@@ -29,7 +29,6 @@ export class MessageComponent {
   constructor(private store: Store) { }
 
   ngOnInit() {
-    console.log("message created, ", this.messageData?.message);
     this.sub == this.store.select(selectMyID).subscribe(data => {
       this.myData = data;
       if (this.messageData?.authorID === data.id)

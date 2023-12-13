@@ -38,7 +38,8 @@ export const setGroupSuccess = createAction("[group] Set Group Success", props<{
 export const resetGroupError = createAction("[group] Reset Group Error", props<{ successType: 'main' | 'private' }>());
 export const setGroupError = createAction("[group] Set Group Error", props<{ successType: 'main' | 'private', errtype: string, message: string }>());
 
-export const setGroupCounter = createAction("[group] Set Group Counter", props<{ counterType: 'main' | 'private', time: number }>());
+export const setGroupCounter = createAction("[group] Set Group Counter",
+  props<{ counterType: 'main' | 'private', active: boolean, time: number, current: number, id?: string | undefined }>());
 
 
 export const setGroupLoading = createAction("[group] Set Group Loading State", props<{ isLoading: boolean }>())

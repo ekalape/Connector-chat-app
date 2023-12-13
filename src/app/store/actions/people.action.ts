@@ -27,9 +27,11 @@ export const resetPeopleSlice = createAction("[people] Reset People Slice");
 
 export const setPeopleSuccess = createAction("[people] Set People Success", props<{ successType: 'main' | 'private', comm: string }>());
 export const resetPeopleError = createAction("[people] Reset People Error", props<{ successType: 'main' | 'private' }>());
-export const setPeopleError = createAction("[people] Set People Error", props<{ successType: 'main' | 'private', errtype: string, message: string }>());
+export const setPeopleError = createAction("[people] Set People Error",
+  props<{ successType: 'main' | 'private', errtype: string, message: string }>());
 
-export const setPeopleCounter = createAction("[people] Set People Counter", props<{ counterType: 'main' | 'private', time: number }>());
+export const setPeopleCounter = createAction("[people] Set People Counter",
+  props<{ counterType: 'main' | 'private', active: boolean, time: number, current: number, id?: string | undefined }>());
 
 
 export const setPeopleLoading = createAction("[people] Set People Loading State", props<{ isLoading: boolean }>())

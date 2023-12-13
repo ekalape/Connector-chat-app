@@ -30,8 +30,8 @@ export const StoreInitialState: IState = {
       private: initErrorState,
     },
     counters: {
-      main: 0,
-      private: 0,
+      main: { active: false, time: 0, current: 60 },
+      private: [],
     },
     loading: false
   },
@@ -44,8 +44,8 @@ export const StoreInitialState: IState = {
       private: initErrorState,
     },
     counters: {
-      main: 0,
-      private: 0,
+      main: { active: false, time: 0, current: 60 },
+      private: [],
     },
     loading: false
   },

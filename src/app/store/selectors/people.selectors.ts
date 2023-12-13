@@ -28,37 +28,12 @@ export const selectFirstLoadedPeople = createSelector(selectUsers, (users) => {
 })
 
 
-/* export const selectUsers = createSelector(selectPeopleData, selectMyID, (data, myData) => data.users.filter(us => us.uid !== myData.id));
-export const selectConversations = createSelector(selectPeopleData, (data) => data.conversations);
-export const selectAllMessages = createSelector(selectPeopleData, (data) => data.messages);
-
-
-
-export const selectSingleUser = (convID: string) => createSelector(selectUsers, selectConversations, (users, dialog) => {
-  const conversation = dialog.find(d => d.id === convID);
-  const user = users.find(u => u.uid === conversation?.companionID);
-  return user;
-})
-
-export const selectMessagesByConversationId = (convID: string) => createSelector(selectAllMessages,
-  (data) => data.find(d => d.conversationID === convID)?.dialog)
-
-
-export const selectSingleConversation = (opponentID: string) => createSelector(selectConversations,
-  (data) => data.find(d => d.companionID === opponentID))
-
-
-export const selectFirstLoadedPeople = createSelector(selectUsers, (users) => {
-  if (users.length) return true;
-  return false;
-}) */
-
-
 export const selectMainPeopleErrorState = createSelector(selectPeopleData, (data) => data.errors.main);
 export const selectPrivatePeopleErrorState = createSelector(selectPeopleData, (data) => data.errors.private);
 
 export const selectPeopleMainCounterState = createSelector(selectPeopleData, (data) => data.counters.main);
 export const selectPeoplePrivateCounterState = createSelector(selectPeopleData, (data) => data.counters.private);
+export const selectPeoplePrivateCounterStateByID = (ID: string) => createSelector(selectPeopleData, (data) => data.counters.private.find(x => x.id === ID));
 
 
 export const selectPeopleLoadingState = createSelector(selectPeopleData, (data) => data.loading);
