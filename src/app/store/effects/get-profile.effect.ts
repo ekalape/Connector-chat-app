@@ -33,7 +33,6 @@ export class GetProfileEffects {
               ),
               catchError((err) => {
                 this.store.dispatch(setErrorAction({ error: err.error }));
-                console.log(err.error);
                 return EMPTY
               })
             )

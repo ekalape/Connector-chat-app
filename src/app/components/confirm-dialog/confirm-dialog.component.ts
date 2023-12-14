@@ -23,7 +23,6 @@ export class ConfirmDialogComponent {
   }
 
   cancel() {
-    console.log("inside cancel dialog");
     this.cancelEvent.emit(false)
   }
 }

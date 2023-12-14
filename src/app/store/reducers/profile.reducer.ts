@@ -1,8 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { getProfileSuccessAction, setErrorAction, updateProfileSuccessAction } from '../actions/profile.action';
-
 import { IAutorizationSlice } from '../models/store.model';
-import { logInAction, logOutAction, logOutSuccessAction, setLoadingAction } from '../actions/auth.action';
+import { logInAction, logOutSuccessAction, setLoadingAction } from '../actions/auth.action';
 
 
 const initState: IAutorizationSlice = {

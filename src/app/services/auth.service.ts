@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BASE_URL } from 'app/utils/enums/pathes';
-import { catchError, of, tap } from 'rxjs';
+import { catchError, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,6 @@ export class AuthService {
 
 
   login(email: string, password: string) {
-
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -50,7 +49,6 @@ export class AuthService {
 
   private handleError(error: HttpErrorResponse) {
     return of({ type: error.error.type, message: error.error.message })
-    //throwError(() => new Error(error.message))
 
   }
 }

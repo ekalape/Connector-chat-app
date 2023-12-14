@@ -1,8 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { PanelModule } from 'primeng/panel';
-import { IMessages, ISingleMessage, IUser } from 'app/models/conversations.model';
+import { ISingleMessage } from 'app/models/conversations.model';
 import { Store } from '@ngrx/store';
 import { selectMyID } from 'app/store/selectors/profile.selectors';
 import { Subscription } from 'rxjs';
@@ -15,7 +15,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './message.component.html',
   styleUrl: './message.component.scss'
 })
-export class MessageComponent {
+export class MessageComponent implements OnInit, OnDestroy {
 
   mine = false;
 

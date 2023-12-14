@@ -1,6 +1,12 @@
 
-import { createConversationSuccess, deleteConversationSuccess, getPeopleAndConversationsSuccess, getPrivateMessagesSuccess, resetPeopleError, resetPeopleSlice, sendPrivateMessageSuccess, setPeopleCounter, setPeopleError, setPeopleLoading, setPeopleSuccess } from '../actions/people.action';
-
+import {
+  createConversationSuccess,
+  deleteConversationSuccess, getPeopleAndConversationsSuccess,
+  getPrivateMessagesSuccess, resetPeopleError,
+  resetPeopleSlice, sendPrivateMessageSuccess,
+  setPeopleCounter, setPeopleError,
+  setPeopleLoading, setPeopleSuccess
+} from '../actions/people.action';
 import { createReducer, on } from '@ngrx/store';
 import { IErrorState, IPeopleSlice } from '../models/store.model';
 import { RequestStatus } from 'app/utils/enums/request-status';

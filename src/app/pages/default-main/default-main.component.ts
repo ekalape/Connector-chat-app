@@ -1,12 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { GroupCardComponent } from 'app/components/group-card/group-card.component';
 import { TitleControlsComponent } from 'app/components/title-controls/title-controls.component';
 import { titleKinds } from 'app/utils/enums/title-controls';
 import { Store } from '@ngrx/store';
 import { addNewGroup, deleteGroup, getAllGroups } from 'app/store/actions/group.action';
-import { selectFirstLoadedGroups, selectGroupLoadingState, selectGroups, selectGroupsList, selectMainGroupErrorState, selectMyGroups } from 'app/store/selectors/group.selectors';
+import {
+  selectFirstLoadedGroups, selectGroupLoadingState,
+  selectGroupsList, selectMainGroupErrorState,
+  selectMyGroups
+} from 'app/store/selectors/group.selectors';
 import { DialogModule } from 'primeng/dialog';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -17,7 +21,6 @@ import { Subscription, first } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { LoadingOverlayComponent } from 'app/components/loading-overlay/loading-overlay.component';
-
 import { RequestStatus } from 'app/utils/enums/request-status';
 import { IErrorState } from 'app/store/models/store.model';
 import { ConfirmDialogComponent } from 'app/components/confirm-dialog/confirm-dialog.component';
@@ -45,7 +48,7 @@ import { ConfirmDialogComponent } from 'app/components/confirm-dialog/confirm-di
   templateUrl: './default-main.component.html',
   styleUrl: './default-main.component.scss'
 })
-export class DefaultMainComponent {
+export class DefaultMainComponent implements OnInit, OnDestroy {
   titleKinds = titleKinds;
   RequestStatus = RequestStatus;
   blockBtn = false;

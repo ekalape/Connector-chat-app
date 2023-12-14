@@ -1,16 +1,15 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Location } from '@angular/common';
 import { titleKinds } from 'app/utils/enums/title-controls';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Subscription, first, take, tap } from 'rxjs';
-import { RequestStatus } from 'app/utils/enums/request-status';
+import { Subscription, first } from 'rxjs';
 import { setGroupCounter } from 'app/store/actions/group.action';
 import { setPeopleCounter } from 'app/store/actions/people.action';
-import { selectGroupMainCounterState, selectGroupPrivateCounterState, selectGroupPrivateCounterStateByID } from 'app/store/selectors/group.selectors';
-import { selectPeopleMainCounterState, selectPeoplePrivateCounterState, selectPeoplePrivateCounterStateByID } from 'app/store/selectors/people.selectors';
+import { selectGroupMainCounterState, selectGroupPrivateCounterStateByID } from 'app/store/selectors/group.selectors';
+import { selectPeopleMainCounterState, selectPeoplePrivateCounterStateByID } from 'app/store/selectors/people.selectors';
 
 
 @Component({
@@ -20,7 +19,7 @@ import { selectPeopleMainCounterState, selectPeoplePrivateCounterState, selectPe
   templateUrl: './title-controls.component.html',
   styleUrl: './title-controls.component.scss'
 })
-export class TitleControlsComponent {
+export class TitleControlsComponent implements OnInit, OnDestroy {
   @Input() kind: titleKinds = titleKinds.PEOPLE;
   @Output() updateContent = new EventEmitter();
   @Output() addGroup = new EventEmitter();
@@ -105,7 +104,6 @@ export class TitleControlsComponent {
         }
         break;
     }
-
   }
 
   goBack() {

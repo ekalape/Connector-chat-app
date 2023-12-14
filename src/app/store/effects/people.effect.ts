@@ -11,7 +11,7 @@ import {
 import { map, switchMap, catchError, of, EMPTY, mergeMap, concatMap, withLatestFrom, tap } from 'rxjs';
 import { IPeople, ISingleMessage, ISingleUserConversation, IUser, IUserConversations } from 'app/models/conversations.model';
 import { selectMyID } from '../selectors/profile.selectors';
-import { selectMessagesByConversationId, selectSingleConversationByConversationId } from '../selectors/people.selectors';
+import { selectSingleConversationByConversationId } from '../selectors/people.selectors';
 
 
 @Injectable()
@@ -27,7 +27,6 @@ export class PeopleEffects {
     .pipe(
       ofType(getPeopleAndConversations),
       tap(() => {
-        /*   this.store.dispatch(resetErrorAction()) */
         this.store.dispatch(setPeopleLoading({ isLoading: true }))
       }),
       mergeMap((action) => {

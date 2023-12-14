@@ -1,17 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TitleControlsComponent } from '../../../components/title-controls/title-controls.component';
 import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { createConversation, getPeopleAndConversations } from 'app/store/actions/people.action';
 import {
-  selectConversationByCompanion, selectFirstLoadedPeople,
+  selectFirstLoadedPeople,
   selectMainPeopleErrorState,
   selectMyConversations, selectPeopleLoadingState,
   selectUsers
 } from 'app/store/selectors/people.selectors';
 import { ISingleUserConversation, IUser } from 'app/models/conversations.model';
-import { Subscription, first, tap } from 'rxjs';
+import { Subscription, first } from 'rxjs';
 import { RequestStatus } from 'app/utils/enums/request-status';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
@@ -36,7 +36,7 @@ import { titleKinds } from 'app/utils/enums/title-controls';
   styleUrl: './people.component.scss',
 
 })
-export class PeopleComponent {
+export class PeopleComponent implements OnInit, OnDestroy {
 
   RequestStatus = RequestStatus;
   titleKinds = titleKinds
@@ -67,7 +67,6 @@ export class PeopleComponent {
   }
   ngOnInit() {
     this.loadingSUB = this.store.select(selectPeopleLoadingState).pipe(
-      tap(console.log)
     ).subscribe(data => {
       this.isLoading = data
     })
@@ -87,7 +86,6 @@ export class PeopleComponent {
         else if (data.status === RequestStatus.SUCCESS) {
           if (data.type === "create") {
             const id = this.myconvsIDs?.find(c => c.companionID === this.userToChatID)?.id;
-            console.log('type :>> ', data.type, "id to go :>>", id);
             if (id) this.router.navigate([`/conversation/${id}`])
           }
           else if (data.type === "update") {
@@ -114,7 +112,6 @@ export class PeopleComponent {
     this.userToChatID = user.uid;
 
     if (this.myOpps.includes(user.uid)) {
-      console.log("includes");
       const convID = this.myconvsIDs?.find(x => x.companionID === user.uid)?.id;
       this.router.navigate([`/conversation/${convID}`])
 

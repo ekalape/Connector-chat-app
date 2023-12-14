@@ -1,14 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TitleControlsComponent } from 'app/components/title-controls/title-controls.component';
 import { titleKinds } from 'app/utils/enums/title-controls';
 import { ISingleGroup, ISingleMessage, IUser } from 'app/models/conversations.model';
 import { Store } from '@ngrx/store';
-import { selectFirstLoadedGroups, selectGroupLoadingState, selectPrivateGroupErrorState, selectSingleGroup, selectSingleGroupDialog } from 'app/store/selectors/group.selectors';
+import {
+  selectFirstLoadedGroups,
+  selectGroupLoadingState,
+  selectPrivateGroupErrorState,
+  selectSingleGroup,
+  selectSingleGroupDialog
+} from 'app/store/selectors/group.selectors';
 import { Observable, Subscription, first, map } from 'rxjs';
 import { ChatContainerComponent } from 'app/components/chat-container/chat-container.component';
-import { deleteGroup, deleteGroupPrivate, getAllGroups, getGroupMessages, sendGroupMessage } from 'app/store/actions/group.action';
+import { deleteGroupPrivate, getAllGroups, getGroupMessages, sendGroupMessage } from 'app/store/actions/group.action';
 import { MessageComponent } from 'app/components/message/message.component';
 import { RequestStatus } from 'app/utils/enums/request-status';
 import { MessageService } from 'primeng/api';
@@ -32,7 +38,7 @@ import { Pathes } from 'app/utils/enums/pathes';
   templateUrl: './group.component.html',
   styleUrl: './group.component.scss'
 })
-export class GroupComponent {
+export class GroupComponent implements OnInit, OnDestroy {
 
   groupId: string | null;
   titleKinds = titleKinds;

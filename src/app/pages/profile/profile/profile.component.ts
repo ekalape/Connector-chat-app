@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { selectError, selectProfileData } from 'app/store/selectors/profile.selectors';
@@ -6,7 +6,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { Location } from '@angular/common';
 import { AbstractControl, FormControl, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { Subscription, map, tap } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { getProfileAction, setErrorAction, updateProfileAction } from 'app/store/actions/profile.action';
 import { selectLoadingState } from 'app/store/selectors/auth.selectors';
 import { MessageService } from 'primeng/api';
@@ -31,7 +31,7 @@ import { FieldsetModule } from 'primeng/fieldset';
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit, OnDestroy {
   profileData$ = this.store.select(selectProfileData);
   loading$ = this.store.select(selectLoadingState);
   error$ = this.store.select(selectError);
@@ -92,8 +92,6 @@ export class ProfileComponent {
 
   editField() {
     this.editEnabled = true;
-    /*   const newValidator = Validators.pattern(`^(?!${this.oldName}$).*$`);
-      this.nameField.addValidators(newValidator); */
     this.nameField.addValidators(this.notOldNameValidator(this.oldName));
     this.nameField.updateValueAndValidity({ emitEvent: false });
   }
@@ -113,7 +111,6 @@ export class ProfileComponent {
       this.editEnabled = false;
       if (!this.errors) {
         this.showSuccess("You changed your name!")
-        // this.nameField.removeValidators(Validators.pattern(`^(?!${this.oldName}$).*$`));
         this.nameField
           .setValidators([Validators.required, Validators.minLength(3), Validators.pattern(/^[A-Za-zА-Яа-я\s]*$/), Validators.maxLength(40)])
         this.nameField.markAsUntouched();
@@ -131,7 +128,6 @@ export class ProfileComponent {
     this.nameField.markAsUntouched();
     this.nameField.markAsPristine();
     this.nameField.updateValueAndValidity({ emitEvent: false });
-
   }
 
   showError(errorMessage: string | undefined) {

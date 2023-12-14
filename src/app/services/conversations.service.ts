@@ -17,7 +17,6 @@ export class ConversationsService {
   }
 
   addNewGroup(name: string) {
-    console.log("inside service, group with name ", name);
     return this.httpClient.post<IGroupResponce>(`${BASE_URL}/groups/create`, { name })
   }
 
@@ -30,7 +29,6 @@ export class ConversationsService {
     let params = new HttpParams().set("groupID", groupId);
     if (since)
       params = params.append("since", since);
-    console.log('params :>> ', params);
     return this.httpClient.get<IMessages>(`${BASE_URL}/groups/read`, { params })
   }
 
@@ -60,8 +58,6 @@ export class ConversationsService {
     let params = new HttpParams().set("conversationID", conversationID);
     if (since)
       params = params.append("since", since);
-    console.log('inside service since :>> ', since, "conversationID :>>", conversationID);
-
     return this.httpClient.get<IMessages>(`${BASE_URL}/conversations/read`, { params });
   }
 

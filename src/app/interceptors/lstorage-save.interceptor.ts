@@ -1,11 +1,9 @@
-import { HttpEvent, HttpEventType, HttpHandler, HttpHeaders, HttpInterceptor, HttpInterceptorFn, HttpRequest, HttpResponse } from '@angular/common/http';
+import { HttpEvent, HttpEventType, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ISigninRequest } from 'app/models/auth.model';
-import { ILoginResponse, IProfileResponse } from 'app/models/http-responses.model';
-import { selectProfileData, selectProfileHeaders } from 'app/store/selectors/profile.selectors';
 import { StorageKeys } from 'app/utils/enums/local-storage-keys';
-import { Observable, first, map, switchMap, withLatestFrom } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 
 @Injectable()

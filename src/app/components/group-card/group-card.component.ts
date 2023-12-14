@@ -1,10 +1,10 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ISingleGroup } from 'app/models/conversations.model';
 import { ButtonModule } from 'primeng/button';
 import { Store } from '@ngrx/store';
-import { selectMyID, selectProfileData } from 'app/store/selectors/profile.selectors';
-import { Subscription, map, take } from 'rxjs';
+import { selectMyID } from 'app/store/selectors/profile.selectors';
+import { Subscription } from 'rxjs';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -14,7 +14,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './group-card.component.html',
   styleUrl: './group-card.component.scss'
 })
-export class GroupCardComponent {
+export class GroupCardComponent implements OnInit, OnDestroy {
 
   @Input() groupData: ISingleGroup | undefined;
 
@@ -38,13 +38,11 @@ export class GroupCardComponent {
     if (this.groupData?.id) {
       event.preventDefault();
       this.deleteGroup.emit(this.groupData.id)
-      console.log("delete group", this.groupData?.id);
     }
   }
 
   ngOnDestroy() {
     this.sub?.unsubscribe()
   }
-
 
 }

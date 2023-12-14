@@ -5,7 +5,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FormGroup, Validators, FormControl, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ComplexPasswordValidator } from 'app/directives/complex-password-validator.directive';
 import { Router } from '@angular/router';
-
 import { Pathes } from 'app/utils/enums/pathes';
 import { AuthService } from 'app/services/auth.service';
 import { take, } from 'rxjs';
@@ -59,7 +58,6 @@ export class SignupFormComponent {
   }
 
   onSubmit() {
-
     this.store.dispatch(setLoadingAction({ loading: true }))
     this.authService.register(this.firstName.value, this.email.value, this.password.value)
       .pipe(take(1))

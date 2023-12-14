@@ -1,5 +1,4 @@
 import { createReducer, on } from '@ngrx/store';
-
 import {
   addNewGroupSuccess, deleteGroupSuccess,
   getAllGroupsSuccess, getGroupMessagesSuccess,
@@ -7,11 +6,9 @@ import {
   sendGroupMessagesSuccess, setGroupCounter, setGroupError, setGroupLoading,
   setGroupSuccess
 } from '../actions/group.action';
-import { ISingleGroup } from 'app/models/conversations.model';
-import { IErrorState, IGroupsMessagesState, IGroupsSlice } from '../models/store.model';
-
+import { IErrorState, IGroupsSlice } from '../models/store.model';
 import { RequestStatus } from 'app/utils/enums/request-status';
-/* import { GroupsActions } from './groups.actions'; */
+
 
 export const groupsFeatureKey = 'groups';
 

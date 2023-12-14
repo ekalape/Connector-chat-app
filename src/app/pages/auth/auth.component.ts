@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TabViewCloseEvent, TabViewModule } from 'primeng/tabview';
 import { ToastModule } from 'primeng/toast';
@@ -31,7 +31,7 @@ import { getProfileAction } from 'app/store/actions/profile.action';
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss'
 })
-export class AuthComponent {
+export class AuthComponent implements OnInit, OnDestroy {
 
   activeIndex = 0;
   sub: Subscription | undefined;
@@ -52,7 +52,6 @@ export class AuthComponent {
   ngOnInit() {
 
     this.datasub = this.dataExchange.successful.subscribe(x => {
-
       if (x.action && x.success) {
         this.showSuccess(x.message);
         if (x.action === authActions.LOGIN) {

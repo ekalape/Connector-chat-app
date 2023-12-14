@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MessageComponent } from 'app/components/message/message.component';
 import { titleKinds } from 'app/utils/enums/title-controls';
@@ -37,7 +37,7 @@ import { ConfirmDialogComponent } from 'app/components/confirm-dialog/confirm-di
   providers: [MessageService],
   styleUrl: './conversation.component.scss'
 })
-export class ConversationComponent {
+export class ConversationComponent implements OnInit, OnDestroy {
 
   titleKinds = titleKinds
   RequestStatus = RequestStatus

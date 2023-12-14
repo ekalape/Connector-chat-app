@@ -1,10 +1,9 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { Router } from '@angular/router';
-import { Pathes } from 'app/utils/enums/pathes';
 import { Store } from '@ngrx/store';
 import { logOutAction } from 'app/store/actions/auth.action';
 import { Subscription } from 'rxjs';
@@ -30,7 +29,7 @@ import { ToastModule } from 'primeng/toast';
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
 
   menuItems: MenuItem[] = [];
   loggedIn = false;

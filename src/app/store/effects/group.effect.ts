@@ -2,7 +2,15 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { withLatestFrom, mergeMap, map, catchError, switchMap, of, concatMap, tap } from 'rxjs';
-import { addNewGroup, addNewGroupSuccess, deleteGroup, deleteGroupPrivate, deleteGroupSuccess, getAllGroups, getAllGroupsSuccess, getGroupMessages, getGroupMessagesSuccess, resetGroupError, sendGroupMessage, sendGroupMessagesSuccess, setGroupError, setGroupLoading, setGroupSuccess } from '../actions/group.action';
+import {
+  addNewGroup, addNewGroupSuccess,
+  deleteGroup, deleteGroupPrivate,
+  deleteGroupSuccess, getAllGroups,
+  getAllGroupsSuccess, getGroupMessages,
+  getGroupMessagesSuccess, sendGroupMessage,
+  sendGroupMessagesSuccess, setGroupError,
+  setGroupLoading, setGroupSuccess
+} from '../actions/group.action';
 import { ConversationsService } from 'app/services/conversations.service';
 import { IGroupResponce, IGroups, ISingleGroup } from 'app/models/conversations.model';
 import { selectMyID } from '../selectors/profile.selectors';

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StorageKeys } from 'app/utils/enums/local-storage-keys';
 
@@ -9,7 +9,7 @@ import { StorageKeys } from 'app/utils/enums/local-storage-keys';
   templateUrl: './not-found.component.html',
   styleUrl: './not-found.component.scss'
 })
-export class NotFoundComponent {
+export class NotFoundComponent implements OnInit {
 
   darkTheme: boolean = false;
 

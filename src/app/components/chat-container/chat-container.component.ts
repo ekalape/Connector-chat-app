@@ -16,9 +16,6 @@ export class ChatContainerComponent {
   messageInput = new FormControl("", [Validators.required]);
   @Output() sendEvent = new EventEmitter<string>()
 
-  ngOnInit() {
-    console.log("chat-component started");
-  }
 
   sendMessage() {
     if (this.messageInput.value?.trim()) {
