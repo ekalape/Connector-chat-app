@@ -22,7 +22,7 @@
 
     <p-button (click)="confirmGroupCreation()" label="Create"
       [disabled]="!groupName.valid"></p-button>
-    <p-button label="Cancel" (click)="cancelGroupCreation()"></p-button>
+    <p-button label="Cancel" [outlined]="true" (click)="cancelGroupCreation()"></p-button>
   </div>
   <span class="errors-container"
     *ngIf="(groupName.touched || groupName.dirty) && groupName.errors?.['required']">Name
@@ -37,5 +37,5 @@
 
 <app-confirm-dialog [show]="showConfirm" (confirmEvent)="deleteGroupConfirmed()"
   (cancelEvent)="showConfirm=false">
-  Do you really want delete this group?
+  Do you really want to delete this group?
 </app-confirm-dialog>

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { withLatestFrom, mergeMap, map, catchError, switchMap, of, concatMap, tap } from 'rxjs';
-import { addNewGroup, addNewGroupSuccess, deleteGroup, deleteGroupSuccess, getAllGroups, getAllGroupsSuccess, getGroupMessages, getGroupMessagesSuccess, resetGroupError, sendGroupMessage, sendGroupMessagesSuccess, setGroupError, setGroupLoading, setGroupSuccess } from '../actions/group.action';
+import { addNewGroup, addNewGroupSuccess, deleteGroup, deleteGroupPrivate, deleteGroupSuccess, getAllGroups, getAllGroupsSuccess, getGroupMessages, getGroupMessagesSuccess, resetGroupError, sendGroupMessage, sendGroupMessagesSuccess, setGroupError, setGroupLoading, setGroupSuccess } from '../actions/group.action';
 import { ConversationsService } from 'app/services/conversations.service';
 import { IGroupResponce, IGroups, ISingleGroup } from 'app/models/conversations.model';
 import { selectMyID } from '../selectors/profile.selectors';
@@ -94,6 +94,28 @@ export class GroupsEffects {
           catchError((err) => {
             return of(setGroupError({
               successType: "main",
+              errtype: err.error.type || err.type || "Unknown",
+              message: err.error.message || err.message || "Something went wrong"
+            }));
+          })
+        )
+      })
+    )
+  )
+  loadDeleteGroupPrivate$ = createEffect(() => this.actions$
+    .pipe(
+      ofType(deleteGroupPrivate),
+      tap(() => { this.store.dispatch(setGroupLoading({ isLoading: true })) }),
+      switchMap((action) => {
+        return this.service.deleteGroup(action.groupId).pipe(
+          concatMap(res => ([
+            deleteGroupSuccess({ groupId: action.groupId }),
+            setGroupSuccess({ successType: "private", comm: "delete" }),
+            setGroupLoading({ isLoading: false })
+          ])),
+          catchError((err) => {
+            return of(setGroupError({
+              successType: "private",
               errtype: err.error.type || err.type || "Unknown",
               message: err.error.message || err.message || "Something went wrong"
             }));

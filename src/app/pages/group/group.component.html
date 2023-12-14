@@ -1,5 +1,6 @@
 <app-title-controls [kind]="titleKinds.PRIVATE_GROUP"
-  (updateContent)="updateGroupMessages()" [blockBtn]="blockBtn">Group
+  (updateContent)="updateGroupMessages()" [blockBtn]="blockBtn"
+  (deleteConversation)="onDelete()">Group
   "{{(groupData|async)?.name || groupId}}"
 </app-title-controls>
 <app-chat-container (sendEvent)="sendMessage($event)">
@@ -7,4 +8,11 @@
     [userName]="getAuthorOfMessage(message)"></app-message>
 </app-chat-container>
 
+<p-toast position="top-center" key="tc"></p-toast>
+
 <app-loading-overlay [show]="(isLoading|async)||false"></app-loading-overlay>
+
+<app-confirm-dialog [show]="showConfirm" (confirmEvent)="onDeleteConfirmed()"
+  (cancelEvent)="showConfirm=false">
+  Do you really want to delete this group?
+</app-confirm-dialog>

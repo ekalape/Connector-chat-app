@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TitleControlsComponent } from 'app/components/title-controls/title-controls.component';
 import { titleKinds } from 'app/utils/enums/title-controls';
 import { ISingleGroup, ISingleMessage, IUser } from 'app/models/conversations.model';
@@ -8,13 +8,15 @@ import { Store } from '@ngrx/store';
 import { selectFirstLoadedGroups, selectGroupLoadingState, selectPrivateGroupErrorState, selectSingleGroup, selectSingleGroupDialog } from 'app/store/selectors/group.selectors';
 import { Observable, Subscription, first, map } from 'rxjs';
 import { ChatContainerComponent } from 'app/components/chat-container/chat-container.component';
-import { getAllGroups, getGroupMessages, sendGroupMessage } from 'app/store/actions/group.action';
+import { deleteGroup, deleteGroupPrivate, getAllGroups, getGroupMessages, sendGroupMessage } from 'app/store/actions/group.action';
 import { MessageComponent } from 'app/components/message/message.component';
 import { RequestStatus } from 'app/utils/enums/request-status';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { selectUsers } from 'app/store/selectors/people.selectors';
 import { LoadingOverlayComponent } from 'app/components/loading-overlay/loading-overlay.component';
+import { ConfirmDialogComponent } from 'app/components/confirm-dialog/confirm-dialog.component';
+import { Pathes } from 'app/utils/enums/pathes';
 
 
 @Component({
@@ -24,6 +26,7 @@ import { LoadingOverlayComponent } from 'app/components/loading-overlay/loading-
     ChatContainerComponent,
     ToastModule,
     MessageComponent,
+    ConfirmDialogComponent,
     LoadingOverlayComponent],
   providers: [MessageService],
   templateUrl: './group.component.html',
@@ -46,10 +49,13 @@ export class GroupComponent {
   allUsersSUB: Subscription | undefined;
 
   blockBtn = false;
+  showConfirm = false;
 
   isLoading = this.store.select(selectGroupLoadingState)
 
-  constructor(private route: ActivatedRoute, private store: Store,
+  constructor(private route: ActivatedRoute,
+    private router: Router,
+    private store: Store,
     private messageService: MessageService) {
     this.groupId = this.route.snapshot.paramMap.get('groupId');
   }
@@ -71,6 +77,12 @@ export class GroupComponent {
       if (data.status === RequestStatus.SUCCESS) {
         if (data.type === "update")
           this.blockBtn = true
+        else if (data.type === "delete") {
+          this.router.navigate([Pathes.HOME])
+        }
+        else if (data.type === "send") {
+          this.updateGroupMessages()
+        }
       }
     })
 
@@ -104,6 +116,16 @@ export class GroupComponent {
     if (this.groupId && message.trim()) {
       this.store.dispatch(sendGroupMessage({ groupId: this.groupId, message }))
     }
+  }
+
+  onDelete() {
+    this.showConfirm = true;
+  }
+  onDeleteConfirmed() {
+    if (this.groupId) {
+      this.store.dispatch(deleteGroupPrivate({ groupId: this.groupId }));
+    }
+    this.showConfirm = false;
   }
 
   getAuthorOfMessage(message: ISingleMessage): string {

@@ -57,37 +57,12 @@
 
     <div class="btns-container" *ngIf="editEnabled">
       <span *ngIf="(loading$|async)?.loading" class="connecting-info">Connecting...</span>
-      <p-button label="Save" [outlined]="true" type="submit" class="btn"
-        [disabled]="!nameField.valid" (click)="onSave()"></p-button>
-      <p-button label="Cancel" [text]="true" [outlined]="true" type="button" class="btn"
+      <p-button label="Save" type="submit" class="btn" [disabled]="!nameField.valid"
+        (click)="onSave()"></p-button>
+      <p-button label="Cancel" [outlined]="true" type="button" class="btn"
         (click)="onCancel()"></p-button>
     </div>
   </p-fieldset>
-
-  <!--   <div class="page-content">
-    <div class="profile-field">
-      <label>User ID: </label>
-      <input type="text" pInputText [formControl]="idField">
-
-    </div>
-    <div class="profile-field">
-      <label>Name: </label>
-      <span class="profile-field__editable">
-        <input type="text" pInputText [formControl]="nameField">
-        <p-button icon="pi pi-file-edit" [outlined]="true"
-          (click)="editField()"></p-button></span>
-    </div>
-    <div class="profile-field">
-      <label>E-mail: </label>
-      <input type="text" pInputText [formControl]="emailField">
-    </div>
-    <div class="profile-field">
-      <label>Created: </label>
-      <span class="not-editable-input-text">{{dateSeconds|date}}</span>
-      <input type="text" pInputText [formControl]="creationField">
-    </div>
-  </div> -->
-
 
 </form>
 <p-toast position="top-center" key="tc"></p-toast>

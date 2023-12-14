@@ -68,11 +68,11 @@ export class ConversationComponent {
         this.showError(data.message || "Something went wrong")
       }
       if (data.status === RequestStatus.SUCCESS) {
-        console.log('data.type :>> ', data.type);
         if (data.type === "delete") {
           this.router.navigate([Pathes.HOME])
         }
         else if (data.type === "update") { this.blockUpdateBtn = true; }
+        else if (data.type === "send") { this.updatePrivateMessages(); }
       }
     })
 
@@ -108,7 +108,6 @@ export class ConversationComponent {
 
   updatePrivateMessages() {
     if (this.convID) {
-      console.log('conversationID :>> ', this.convID);
       this.store.dispatch(getPrivateMessages({ conversationID: this.convID }))
     }
 
@@ -116,8 +115,8 @@ export class ConversationComponent {
   deleteConversation() {
     this.showConfirm = true;
 
-
   }
+
   deleteConfirmed() {
     if (this.convID) {
       this.store.dispatch(deleteConversation({ conversationID: this.convID }));

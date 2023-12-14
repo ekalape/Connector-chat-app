@@ -14,7 +14,9 @@ import { FormsModule } from '@angular/forms';
 import { StorageKeys } from 'app/utils/enums/local-storage-keys';
 import { ThemeService } from 'app/services/theme.service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-
+import { selectError } from 'app/store/selectors/profile.selectors';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-header',
@@ -22,7 +24,9 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
   imports: [CommonModule, PanelModule,
     FormsModule,
     ConfirmDialogComponent,
+    ToastModule,
     MenubarModule, InputSwitchModule],
+  providers: [MessageService],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
@@ -31,6 +35,7 @@ export class HeaderComponent {
   menuItems: MenuItem[] = [];
   loggedIn = false;
   sub: Subscription | undefined;
+  errorSUB: Subscription | undefined;
   darkTheme: boolean;
 
   showConfirm = false;
@@ -40,7 +45,8 @@ export class HeaderComponent {
 
   constructor(private router: Router,
     private store: Store,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private messageService: MessageService
   ) {
     const currentTheme = localStorage.getItem(StorageKeys.THEME_KEY);
     if (currentTheme) this.darkTheme = JSON.parse(currentTheme);
@@ -50,6 +56,10 @@ export class HeaderComponent {
   ngOnInit() {
     this.sub = this.store.select(selectLoggedIn).subscribe(x => this.loggedIn = x.loggedIn)
     this.switchTheme(this.darkTheme)
+    this.errorSUB = this.store.select(selectError).subscribe(data => {
+      if (data) this.showError(data.message)
+    })
+
 
   }
 
@@ -66,6 +76,7 @@ export class HeaderComponent {
     if (this.loggedIn) {
       this.store.dispatch(logOutAction())
     }
+    this.showConfirm = false;
   }
 
   switchTheme(dark: boolean) {
@@ -74,5 +85,7 @@ export class HeaderComponent {
     this.themeService.switchTheme(dark)
     localStorage.setItem(StorageKeys.THEME_KEY, JSON.stringify(this.darkTheme))
   }
-
+  showError(errorMessage: string | undefined) {
+    this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: errorMessage || "Something went wrong, try again" });
+  }
 }

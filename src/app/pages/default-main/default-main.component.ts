@@ -82,7 +82,9 @@ export class DefaultMainComponent {
       if (data.status === RequestStatus.ERROR) this.showError(data.message || "Something went wrong");
       if (data.status === RequestStatus.SUCCESS) {
         if (data.type === "update")
-          this.blockBtn = true
+          this.blockBtn = true;
+        if (data.type === "delete") { this.showSuccess("The group was deleted") }
+        if (data.type === "create") { this.showSuccess("The group was created") }
       }
     })
 
@@ -135,7 +137,9 @@ export class DefaultMainComponent {
   }
   showError(errorMessage: string | undefined) {
     this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: errorMessage || "Something went wrong, try again" });
-
+  }
+  showSuccess(message: string | undefined) {
+    this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: message || 'Thank you!' });
   }
 
   ngOnDestroy() {
