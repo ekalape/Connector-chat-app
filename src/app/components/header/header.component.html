@@ -1,6 +1,7 @@
 <header>
-  <a routerLink="">
-    <img src="assets/connect-logo.png" height="40" alt="logo" class="logo" />
+  <a class="logotype" routerLink="">
+    <img src="assets/connect-logo2.png" height="40" alt="logo" class="logo" />
+    <span *ngIf="!loggedIn">The Connector</span>
   </a>
   <div class="admin-panel" *ngIf="loggedIn">
     <a class="header__menu-item" routerLink="" [class.active]="isActive()">

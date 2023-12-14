@@ -35,6 +35,9 @@
   align-items: center;
   gap: 2rem;
   position: relative;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+
   & ::ng-deep .p-inputtext {
     width: 100%;
   }

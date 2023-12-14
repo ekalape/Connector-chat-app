@@ -5,7 +5,7 @@ import { selectError, selectProfileData } from 'app/store/selectors/profile.sele
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { Location } from '@angular/common';
-import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { Subscription, map, tap } from 'rxjs';
 import { getProfileAction, setErrorAction, updateProfileAction } from 'app/store/actions/profile.action';
 import { selectLoadingState } from 'app/store/selectors/auth.selectors';
@@ -77,7 +77,6 @@ export class ProfileComponent {
       })
 
     if (!this.nameField.value) {
-      console.log("---name is missing make request---");
       this.store.dispatch(getProfileAction())
     }
 
@@ -93,8 +92,9 @@ export class ProfileComponent {
 
   editField() {
     this.editEnabled = true;
-    const newValidator = Validators.pattern(`^(?!${this.oldName}$).*$`);
-    this.nameField.addValidators(newValidator);
+    /*   const newValidator = Validators.pattern(`^(?!${this.oldName}$).*$`);
+      this.nameField.addValidators(newValidator); */
+    this.nameField.addValidators(this.notOldNameValidator(this.oldName));
     this.nameField.updateValueAndValidity({ emitEvent: false });
   }
 
@@ -111,14 +111,25 @@ export class ProfileComponent {
     if (this.nameField.value?.trim()) {
       this.store.dispatch(updateProfileAction({ name: this.nameField.value }))
       this.editEnabled = false;
-      if (!this.errors) this.showSuccess("You changed your name!")
+      if (!this.errors) {
+        this.showSuccess("You changed your name!")
+        // this.nameField.removeValidators(Validators.pattern(`^(?!${this.oldName}$).*$`));
+        this.nameField
+          .setValidators([Validators.required, Validators.minLength(3), Validators.pattern(/^[A-Za-zА-Яа-я\s]*$/), Validators.maxLength(40)])
+        this.nameField.markAsUntouched();
+        this.nameField.markAsPristine();
+        this.nameField.updateValueAndValidity({ emitEvent: false });
+      }
 
     }
   }
   onCancel() {
     this.editEnabled = false;
     this.nameField.setValue(this.oldName);
-    this.nameField.removeValidators(Validators.pattern(`^(?!${this.oldName}$).*$`));
+    this.nameField
+      .setValidators([Validators.required, Validators.minLength(3), Validators.pattern(/^[A-Za-zА-Яа-я\s]*$/), Validators.maxLength(40)]);
+    this.nameField.markAsUntouched();
+    this.nameField.markAsPristine();
     this.nameField.updateValueAndValidity({ emitEvent: false });
 
   }
@@ -129,4 +140,11 @@ export class ProfileComponent {
   showSuccess(message: string | undefined) {
     this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: message || 'Thank you!' });
   }
+  notOldNameValidator(oldName: string): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      const valid = new RegExp(`^(?!${oldName}$).*$`).test(control.value);
+      return valid ? null : { 'notOldName': true };
+    }
+  }
 }
+

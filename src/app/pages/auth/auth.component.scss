@@ -6,20 +6,27 @@
   padding: 2rem 0;
 
   & ::ng-deep {
+    & .p-tabview-panels {
+      background-color: var(--light-gray);
+    }
     & .p-tabview-panel {
       width: 100%;
-
       justify-content: center;
       width: 400px;
+      //background: var(--light-gray);
     }
     & .p-float-label {
       width: 100%;
       justify-content: center;
     }
+    & .p-tabview .p-tabview-nav {
+      background-color: transparent;
+    }
     & .p-tabview-nav {
       display: flex;
       width: 100%;
       justify-content: center;
+      //background: var(--light-gray);
     }
     & p-button {
       width: 100%;

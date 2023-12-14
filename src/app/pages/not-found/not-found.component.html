@@ -1,2 +1,3 @@
 <h3>The page is not found</h3>
-<img src="assets/not-found-dark.png" alt="Page not found">
+<img src="assets/not-found-dark.png" alt="Page not found" *ngIf="!darkTheme">
+<img src="assets/not-found-light.png" alt="Page not found" *ngIf="darkTheme">

@@ -4,7 +4,7 @@
 @import "primeicons/primeicons.css";
 
 :root {
-  --primary_green: #449e48;
+  --primary_green: #3b8d3f;
   --light-gray: #e6e6e6;
   --lighter-gray: #f8f9fa;
   --medium-gray: rgb(134, 134, 134);
@@ -27,13 +27,9 @@ body {
 
 .dark {
   --primary_green: #6abd6e;
-  //--light-gray: #2b3029;
   --light-gray: #1f2d40;
-  // --lighter-gray: #121411;
   --lighter-gray: #17212f;
-
   --medium-gray: #405f81;
-  //--darker-gray: #a6b89c;
   --darker-gray: #e2e4e6;
   --black: rgb(255, 255, 255);
   --white: rgb(0, 0, 0);

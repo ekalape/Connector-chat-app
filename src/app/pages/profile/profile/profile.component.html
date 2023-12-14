@@ -32,6 +32,9 @@
           <p class="errors-message" *ngIf="nameField.errors?.['pattern']">
             Only letters and spaces are allowed.
           </p>
+          <p class="errors-message" *ngIf="nameField.errors?.['notOldName']">
+            It is the same name as before.
+          </p>
           <p class="errors-message" *ngIf="nameField.errors?.['maxlength']">
             The name is too long.
           </p>

@@ -28,6 +28,9 @@
   align-items: center;
   background-color: var(--light-gray);
   gap: 2rem;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+
   & ::ng-deep .p-inputtext {
     width: 100%;
   }

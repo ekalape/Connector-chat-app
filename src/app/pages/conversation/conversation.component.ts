@@ -66,6 +66,9 @@ export class ConversationComponent {
     this.errorSUB = this.errorData.subscribe(data => {
       if (data.status === RequestStatus.ERROR) {
         this.showError(data.message || "Something went wrong")
+        if (data.type === 'InvalidIDException') {
+          setTimeout(() => { this.router.navigate([Pathes.HOME]) }, 800); // --> timeout is need to have time for error message
+        }
       }
       if (data.status === RequestStatus.SUCCESS) {
         if (data.type === "delete") {
