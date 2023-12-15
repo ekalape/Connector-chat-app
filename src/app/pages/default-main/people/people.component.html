@@ -1,14 +1,17 @@
 <app-title-controls (updateContent)="updateContent()"
   [blockBtn]="blockBtn">People</app-title-controls>
 <div class="filter-menu">
-
-  <a [ngClass]="filtered?'':'chosen'" (click)="chooseFilter(0)">Show
-    all ({{(people|async)?.length}})</a>
-  <a [ngClass]="filtered?'chosen':''" (click)="chooseFilter(1)">My chat
-    partners ({{(myConvs|async)?.length}})</a>
+  <input type="text" pInputText [formControl]="peopleFilterInput"
+    (input)="filterPeople()">
+  <div class="alternative-filters">
+    <a [ngClass]="filtered?'':'chosen'" (click)="chooseFilter(0)">Show
+      all ({{(people|async)?.length}})</a>
+    <a [ngClass]="filtered?'chosen':''" (click)="chooseFilter(1)">My chat
+      partners ({{(myConvs|async)?.length}})</a>
+  </div>
 </div>
 <div class="people_container" *ngIf="(people|async) as people">
-  <a *ngFor="let user of (people | chatPartners:filtered:myOpps)"
+  <a *ngFor="let user of ((people | chatPartners:filtered:myOpps))|conversationFilter:filterWord"
     (click)="openConversation(user)"
     [ngClass]="myOpps.includes(user.uid)?'mine':''">{{user.name}}</a>
 </div>

@@ -24,6 +24,7 @@ import { LoadingOverlayComponent } from 'app/components/loading-overlay/loading-
 import { RequestStatus } from 'app/utils/enums/request-status';
 import { IErrorState } from 'app/store/models/store.model';
 import { ConfirmDialogComponent } from 'app/components/confirm-dialog/confirm-dialog.component';
+import { GroupsFilterPipe } from 'app/pipes/groups-filter.pipe';
 
 
 
@@ -43,6 +44,7 @@ import { ConfirmDialogComponent } from 'app/components/confirm-dialog/confirm-di
     ToastModule,
     ConfirmDialogComponent,
     LoadingOverlayComponent,
+    GroupsFilterPipe,
     OwnGroupsPipe],
   providers: [MessageService],
   templateUrl: './default-main.component.html',
@@ -54,6 +56,9 @@ export class DefaultMainComponent implements OnInit, OnDestroy {
   blockBtn = false;
   showConfirm = false;
   groupToDelete: string | undefined
+
+  groupFilterInput = new FormControl("");
+  filterWord = ""
 
   allGroups = this.store.select(selectGroupsList);
   myGroups = this.store.select(selectMyGroups);
@@ -136,8 +141,12 @@ export class DefaultMainComponent implements OnInit, OnDestroy {
         break;
       default: return;
     }
-
   }
+
+  filterGroups() {
+    this.filterWord = this.groupFilterInput.value || ""
+  }
+
   showError(errorMessage: string | undefined) {
     this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: errorMessage || "Something went wrong, try again" });
   }

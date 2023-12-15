@@ -19,6 +19,9 @@ import { ChatPartnersPipe } from 'app/pipes/chat-partners.pipe';
 import { LoadingOverlayComponent } from 'app/components/loading-overlay/loading-overlay.component';
 import { IErrorState } from 'app/store/models/store.model';
 import { titleKinds } from 'app/utils/enums/title-controls';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ConversationFilterPipe } from 'app/pipes/conversation-filter.pipe';
+import { InputTextModule } from 'primeng/inputtext';
 
 
 
@@ -29,7 +32,10 @@ import { titleKinds } from 'app/utils/enums/title-controls';
     TitleControlsComponent,
     RouterModule,
     ToastModule,
+    ReactiveFormsModule,
     ChatPartnersPipe,
+    ConversationFilterPipe,
+    InputTextModule,
     LoadingOverlayComponent],
   providers: [MessageService],
   templateUrl: './people.component.html',
@@ -41,6 +47,8 @@ export class PeopleComponent implements OnInit, OnDestroy {
   RequestStatus = RequestStatus;
   titleKinds = titleKinds
   blockBtn = false;
+
+  filterWord = "";
 
   people = this.store.select(selectUsers);
   errorState = this.store.select(selectMainPeopleErrorState);
@@ -54,6 +62,8 @@ export class PeopleComponent implements OnInit, OnDestroy {
   myOpps: string[] = [];
 
   userToChatID: string | undefined;
+
+  peopleFilterInput = new FormControl("")
 
   errorData: IErrorState | undefined;
 
@@ -125,6 +135,10 @@ export class PeopleComponent implements OnInit, OnDestroy {
   showError(errorMessage: string | undefined) {
     this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: errorMessage || "Something went wrong, try again" });
 
+  }
+  filterPeople() {
+
+    this.filterWord = this.peopleFilterInput.value || ""
   }
 
   chooseFilter(opt: number) {

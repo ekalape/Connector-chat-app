@@ -42,11 +42,17 @@
   width: 100%;
   padding: 1rem;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 1rem;
   color: var(--medium-gray);
   font-size: 0.8rem;
   font-style: italic;
+  & .alternative-filters {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
   & a {
     cursor: pointer;
   }
