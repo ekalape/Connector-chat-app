@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { HeaderComponent } from './components/header/header.component';
 import { StorageKeys } from './utils/enums/local-storage-keys';
 import { Store } from '@ngrx/store';
-import { logInAction } from './store/actions/auth.action';
+import { logInAction, logOutSuccessAction } from './store/actions/auth.action';
+import { Subscription } from 'rxjs';
+import { selectError } from './store/selectors/profile.selectors';
 
 
 @Component({
@@ -17,8 +19,9 @@ import { logInAction } from './store/actions/auth.action';
 })
 export class AppComponent {
   title = 'connector app';
+  errorSUB: Subscription | undefined;
 
-  constructor(private store: Store) {
+  constructor(private store: Store, private router: Router) {
   }
 
   ngOnInit() {
@@ -27,6 +30,13 @@ export class AppComponent {
       const { token, email, uid } = JSON.parse(personalData)
       this.store.dispatch(logInAction({ token, email, uid }))
     }
+    this.errorSUB = this.store.select(selectError).subscribe((data) => {
+      if (data?.type === "InvalidIDException") {
+        localStorage.removeItem(StorageKeys.LOGIN_KEY);
+        this.store.dispatch(logOutSuccessAction())
+      }
+    })
+
   }
 
 
@@ -35,4 +45,8 @@ export class AppComponent {
     else document.body.classList.remove('dark')
   }
 
+
+  ngOnDestroy() {
+    this.errorSUB?.unsubscribe()
+  }
 }
