@@ -15,10 +15,11 @@ export const getAllGroupsSuccess = createAction("[group] Get All Groups Success"
 
 export const deleteGroup = createAction("[group] Delete Group",
   props<{ groupId: string }>())
-export const deleteGroupPrivate = createAction("[group] Delete Group",
+export const deleteGroupPrivate = createAction("[group] Delete Private Group",
   props<{ groupId: string }>())
 export const deleteGroupSuccess = createAction("[group] Delete Group Success",
   props<{ groupId: string }>());
+
 
 
 export const getGroupMessages = createAction("[group] Get Group Messages",
