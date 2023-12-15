@@ -1,9 +1,12 @@
 <div class="list-container groups">
   <app-title-controls [kind]="titleKinds.GROUPS" (updateContent)="updateContent()"
-    (addGroup)="addGroup()" [blockBtn]="blockBtn">Groups</app-title-controls>
+    (addGroup)="addGroup()" [blockBtn]="blockBtn">Groups
+  </app-title-controls>
   <div class="filter-menu">
-    <a [ngClass]="filtered?'':'chosen'" (click)="chooseFilter(0)">Show all</a>
-    <a [ngClass]="filtered?'chosen':''" (click)="chooseFilter(1)">My groups</a>
+    <a [ngClass]="filtered?'':'chosen'" (click)="chooseFilter(0)">Show all
+      ({{(allGroups|async)?.length}})</a>
+    <a [ngClass]="filtered?'chosen':''" (click)="chooseFilter(1)">My groups
+      ({{(myGroups|async)?.length}})</a>
   </div>
   <div class="groups__container" *ngIf="allGroups|async as groups">
     <app-group-card *ngFor="let gr of (groups|ownGroups:filtered:(myGroups|async))"
