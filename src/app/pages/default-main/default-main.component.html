@@ -1,10 +1,16 @@
 <div class="list-container groups">
   <app-title-controls [kind]="titleKinds.GROUPS" (updateContent)="updateContent()"
-    (addGroup)="addGroup()" [blockBtn]="blockBtn">Groups
+    (addGroup)="addGroup()" [blockBtn]="blockBtn">
+    <i class="pi pi-users"></i>
+    Groups
   </app-title-controls>
   <div class="filter-menu">
-    <input type="text" pInputText [formControl]="groupFilterInput"
-      (input)="filterGroups()">
+    <div class="search-filter">
+      <i class="pi pi-filter"></i>
+      <input type="text" pInputText [formControl]="groupFilterInput"
+        (input)="filterGroups()">
+    </div>
+
     <div class="alternative-filters">
 
       <a [ngClass]="filtered?'':'chosen'" (click)="chooseFilter(0)">Show all

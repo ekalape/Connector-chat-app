@@ -47,6 +47,12 @@
   color: var(--medium-gray);
   font-size: 0.8rem;
   font-style: italic;
+  & .search-filter {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+  }
   & .alternative-filters {
     display: flex;
     align-items: center;

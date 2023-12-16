@@ -31,7 +31,7 @@ export class AppComponent {
       this.store.dispatch(logInAction({ token, email, uid }))
     }
     this.errorSUB = this.store.select(selectError).subscribe((data) => {
-      if (data?.type === "InvalidIDException") {
+      if (data?.type === "InvalidIDException" || data?.type === "InvalidTokenException") {
         localStorage.removeItem(StorageKeys.LOGIN_KEY);
         this.store.dispatch(logOutSuccessAction())
       }

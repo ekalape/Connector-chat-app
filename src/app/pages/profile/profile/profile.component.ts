@@ -82,7 +82,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     this.errorsub = this.error$
       .subscribe(x => {
-        if (x) {
+        if (x && x.type !== "InvalidIDException") {
           this.showError(x?.message)
 
           this.errors = x

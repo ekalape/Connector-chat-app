@@ -34,7 +34,6 @@ export class HeaderComponent implements OnInit {
   menuItems: MenuItem[] = [];
   loggedIn = false;
   sub: Subscription | undefined;
-  errorSUB: Subscription | undefined;
   darkTheme: boolean;
 
   showConfirm = false;
@@ -55,10 +54,6 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.sub = this.store.select(selectLoggedIn).subscribe(x => this.loggedIn = x.loggedIn)
     this.switchTheme(this.darkTheme)
-    this.errorSUB = this.store.select(selectError).subscribe(data => {
-      if (data) this.showError(data.message)
-    })
-
 
   }
 
